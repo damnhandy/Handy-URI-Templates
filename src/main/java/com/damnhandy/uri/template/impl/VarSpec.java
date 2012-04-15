@@ -29,7 +29,7 @@ public final class VarSpec
    /**
     * 
     */
-   private String key;
+   private String variableName;
 
    /**
     * 
@@ -59,7 +59,7 @@ public final class VarSpec
       this.modifier = modifier;
       this.value = value;
       this.position = position;
-      setKey();
+      initVariableName();
    }
 
    /**
@@ -92,23 +92,23 @@ public final class VarSpec
       return position;
    }
 
-   private void setKey()
+   private void initVariableName()
    {
       if (modifier != null)
       {
          if (modifier.equals(":"))
          {
             String[] values = getValue().split(":");
-            key = values[0];
+            variableName = values[0];
          }
          else if (modifier.equals("*") || modifier.equals("+"))
          {
-            key = getValue().substring(0, getValue().length() - 1);
+            variableName = getValue().substring(0, getValue().length() - 1);
          }
       }
       else
       {
-         key = getValue();
+         variableName = getValue();
       }
    }
 
@@ -117,13 +117,13 @@ public final class VarSpec
     * 
     * @return
     */
-   public String getKey()
+   public String getVariableName()
    {
-      if (key == null)
+      if (variableName == null)
       {
          return getValue();
       }
-      return key;
+      return variableName;
    }
 
    /**
@@ -159,7 +159,7 @@ public final class VarSpec
    @Override
    public String toString()
    {
-      return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", key=" + key + "]";
+      return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName=" + variableName + "]";
    }
 
 }

@@ -170,9 +170,9 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       for (VarSpec varSpec : varSpecs)
       {
-         if (vars.containsKey(varSpec.getKey()) || varSpec.hasDefaultValue())
+         if (vars.containsKey(varSpec.getVariableName()) || varSpec.hasDefaultValue())
          {
-            Object var = vars.get(varSpec.getKey());
+            Object var = vars.get(varSpec.getVariableName());
             String expanded = null;
             if (var == null)
             {
@@ -252,7 +252,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             }
             else
             {
-               value = varSpec.getKey() + "=" + extractStringValue(operator, joiner, false, varSpec, value);
+               value = varSpec.getVariableName() + "=" + extractStringValue(operator, joiner, false, varSpec, value);
                stringValues.add(value);
             }
          }
@@ -269,7 +269,7 @@ public final class RFC6570UriTemplate extends UriTemplate
          {
             return joinParts(pairJoiner, stringValues);
          }
-         return varSpec.getKey() + "=" + joinParts(pairJoiner, stringValues);
+         return varSpec.getVariableName() + "=" + joinParts(pairJoiner, stringValues);
       }
       return joinParts(joiner, stringValues);
    }
@@ -295,7 +295,7 @@ public final class RFC6570UriTemplate extends UriTemplate
 
          if (varSpec.getModifier().equals("+"))
          {
-            key = varSpec.getKey() + "." + key;
+            key = varSpec.getVariableName() + "." + key;
          }
          String pairJoiner = joiner;;
          if (varSpec.getModifier().equals("*"))
