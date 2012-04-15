@@ -1,0 +1,38 @@
+{
+    "Fragment Expansion" : {
+        "variables": {
+            "count"      : [ "one", "two",  "three" ],
+            "dom"        : [ "example", "com" ],
+            "dub"        : "me/too",
+            "hello"      : "Hello World!",
+            "half"       : "50%",
+            "var"        : "value",
+            "who"        : "fred",
+            "base"       : "http://example.com/home/",
+            "path"       : "/foo/bar",
+            "list"       : ["red","green","blue"],
+            "keys"       : { "semi": ";", "dot": ".", "comma": "," },
+            "v"          : "6",
+            "x"          : "1024",
+            "y"          : "768",
+            "empty"      : "",
+            "empty_keys" : [],
+            "undef"      : null
+        },
+        "testcases": [
+			["foo{#undef}", "foo"],
+			["{#var}", "#value"],
+			["{#hello}", "#Hello%20World!"],
+			["{#half}", "#50%25"],
+			["foo{#empty}", "foo#"],
+			
+			["{#x,hello,y}", "#1024,Hello%20World!,768"],
+			["{#path,x}/here", "#/foo/bar,1024/here"],
+			["{#path:6}/here", "#/foo/b/here"],
+			["{#list}", "#red,green,blue"],
+			["{#list*}", "#red,green,blue"],
+			["{#keys}", "#semi,;,dot,.,comma,,"],
+			["{#keys*}", "#semi=;,dot=.,comma=,"]
+        ]
+    }
+}
