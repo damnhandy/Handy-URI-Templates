@@ -12,6 +12,7 @@
 *.iml
 *.ipr
 *.iws
+.checkstyle
 nbproject
 .DS_Store
 target
