@@ -37,12 +37,12 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * 
     */
-   private String template;
+   private String expression;
 
    /**
     * 
     */
-   private Map<String, Object> vars;
+   private Map<String, Object> variables;
 
    /**
     * 
@@ -52,45 +52,35 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * Create a new RFC6570UriTemplate.
     * 
-    * @param template
+    * @param expression
     */
    public RFC6570UriTemplate(String template)
    {
-      this.template = template;
+      this.expression = template;
    }
 
    /**
-    * Expand the URI template using the supplied variables
+    * Returns the original URI expression string.
     * 
-    * @param vars The variables that will be used in the expansion
+    * @return
+    */
+   @Override
+   public String getExpression()
+   {
+      return expression;
+   }
+
+   /**
+    * Expand the URI expression using the supplied variables
+    * 
+    * @param variables The variables that will be used in the expansion
     * @return the expanded URI as a String
     */
    @Override
    public String expand(Map<String, Object> vars)
    {
-      this.vars = vars;
-      return findMatches();
-   }
-
-   /**
-    * Returns the original URI template string.
-    * 
-    * @return
-    */
-   @Override
-   public String getTemplate()
-   {
-      return template;
-   }
-
-   /**
-    * FIXME Comment this
-    * 
-    * @return
-    */
-   private String findMatches()
-   {
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(template);
+      this.variables = vars;
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(expression);
       StringBuffer buffer = new StringBuffer();
       while (matcher.find())
       {
@@ -109,48 +99,15 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param varSpecs
     * @return
     */
-   private String expandMatch(String operator, List<VarSpec> varSpecs)
+   private String expandMatch(Op operator, List<VarSpec> varSpecs)
    {
-      String result = "";
-      String prefix = operator;
-      String joiner = operator;
-      boolean useQueryString = false;
-      if (operator.equals("?"))
+      List<String> replacements = getReplacementValues(operator, varSpecs);
+      String result = joinParts(operator.getJoiner(), replacements);
+      if (result != null)
       {
-         joiner = "&";
-         useQueryString = true;
+         return operator.getPrefix() + result;
       }
-      else if (operator.equals("&"))
-      {
-         useQueryString = true;
-      }
-      else if (operator.endsWith("#"))
-      {
-         joiner = ",";
-
-      }
-      else if (operator.endsWith(";"))
-      {
-         useQueryString = true;
-      }
-      else if (operator.equals("") || operator.endsWith("+"))
-      {
-         joiner = ",";
-         prefix = "";
-      }
-
-      List<String> replacements = getReplacementValues(operator, varSpecs, joiner, useQueryString);
-
-      result = joinParts(joiner, replacements);
-      if (result != null && prefix != "")
-      {
-         result = prefix + result;
-      }
-      else
-      {
-         result = "";
-      }
-      return result;
+      return "";
    }
 
    /** FIXME Comment this
@@ -163,40 +120,48 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    @SuppressWarnings(
    {"rawtypes", "unchecked"})
-   private List<String> getReplacementValues(String operator, List<VarSpec> varSpecs, String joiner,
-         boolean useQueryString)
+   private List<String> getReplacementValues(Op operator, List<VarSpec> varSpecs)
    {
       List<String> replacements = new ArrayList<String>();
 
       for (VarSpec varSpec : varSpecs)
       {
-         if (vars.containsKey(varSpec.getVariableName()) || varSpec.hasDefaultValue())
+         if (variables.containsKey(varSpec.getVariableName()) || varSpec.hasDefaultValue())
          {
-            Object var = vars.get(varSpec.getVariableName());
+            Object var = variables.get(varSpec.getVariableName());
             String expanded = null;
+            /*
+             * The there is no supplied value for the variable and the default
+             * value is used.
+             */
             if (var == null)
             {
                var = varSpec.getDefaultValue();
             }
-
+            /*
+             * The variable value contains a list of values
+             */
             if (var instanceof Collection)
             {
-               expanded = this.extractCollection(operator, joiner, useQueryString, varSpec, (Collection) var);
+               expanded = this.expandCollection(operator, varSpec, (Collection) var);
             }
-
+            /*
+             * The variable value contains a list of key-value pairs
+             */
             else if (var instanceof Map)
             {
-               expanded = extractMap(operator, joiner, useQueryString, varSpec, (Map) var);
+               expanded = expandMap(operator, varSpec, (Map) var);
             }
+            /*
+             * The variable value is null or has o value.
+             */
             else if (var == null)
             {
                expanded = null;
             }
             else
             {
-               String variable = var.toString();
-
-               expanded = this.extractStringValue(operator, joiner, useQueryString, varSpec, variable);
+               expanded = this.expandStringValue(operator, varSpec, var.toString());
             }
             if (expanded != null)
             {
@@ -218,24 +183,23 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param variable
     * @return
     */
-   private String extractCollection(String operator, String joiner, boolean useQueryString, VarSpec varSpec,
-         Collection<?> variable)
+   private String expandCollection(Op operator, VarSpec varSpec, Collection<?> variable)
    {
       List<String> stringValues = new ArrayList<String>();
       Iterator<?> i = variable.iterator();
       String pairJoiner = ",";
       if (varSpec.getModifier().equals("*"))
       {
-         if (operator.equalsIgnoreCase("?") || operator.equalsIgnoreCase("&"))
+         if (operator == Op.QUERY || operator == Op.CONTINUATION)
          {
             {
                pairJoiner = "&";
             }
          }
-         else if (!operator.equalsIgnoreCase(""))
+         else if (operator != Op.NAME_LABEL)
          {
             {
-               pairJoiner = operator;
+               pairJoiner = operator.getJoiner();
             }
          }
       }
@@ -243,35 +207,35 @@ public final class RFC6570UriTemplate extends UriTemplate
       while (i.hasNext())
       {
          String value = i.next().toString();
-         if (varSpec.getModifier().equals("*") && !operator.equalsIgnoreCase(""))
+         if (varSpec.getModifier().equals("*") && operator != Op.NONE)
          {
             if (operator.equals("/"))
             {
-               stringValues.add(extractStringValue(operator, operator, false, varSpec, value));
-               pairJoiner = operator;
+               stringValues.add(expandStringValue(operator, varSpec, value));
+               pairJoiner = operator.getJoiner();
             }
             else
             {
-               value = varSpec.getVariableName() + "=" + extractStringValue(operator, joiner, false, varSpec, value);
+               value = varSpec.getVariableName() + "=" + expandStringValue(operator, varSpec, value);
                stringValues.add(value);
             }
          }
          else
          {
-            stringValues.add(extractStringValue(operator, ",", false, varSpec, value));
+            stringValues.add(expandStringValue(operator, varSpec, value));
          }
 
       }
 
-      if (!operator.equalsIgnoreCase("") && !operator.equals("+"))
+      if (operator != Op.NONE && operator != Op.NAME_LABEL)
       {
-         if (operator.equals("/") || varSpec.getModifier().equals("*"))
+         if (operator == Op.MATRIX || varSpec.getModifier() == Modifier.EXPLODE)
          {
             return joinParts(pairJoiner, stringValues);
          }
          return varSpec.getVariableName() + "=" + joinParts(pairJoiner, stringValues);
       }
-      return joinParts(joiner, stringValues);
+      return joinParts(operator.getJoiner(), stringValues);
    }
 
    /**
@@ -284,41 +248,34 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param variable
     * @return
     */
-   private String extractMap(String operator, String joiner, boolean useQueryString, VarSpec varSpec,
-         Map<String, Object> variable)
+   private String expandMap(Op operator, VarSpec varSpec, Map<String, Object> variable)
    {
       List<String> stringValues = new ArrayList<String>();
       for (Entry<String, Object> entry : variable.entrySet())
       {
 
          String key = entry.getKey();
-
-         if (varSpec.getModifier().equals("+"))
-         {
-            key = varSpec.getVariableName() + "." + key;
-         }
-         String pairJoiner = joiner;;
-         if (varSpec.getModifier().equals("*"))
+         String pairJoiner = operator.getJoiner();
+         if (varSpec.getModifier() == Modifier.EXPLODE)
          {
             pairJoiner = "=";
          }
-         else if (!varSpec.getModifier().equals("*") && (operator.equals("/") || operator.equals(";")))
+         else if (varSpec.getModifier() != Modifier.EXPLODE && (operator == Op.PATH || operator == Op.MATRIX))
          {
-            joiner = ",";
             pairJoiner = ",";
          }
 
-         String pair = extractStringValue(operator, joiner, useQueryString, varSpec, key) + pairJoiner
-               + extractStringValue(operator, joiner, useQueryString, varSpec, entry.getValue().toString());
+         String pair = expandStringValue(operator, varSpec, key) + pairJoiner
+               + expandStringValue(operator, varSpec, entry.getValue().toString());
 
          stringValues.add(pair);
       }
 
-      return joinParts(joiner, stringValues);
+      return joinParts(operator.getJoiner(), stringValues);
    }
 
    /** FIXME Comment this
-    * 
+    *  
     * @param operator
     * @param joiner
     * @param useQueryString
@@ -326,11 +283,11 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param variable
     * @return
     */
-   private String extractStringValue(String operator, String joiner, boolean useQueryString, VarSpec varSpec,
-         String variable)
+   private String expandStringValue(Op operator, VarSpec varSpec, String variable)
    {
       String expanded = "";
-      if (varSpec.getModifier().equals(":"))
+      // TODO: if the value is not a string, it needs to raise an exception.
+      if (varSpec.getModifier() == Modifier.PREFIX)
       {
          int position = varSpec.getPosition();
          if (position < variable.length())
@@ -340,7 +297,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       try
       {
-         if (operator.equals("+") || operator.equals("#"))
+         if (operator == Op.NAME_LABEL || operator == Op.FRAGMENT)
          {
 
             expanded = variable.replaceAll(" ", "%20");
@@ -357,9 +314,9 @@ public final class RFC6570UriTemplate extends UriTemplate
          throw new RuntimeException(e);
       }
 
-      if (useQueryString)
+      if (operator.useQueryString())
       {
-         if (expanded.isEmpty() && !joiner.equals("&"))
+         if (expanded.isEmpty() && !operator.getJoiner().equals("&"))
          {
             expanded = varSpec.getValue();
          }
@@ -392,6 +349,12 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
          return null;
       }
+
+      if (parts.size() == 1)
+      {
+         return parts.get(0);
+      }
+
       StringBuilder builder = new StringBuilder();
       for (int i = 0; i < parts.size(); i++)
       {
@@ -418,11 +381,11 @@ public final class RFC6570UriTemplate extends UriTemplate
    private String buildVarSpecs(String token)
    {
       // Check for URI operators
-      String operator = "";
+      Op operator = Op.NONE;
       String firstChar = token.substring(0, 1);
       if (containsOperator(firstChar))
       {
-         operator = firstChar;
+         operator = Op.valueOfOpCode(firstChar);
          token = token.substring(1, token.length());
       }
 
@@ -432,32 +395,40 @@ public final class RFC6570UriTemplate extends UriTemplate
       for (String value : values)
       {
          value = value.trim();
-         int subStrPos = value.indexOf(':');
-         int defaultPos = value.indexOf('=');
+         int subStrPos = value.indexOf(Modifier.PREFIX.getValue());
+         int defaultPos = value.indexOf(Modifier.DEFAULT_VALUE.getValue());
+         /*
+          * Prefex variable 
+          */
          if (subStrPos > 0)
          {
-            String[] pair = value.split(":");
+            String[] pair = value.split(Modifier.PREFIX.getValue());
             Integer pos = Integer.valueOf(value.substring(subStrPos + 1));
-            vars.add(new VarSpec(pair[0], ":", pos));
+            vars.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
          }
+         /*
+          * If the variable contains a default value
+          */
          else if (defaultPos > 0)
          {
-            String[] pair = value.split("=");
-            VarSpec v = new VarSpec(pair[0], "=");
+            String[] pair = value.split(Modifier.DEFAULT_VALUE.getValue());
+            VarSpec v = new VarSpec(pair[0], Modifier.DEFAULT_VALUE);
             v.setDefaultValue(pair[1]);
             vars.add(v);
          }
-         else if (value.lastIndexOf("*") > 0)
+         /*
+          * Variable will be exploded
+          */
+         else if (value.lastIndexOf(Modifier.EXPLODE.getValue()) > 0)
          {
-            vars.add(new VarSpec(value, "*"));
+            vars.add(new VarSpec(value, Modifier.EXPLODE));
          }
-         else if (value.lastIndexOf("+") > 0)
-         {
-            vars.add(new VarSpec(value, "+"));
-         }
+         /*
+          * Standard Value
+          */
          else
          {
-            vars.add(new VarSpec(value, ""));
+            vars.add(new VarSpec(value, Modifier.NONE));
          }
       }
       return expandMatch(operator, vars);

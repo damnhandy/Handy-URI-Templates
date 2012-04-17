@@ -17,6 +17,142 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 public abstract class UriTemplate
 {
 
+   public static enum Modifier {
+
+      NONE         ("na"),
+      PREFIX       (":" ), 
+      EXPLODE      ("*" ),
+      DEFAULT_VALUE("=" );
+
+      /**
+       * 
+       */
+      private String value;
+
+      /**
+       * 
+       * Create a new Modifier.
+       * 
+       * @param value
+       */
+      private Modifier(String value)
+      {
+         this.value = value;
+      }
+
+      /**
+       * 
+       * 
+       * @return
+       */
+      public String getValue()
+      {
+         return value;
+      }
+
+      /**
+       * 
+       * 
+       * @param value
+       * @return
+       */
+      public static Modifier fromValue(String value)
+      {
+         for (Modifier m : Modifier.values())
+         {
+            if (m.getValue().equalsIgnoreCase(value))
+            {
+               return m;
+            }
+         }
+         return null;
+      }
+   }
+   /**
+    * <p>
+    * Represents an operator in a URI Template.
+    * </p>
+    */
+   protected static enum Op {
+
+      NONE         ("",  ",", false),
+      RESERVED     ("+", ",", false), 
+      FRAGMENT     ("#", ",", false), 
+      NAME_LABEL   (".", "," ,false), 
+      PATH         ("/", "/", false), 
+      MATRIX       (";", "=", true), 
+      QUERY        ("?", "&", true), 
+      CONTINUATION ("&", "&", true);
+
+      /**
+       * 
+       */
+      private String operator;
+
+      /**
+       * 
+       */
+      private String joiner;
+      /**
+       * 
+       */
+      private boolean queryString;
+      /**
+       * 
+       * Create a new Op.
+       * 
+       * @param operator
+       * @param joiner
+       */
+      private Op(String operator, String joiner, boolean queryString)
+      {
+         this.operator = operator;
+         this.joiner = joiner;
+         this.queryString = queryString;
+      }
+
+      public String getOperator()
+      {
+         return this.operator;
+      }
+
+      public String getJoiner()
+      {
+         return this.joiner;
+      }
+
+      public boolean useQueryString()
+      {
+         return queryString;
+      }
+      
+      /**
+       * 
+       * 
+       * @return
+       */
+      public String getPrefix()
+      {
+         return operator;
+      }
+      /**
+       * FIXME Comment this
+       * 
+       * @param opCode
+       * @return
+       */
+      public static Op valueOfOpCode(String opCode)
+      {
+          for (Op op : Op.values())
+          {
+              if (op.getOperator().equalsIgnoreCase(opCode))
+              {
+                  return op;
+              }
+          }
+          return null;
+      }
+   }
    /**
     * FIXME Comment this
     * 
@@ -39,6 +175,6 @@ public abstract class UriTemplate
     * 
     * @return
     */
-   public abstract String getTemplate();
+   public abstract String getExpression();
 
 }

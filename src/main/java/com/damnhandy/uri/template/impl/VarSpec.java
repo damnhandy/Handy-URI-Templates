@@ -3,6 +3,8 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import com.damnhandy.uri.template.UriTemplate.Modifier;
+
 /**
  * A VarSpec.
  * 
@@ -14,7 +16,7 @@ public final class VarSpec
    /**
     * 
     */
-   private String modifier;
+   private Modifier modifier = Modifier.NONE;
 
    /**
     * 
@@ -42,7 +44,7 @@ public final class VarSpec
     * @param modifier
     * @param value
     */
-   public VarSpec(String value, String modifier)
+   public VarSpec(String value, Modifier modifier)
    {
       this(value, modifier, null);
    }
@@ -54,7 +56,7 @@ public final class VarSpec
     * @param value
     * @param position
     */
-   public VarSpec(String value, String modifier, Integer position)
+   public VarSpec(String value, Modifier modifier, Integer position)
    {
       this.modifier = modifier;
       this.value = value;
@@ -67,7 +69,7 @@ public final class VarSpec
     * 
     * @return the modifier.
     */
-   public String getModifier()
+   public Modifier getModifier()
    {
       return modifier;
    }
@@ -94,14 +96,14 @@ public final class VarSpec
 
    private void initVariableName()
    {
-      if (modifier != null)
+      if (modifier != Modifier.NONE)
       {
-         if (modifier.equals(":"))
+         if (modifier == Modifier.PREFIX)
          {
-            String[] values = getValue().split(":");
+            String[] values = getValue().split(Modifier.PREFIX.getValue());
             variableName = values[0];
          }
-         else if (modifier.equals("*") || modifier.equals("+"))
+         else if (modifier == Modifier.EXPLODE)
          {
             variableName = getValue().substring(0, getValue().length() - 1);
          }
@@ -159,7 +161,8 @@ public final class VarSpec
    @Override
    public String toString()
    {
-      return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName=" + variableName + "]";
+      return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName="
+            + variableName + "]";
    }
 
 }
