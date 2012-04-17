@@ -17,6 +17,10 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 public abstract class UriTemplate
 {
 
+   public static enum VarFormat {
+      SINGLE, ARRAY, PAIRS;
+   }
+   
    public static enum Modifier {
 
       NONE         ("na"),
@@ -75,14 +79,14 @@ public abstract class UriTemplate
     */
    protected static enum Op {
 
-      NONE         ("",  ",", false),
-      RESERVED     ("+", ",", false), 
-      FRAGMENT     ("#", ",", false), 
-      NAME_LABEL   (".", "," ,false), 
-      PATH         ("/", "/", false), 
-      MATRIX       (";", "=", true), 
-      QUERY        ("?", "&", true), 
-      CONTINUATION ("&", "&", true);
+      NONE         ("",  ",", ",", ",", false, false),
+      RESERVED     ("+", ",", ",", ",", false, false), 
+      FRAGMENT     ("#", ",", ",", ",", false, false), 
+      NAME_LABEL   (".", "," ,".", ",", false, false), 
+      PATH         ("/", "/", "/", ",", false, false), 
+      MATRIX       (";", ";", ";", ",", true,  true), 
+      QUERY        ("?", "&", "&", ",", true,  true), 
+      CONTINUATION ("&", "&", "&", ",", true,  true);
 
       /**
        * 
@@ -97,6 +101,20 @@ public abstract class UriTemplate
        * 
        */
       private boolean queryString;
+      
+      /**
+       * 
+       */
+      private String explodeJoiner;
+      
+      /**
+       * 
+       */
+      private String listJoiner;
+      /**
+       * 
+       */
+      private boolean varNameWhenExploded;
       /**
        * 
        * Create a new Op.
@@ -104,11 +122,14 @@ public abstract class UriTemplate
        * @param operator
        * @param joiner
        */
-      private Op(String operator, String joiner, boolean queryString)
+      private Op(String operator, String joiner, String explodeJoiner, String listJoiner, boolean queryString, boolean varNameWhenExploded)
       {
          this.operator = operator;
          this.joiner = joiner;
          this.queryString = queryString;
+         this.explodeJoiner = explodeJoiner;
+         this.varNameWhenExploded = varNameWhenExploded;
+         this.listJoiner = listJoiner;
       }
 
       public String getOperator()
@@ -121,9 +142,34 @@ public abstract class UriTemplate
          return this.joiner;
       }
 
+      public String getExplodeJoiner() {
+         return explodeJoiner;
+      }
+      /**
+       * 
+       * 
+       * @return
+       */
       public boolean useQueryString()
       {
          return queryString;
+      }
+      
+      public String getListJoiner() {
+         return listJoiner;
+      }
+      /**
+       * When the variable is a Collection, this flag determines if we use 
+       * the VarSpec name to prefix values. For example:
+       * 
+       * {&list} return false
+       * 
+       * {&list*} will return true 
+       * 
+       * @return
+       */
+      public boolean useVarNameWhenExploded() {
+         return varNameWhenExploded;
       }
       
       /**
@@ -141,7 +187,7 @@ public abstract class UriTemplate
        * @param opCode
        * @return
        */
-      public static Op valueOfOpCode(String opCode)
+      public static Op fromOpCode(String opCode)
       {
           for (Op op : Op.values())
           {
