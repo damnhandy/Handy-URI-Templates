@@ -3,6 +3,8 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import info.aduna.net.UriUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,7 +33,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * 
     */
-   private static final String[] OPERATORS = {"+", "#", ".", "/", ";", "?", "&"};
+   private static final String[] OPERATORS =
+   {"+", "#", ".", "/", ";", "?", "&"};
 
    /**
     * 
@@ -177,7 +180,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       return replacements;
    }
-   
+
    /**
     * FIXME Comment this
     * 
@@ -274,22 +277,25 @@ public final class RFC6570UriTemplate extends UriTemplate
             variable = variable.substring(0, position);
          }
       }
-      try
+      if (operator == Op.NAME_LABEL || operator == Op.RESERVED)
       {
-         if (operator == Op.NAME_LABEL || operator == Op.FRAGMENT || operator == Op.RESERVED)
+         expanded = variable.replaceAll("%", "%25").replaceAll(" ", "%20");
+      }
+      else if (operator == Op.FRAGMENT)
+      {
+         expanded = UriUtil.encodeUri(variable);
+      }
+      else
+      {
+         //TODO: Find a better encoder
+         try
          {
-            expanded = variable.replaceAll(" ", "%20");
-         }
-         else
-         {
-            //TODO: Find a better encoder
             expanded = urlCodec.encode(variable).replaceAll("\\+", "%20");
          }
-      }
-
-      catch (EncoderException e)
-      {
-         throw new RuntimeException(e);
+         catch (EncoderException e)
+         {
+            throw new RuntimeException(e);
+         }
       }
 
       if (operator.useQueryString())
