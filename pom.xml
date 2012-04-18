@@ -12,6 +12,22 @@
 		<jackson.version>1.8.5</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	<repositories>
+		<repository>
+			<id>OpenRDF</id>
+			<url>http://repo.aduna-software.org/maven2/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+	<developers>
+		<developer>
+			<name>Ryan J. McDonough</name>
+			<email>ryan@damnhandy.com</email>
+			<organizationUrl>http://www.damnhandy.com/</organizationUrl>
+		</developer>
+	</developers>
 	<build>
 		<plugins>
 
@@ -84,10 +100,17 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>info.aduna.commons</groupId>
+			<artifactId>aduna-commons-net</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<!-- 
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>3.1.1.RELEASE</version>
 		</dependency>
+		 -->
 		<!-- Concordian -->
 		<dependency>
 			<groupId>org.concordion</groupId>
