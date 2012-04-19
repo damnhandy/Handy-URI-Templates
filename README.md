@@ -1,6 +1,8 @@
 # Handy URI Templates
 
-This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. At present, this is very much a work in project and pretty bare bones. It does not pass all of my tests at the moment and is a pretty hairy state of alpha.
+This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. 
+At present, this is very much a work in project and pretty bare bones. It is functioning correctly, but
+the API is very much in flux.
 
 ## Using the Library
 
@@ -20,7 +22,7 @@ This would result in the following URI:
 	
 ## Future Plans
 
-In addition to making the implementaion fully compliant with RFC6570, I'm considering the following:
+In addition to making the implementation fully compliant with RFC6570, I'm considering the following:
 
-* Include more options other than java.util.Map to supply paramater values. For exmaple, it would be helpful to be able to explode a POJO into a URI parameter.
+* Include more options other than java.util.Map to supply parameter values. For example, it would be helpful to be able to explode a POJO into a URI parameter.
 * A URI Template Builder that can be used to produce URI Template strings for use in clients.
