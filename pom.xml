@@ -3,13 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.damnhhandy</groupId>
 	<artifactId>handy-uri-templates</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 
 	<properties>
 		<http.client>4.1.1</http.client>
-		<slf4j.version>1.5.8</slf4j.version>
-		<jackson.version>1.8.5</jackson.version>
+		<jackson.version>2.0.0</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -146,20 +145,20 @@
 
 		<!-- JSON -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-xc</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
