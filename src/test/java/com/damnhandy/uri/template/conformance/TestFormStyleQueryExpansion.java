@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.damnhandy.uri.template;
+package com.damnhandy.uri.template.conformance;
 
 import java.io.File;
 import java.util.Collection;
@@ -10,13 +10,14 @@ import java.util.Map;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * A TestFormStyleQueryContinuation.
+ * A TestFormStyleQueryExpansion.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public class TestFormStyleQueryContinuation extends AbstractUriTemplateTest
+public class TestFormStyleQueryExpansion extends AbstractUriTemplateConformanceTest
 {
+
    /**
     * FIXME Comment this
     * 
@@ -26,20 +27,20 @@ public class TestFormStyleQueryContinuation extends AbstractUriTemplateTest
    @Parameters
    public static Collection<Object[]> testData() throws Exception
    {
-      File file = new File("./src/test/resources/form-style-query-continuation.json");
+      File file = new File("./src/test/resources/form-style-query-expansion.json");
       return loadTestData(file);
    }
 
    /**
     * 
-    * Create a new TestFormStyleQueryContinuation.
+    * Create a new TestFormStyleQueryExpansion.
     * 
     * @param vars
     * @param template
     * @param expected
     * @param testsuite
     */
-   public TestFormStyleQueryContinuation(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestFormStyleQueryExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

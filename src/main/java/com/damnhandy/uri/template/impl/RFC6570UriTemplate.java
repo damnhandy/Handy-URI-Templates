@@ -5,6 +5,9 @@ package com.damnhandy.uri.template.impl;
 
 import info.aduna.net.UriUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,13 +17,11 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.URLCodec;
-
 import com.damnhandy.uri.template.UriTemplate;
+import com.damnhandy.uri.template.VarExploder;
 
 /**
- * A RFC6570UriTemplate.
+ * A {@link UriTemplate} implementation that supports <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a>
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -31,49 +32,17 @@ public final class RFC6570UriTemplate extends UriTemplate
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
 
    /**
-    * 
-    */
-   private static final String[] OPERATORS =
-   {"+", "#", ".", "/", ";", "?", "&"};
-
-   /**
-    * 
-    */
-   private String expression;
-
-   /**
-    * 
-    */
-   private Map<String, Object> variables;
-
-   /**
-    * 
-    */
-   private URLCodec urlCodec = new URLCodec("UTF-8");
-
-   /**
     * Create a new RFC6570UriTemplate.
     * 
-    * @param expression
+    * @param template
     */
    public RFC6570UriTemplate(String template)
    {
-      this.expression = template;
+      this.template = template;
    }
 
    /**
-    * Returns the original URI expression string.
-    * 
-    * @return
-    */
-   @Override
-   public String getExpression()
-   {
-      return expression;
-   }
-
-   /**
-    * Expand the URI expression using the supplied variables
+    * Expand the URI template using the supplied variables
     * 
     * @param variables The variables that will be used in the expansion
     * @return the expanded URI as a String
@@ -82,7 +51,17 @@ public final class RFC6570UriTemplate extends UriTemplate
    public String expand(Map<String, Object> vars)
    {
       this.variables = vars;
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(expression);
+      return expand();
+   }
+
+   /**
+    * 
+    * 
+    * @return
+    */
+   public String expand()
+   {
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(template);
       StringBuffer buffer = new StringBuffer();
       while (matcher.find())
       {
@@ -95,19 +74,19 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param operator
     * @param varSpecs
     * @return
     */
-   private String expandMatch(Op operator, List<VarSpec> varSpecs)
+   private String findExpressions(Operator operator, List<VarSpec> varSpecs)
    {
       List<String> replacements = expandVariables(operator, varSpecs);
-      String result = joinParts(operator.getJoiner(), replacements);
+      String result = joinParts(operator.getSeparator(), replacements);
       if (result != null)
       {
-         if (operator == Op.RESERVED || operator == Op.NAME_LABEL)
+         if (operator == Operator.RESERVED || operator == Operator.NAME_LABEL)
          {
             return result;
          }
@@ -120,31 +99,43 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param operator
     * @param varSpecs
     * @return
     */
-   @SuppressWarnings(
-   {"rawtypes", "unchecked"})
-   private List<String> expandVariables(Op operator, List<VarSpec> varSpecs)
+   @SuppressWarnings({"rawtypes", "unchecked"})
+   private List<String> expandVariables(Operator operator, List<VarSpec> varSpecs)
    {
       List<String> replacements = new ArrayList<String>();
 
       for (VarSpec varSpec : varSpecs)
       {
-         if (variables.containsKey(varSpec.getVariableName()) || varSpec.hasDefaultValue())
+         if (variables.containsKey(varSpec.getVariableName()))
          {
             Object var = variables.get(varSpec.getVariableName());
             String expanded = null;
-            /*
-             * The there is no supplied value for the variable and the default
-             * value is used.
-             */
-            if (var == null)
+            
+            boolean literal = true;
+            if (var != null)
             {
-               var = varSpec.getDefaultValue();
+               literal = var.getClass().isPrimitive();
+               if (var.getClass().isArray())
+               {
+                  var = arrayToList(var);
+               }
+            }
+
+            if (!literal && varSpec.getModifier() == Modifier.EXPLODE)
+            {
+               VarExploder exploder = VarExploderFactory.getExploder(var, varSpec);
+               expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
+            }
+            if (varSpec.getModifier() != Modifier.EXPLODE && var instanceof VarExploder)
+            {
+               throw new VariableExpansionException(varSpec.getVariableName() + " was passed a "
+                     + VarExploder.class.getSimpleName() + " but the variable did not include the explode modifer.");
             }
             /*
              * The variable value contains a list of values
@@ -167,9 +158,9 @@ public final class RFC6570UriTemplate extends UriTemplate
             {
                expanded = null;
             }
-            else
+            else if (expanded == null)
             {
-               expanded = this.expandStringValue(operator, varSpec, var.toString(), VarFormat.SINGLE);
+               expanded = this.expandStringValue(operator, varSpec, var.toString(), VarSpec.VarFormat.SINGLE);
             }
             if (expanded != null)
             {
@@ -182,30 +173,30 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param operator
     * @param varSpec
     * @param variable
     * @return
     */
-   private String expandCollection(Op operator, VarSpec varSpec, Collection<?> variable)
+   private String expandCollection(Operator operator, VarSpec varSpec, Collection<?> variable)
    {
       List<String> stringValues = new ArrayList<String>();
       Iterator<?> i = variable.iterator();
-      String joiner = operator.getJoiner();
+      String joiner = operator.getSeparator();
       if (varSpec.getModifier() == Modifier.EXPLODE)
       {
-         joiner = operator.getExplodeJoiner();
+         joiner = operator.getExplodeSeparator();
       }
       else
       {
-         joiner = operator.getListJoiner();
+         joiner = operator.getListSeparator();
       }
       while (i.hasNext())
       {
          String value = i.next().toString();
-         stringValues.add(expandStringValue(operator, varSpec, value, VarFormat.ARRAY));
+         stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));
       }
 
       if (varSpec.getModifier() != Modifier.EXPLODE && operator.useVarNameWhenExploded())
@@ -216,14 +207,14 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param operator
     * @param varSpec
     * @param variable
     * @return
     */
-   private String expandMap(Op operator, VarSpec varSpec, Map<String, Object> variable)
+   private String expandMap(Operator operator, VarSpec varSpec, Map<String, Object> variable)
    {
       List<String> stringValues = new ArrayList<String>();
       String pairJoiner = "=";
@@ -231,24 +222,24 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
          pairJoiner = ",";
       }
-      String joiner = operator.getJoiner();
+      String joiner = operator.getSeparator();
       if (varSpec.getModifier() != Modifier.EXPLODE)
       {
-         joiner = operator.getListJoiner();
+         joiner = operator.getListSeparator();
       }
       for (Entry<String, Object> entry : variable.entrySet())
       {
 
          String key = entry.getKey();
 
-         String pair = expandStringValue(operator, varSpec, key, VarFormat.PAIRS) + pairJoiner
-               + expandStringValue(operator, varSpec, entry.getValue().toString(), VarFormat.PAIRS);
+         String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
+               + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
 
          stringValues.add(pair);
       }
 
       if (varSpec.getModifier() != Modifier.EXPLODE
-            && (operator == Op.MATRIX || operator == Op.QUERY || operator == Op.CONTINUATION))
+            && (operator == Operator.MATRIX || operator == Operator.QUERY || operator == Operator.CONTINUATION))
       {
          return varSpec.getVariableName() + "=" + joinParts(joiner, stringValues);
       }
@@ -257,7 +248,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param operator
     * @param varSpec
@@ -265,10 +256,10 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param format
     * @return
     */
-   private String expandStringValue(Op operator, VarSpec varSpec, String variable, VarFormat format)
+   private String expandStringValue(Operator operator, VarSpec varSpec, String variable, VarSpec.VarFormat format)
    {
       String expanded = "";
-      // TODO: if the value is not a string, it needs to raise an exception.
+
       if (varSpec.getModifier() == Modifier.PREFIX)
       {
          int position = varSpec.getPosition();
@@ -277,34 +268,34 @@ public final class RFC6570UriTemplate extends UriTemplate
             variable = variable.substring(0, position);
          }
       }
-      if (operator == Op.NAME_LABEL || operator == Op.RESERVED)
+      // TODO: The URI encoding logic here is pretty hackish, needs help!
+      if (operator == Operator.NAME_LABEL || operator == Operator.RESERVED)
       {
          expanded = variable.replaceAll("%", "%25").replaceAll(" ", "%20");
       }
-      else if (operator == Op.FRAGMENT)
+      else if (operator == Operator.FRAGMENT)
       {
          expanded = UriUtil.encodeUri(variable);
       }
       else
       {
-         //TODO: Find a better encoder
          try
          {
-            expanded = urlCodec.encode(variable).replaceAll("\\+", "%20");
+            expanded = URLEncoder.encode(variable, "UTF-8").replaceAll("\\+", "%20");
          }
-         catch (EncoderException e)
+         catch (UnsupportedEncodingException e)
          {
-            throw new RuntimeException(e);
+            throw new VariableExpansionException(e);
          }
       }
 
       if (operator.useQueryString())
       {
-         if (expanded.isEmpty() && !operator.getJoiner().equals("&"))
+         if (expanded.isEmpty() && !operator.getSeparator().equals("&"))
          {
             expanded = varSpec.getValue();
          }
-         else if (format == VarFormat.SINGLE)
+         else if (format == VarSpec.VarFormat.SINGLE)
          {
             expanded = varSpec.getVariableName() + "=" + expanded;
          }
@@ -317,7 +308,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             }
             else if (varSpec.getModifier() == Modifier.EXPLODE)
             {
-               if (operator.useVarNameWhenExploded() && format != VarFormat.PAIRS)
+               if (operator.useVarNameWhenExploded() && format != VarSpec.VarFormat.PAIRS)
                {
                   expanded = varSpec.getVariableName() + "=" + expanded;
                }
@@ -328,7 +319,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param joiner
     * @param parts
@@ -364,7 +355,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param token
     * @return
@@ -372,11 +363,11 @@ public final class RFC6570UriTemplate extends UriTemplate
    private String buildVarSpecs(String token)
    {
       // Check for URI operators
-      Op operator = Op.NONE;
+      Operator operator = Operator.NONE;
       String firstChar = token.substring(0, 1);
       if (containsOperator(firstChar))
       {
-         operator = Op.fromOpCode(firstChar);
+         operator = Operator.fromOpCode(firstChar);
          token = token.substring(1, token.length());
       }
 
@@ -412,25 +403,24 @@ public final class RFC6570UriTemplate extends UriTemplate
             vars.add(new VarSpec(value, Modifier.NONE));
          }
       }
-      return expandMatch(operator, vars);
+      return findExpressions(operator, vars);
 
    }
 
    /**
-    * FIXME Comment this
+    * Takes an array of objects and convertes them to a {@link List}.
     * 
-    * @param op
+    * @param array
     * @return
     */
-   private boolean containsOperator(String op)
+   private List<Object> arrayToList(Object array)
    {
-      for (String operator : OPERATORS)
+      List<Object> list = new ArrayList<Object>();
+      int length = Array.getLength(array);
+      for (int i = 0; i < length; i++)
       {
-         if (operator.equals(op))
-         {
-            return true;
-         }
+         list.add(Array.get(array, i));
       }
-      return false;
+      return list;
    }
 }

@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.damnhandy.uri.template;
+package com.damnhandy.uri.template.conformance;
 
 import java.io.File;
 import java.util.Collection;
@@ -10,14 +10,13 @@ import java.util.Map;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * A TestReservedExpansion.
+ * A TestFragmentExpansion.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public class TestReservedExpansion extends AbstractUriTemplateTest
+public class TestFragmentExpansion extends AbstractUriTemplateConformanceTest
 {
-
    /**
     * FIXME Comment this
     * 
@@ -27,22 +26,22 @@ public class TestReservedExpansion extends AbstractUriTemplateTest
    @Parameters
    public static Collection<Object[]> testData() throws Exception
    {
-      File file = new File("./src/test/resources/reserved-expansion.json");
+      File file = new File("./src/test/resources/fragment-expansion.json");
       return loadTestData(file);
    }
 
    /**
     * 
-    * Create a new TestReservedExpansion.
+    * Create a new TestFragmentExpansion.
     * 
     * @param vars
     * @param template
     * @param expected
     * @param testsuite
     */
-   public TestReservedExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestFragmentExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
    {
-      // FIXME TestReservedExpansion constructor
+      // FIXME TestFragmentExpansion constructor
       super(vars, template, expected, testsuite);
    }
 

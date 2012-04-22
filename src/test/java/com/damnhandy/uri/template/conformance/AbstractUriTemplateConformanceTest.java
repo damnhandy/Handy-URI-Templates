@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.damnhandy.uri.template;
+package com.damnhandy.uri.template.conformance;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,12 +19,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import com.damnhandy.uri.template.UriTemplate;
+
 /**
  * @author <a href="mailto:ryan@damnhandy.com">Ryan J. McDonough</a>
  *
  */
 @RunWith(Parameterized.class)
-public abstract class AbstractUriTemplateTest
+public abstract class AbstractUriTemplateConformanceTest
 {
 
    /**
@@ -90,7 +92,7 @@ public abstract class AbstractUriTemplateTest
     * @param template
     * @param expected
     */
-   public AbstractUriTemplateTest(Map<String, Object> vars, String template, String expected, String testsuite)
+   public AbstractUriTemplateConformanceTest(Map<String, Object> vars, String template, String expected, String testsuite)
    {
       this.template = template;
       this.expected = expected;
