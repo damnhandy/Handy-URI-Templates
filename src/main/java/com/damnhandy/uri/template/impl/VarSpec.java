@@ -3,7 +3,6 @@
  */
 package com.damnhandy.uri.template.impl;
 
-import com.damnhandy.uri.template.UriTemplate.Modifier;
 
 /**
  * A VarSpec.
@@ -13,6 +12,10 @@ import com.damnhandy.uri.template.UriTemplate.Modifier;
  */
 public final class VarSpec
 {
+   public static enum VarFormat {
+      SINGLE, ARRAY, PAIRS;
+   }
+
    /**
     * 
     */
@@ -33,10 +36,6 @@ public final class VarSpec
     */
    private String variableName;
 
-   /**
-    * 
-    */
-   private String defaultValue;
 
    /**
     * Create a new VarSpec.
@@ -128,35 +127,8 @@ public final class VarSpec
       return variableName;
    }
 
-   /**
-    * FIXME Comment this
-    * 
-    * @return
-    */
-   public boolean hasDefaultValue()
-   {
-      return (defaultValue != null);
-   }
 
-   /**
-    * Get the defaultValue.
-    * 
-    * @return the defaultValue.
-    */
-   public String getDefaultValue()
-   {
-      return defaultValue;
-   }
 
-   /**
-    * Set the defaultValue.
-    * 
-    * @param defaultValue The defaultValue to set.
-    */
-   public void setDefaultValue(String defaultValue)
-   {
-      this.defaultValue = defaultValue;
-   }
 
    @Override
    public String toString()
