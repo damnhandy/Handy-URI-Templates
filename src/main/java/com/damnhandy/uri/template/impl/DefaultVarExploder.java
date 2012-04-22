@@ -10,8 +10,8 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.damnhandy.uri.template.UriTransient;
 import com.damnhandy.uri.template.VarExploder;
@@ -64,7 +64,7 @@ public class DefaultVarExploder implements VarExploder
    /**
     * The objects properties that have been extracted to a {@link Map}
     */
-   private Map<String, Object> values = new HashMap<String, Object>();
+   private Map<String, Object> values = new TreeMap<String, Object>();
 
    /**
     * 

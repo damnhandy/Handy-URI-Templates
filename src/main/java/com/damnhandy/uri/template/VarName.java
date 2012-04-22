@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 @Documented
 @Retention(RUNTIME)

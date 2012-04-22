@@ -42,15 +42,15 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * Expand the URI template using the supplied variables
+    * Expand the URI template using the supplied values
     * 
-    * @param variables The variables that will be used in the expansion
+    * @param values The values that will be used in the expansion
     * @return the expanded URI as a String
     */
    @Override
    public String expand(Map<String, Object> vars)
    {
-      this.variables = vars;
+      this.values = vars;
       return expand();
    }
 
@@ -112,9 +112,9 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       for (VarSpec varSpec : varSpecs)
       {
-         if (variables.containsKey(varSpec.getVariableName()))
+         if (values.containsKey(varSpec.getVariableName()))
          {
-            Object var = variables.get(varSpec.getVariableName());
+            Object var = values.get(varSpec.getVariableName());
             String expanded = null;
             
             boolean literal = true;

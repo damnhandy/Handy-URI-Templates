@@ -4,7 +4,8 @@
 package com.damnhandy.uri.template;
 
 /**
- * A ExtendedAddress.
+ * A subclass of {@link Address} to verify that field-level annotation are still being 
+ * picked up by the {@link DefaultVarExploder}.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $

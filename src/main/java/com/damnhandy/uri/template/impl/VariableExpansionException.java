@@ -4,7 +4,7 @@
 package com.damnhandy.uri.template.impl;
 
 /**
- * A VariableExpansionException.
+ *
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -21,7 +21,7 @@ public class VariableExpansionException extends RuntimeException
     */
    public VariableExpansionException()
    {
-      // FIXME VariableExpansionException constructor
+      
 
    }
 

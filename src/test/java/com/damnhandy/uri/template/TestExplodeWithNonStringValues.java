@@ -3,8 +3,6 @@
  */
 package com.damnhandy.uri.template;
 
-import java.util.Date;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -23,15 +21,6 @@ public class TestExplodeWithNonStringValues
    public void testExpandInteger() throws Exception
    {
       String result = UriTemplate.create(expression).set("foo", new Integer(300)).expand();
-      System.out.println(result);
-      Assert.assertNotNull(result);
-   }
-
-   @Test
-   public void testExpandDate() throws Exception
-   {
-      String result = UriTemplate.create(expression).set("foo", new Date()).expand();
-      System.out.println(result);
-      Assert.assertNotNull(result);
+      Assert.assertEquals("/3/300", result);
    }
 }

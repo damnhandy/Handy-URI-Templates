@@ -13,10 +13,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Types 
+ * Allows a type to specify a {@link VarExploder} to be used when expanding
+ * a Java object under the explode modifier.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 @Documented
 @Retention(RUNTIME)
@@ -24,7 +26,7 @@ import java.lang.annotation.Target;
 public @interface ExplodeWith {
 
    /**
-    * FIXME Comment this
+    * The class name of the {@link VarExploder}
     * 
     * @return
     */

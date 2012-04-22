@@ -13,10 +13,11 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 
 /**
  * 
- * A UriTemplate.
+ * A generalized API for interacting with multiple variations of URI templates.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 public abstract class UriTemplate
 {
@@ -31,14 +32,14 @@ public abstract class UriTemplate
    public static final String[] OPERATORS = {"+", "#", ".", "/", ";", "?", "&"};
 
    /**
-    * 
+    * The URI template
     */
    protected String template;
 
    /**
-    * 
+    * The collection of values that will be applied to the URI template in the expansion process.
     */
-   protected Map<String, Object> variables = new HashMap<String, Object>();
+   protected Map<String, Object> values = new HashMap<String, Object>();
 
    /**
     * 
@@ -62,10 +63,11 @@ public abstract class UriTemplate
    }
 
    /**
-    * 
+    * Helper method to set an expand a URI template.
     * 
     * @param template
-    * @param variables
+    * @param values
+    * @since 1.0
     * @return
     */
    public static String expand(String expression, Map<String, Object> variables)
@@ -80,65 +82,73 @@ public abstract class UriTemplate
     * 
     * @param var
     * @param value
+    * @since 1.0
     * @return
     */
    public UriTemplate set(String var, Object value)
    {
-      variables.put(var, value);
+      values.put(var, value);
       return this;
    }
 
    /**
-    * Sets a Date value into the list of variable substi
+    * Sets a Date value into the list of variable substitutions using the
+    * default {@link DateFormat}.
     * 
     * @param var
     * @param value
+    * @since 1.0
     * @return
+    * 
     */
    public UriTemplate set(String var, Date value)
    {
       String date = defaultDateFormat.format(value);
-      variables.put(var, date);
+      values.put(var, date);
       return this;
    }
 
    /**
-    * 
+    * Sets a Date value into the list of variable substitutions using a
+    * user defined {@link DateFormat}.
     * 
     * @param var
     * @param value
     * @param format
+    * @since 1.0
     * @return
     */
    public UriTemplate set(String var, Date value, DateFormat format)
    {
-      variables.put(var, format.format(value));
+      values.put(var, format.format(value));
       return this;
    }
 
    /**
+    * Uses the supplied {@link Map} of values
     * 
-    * 
-    * @param variables
+    * @param values
+    * @since 1.0
     * @return
     */
-   public UriTemplate setVars(Map<String, Object> variables)
+   public UriTemplate setVars(Map<String, Object> values)
    {
-      this.variables = variables;
+      this.values = values;
       return this;
    }
 
    /**
-    * Expand the URI template using the supplied variables
+    * Expand the URI template using the supplied values
     * 
-    * @param vars The variables that will be used in the expansion
+    * @param vars The values that will be used in the expansion
+    * @since 1.0
     * @return the expanded URI as a String
     */
    public abstract String expand(Map<String, Object> vars);
 
    /**
     * Applies variable substitution the URI Template and returns the expanded URI.
-    * 
+    * @since 1.0
     * @return
     */
    public abstract String expand();

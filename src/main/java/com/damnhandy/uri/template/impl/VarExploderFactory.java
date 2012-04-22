@@ -24,7 +24,7 @@ public final class VarExploderFactory
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param varValue
     * @return
@@ -92,7 +92,7 @@ public final class VarExploderFactory
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @param message
     * @param e

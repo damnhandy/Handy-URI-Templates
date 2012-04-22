@@ -40,6 +40,7 @@ import com.damnhandy.uri.template.impl.DefaultVarExploder;
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 public interface VarExploder
 {
