@@ -36,7 +36,7 @@ Values that are not Strings are rendered into the URI will have its `toString()`
 
 The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values an associative array of (name, value) pairs. Handy URI templates always treats lists as java.util.List and name/value pairs as a java.util.Map.  
 
-## [composite]POJOs as Composite Values
+## POJOs as Composite Values
 
 A VarExploder is invoked when an explode modifier "*" is encountered within a variable name within a URI template expression and the replacement value is a complex type, such a some type of POJO. For most use cases, the DefaultVarExploder will be sufficient. Please refer to the DefaultVarExploder JavaDoc for more details on how it works.
 
