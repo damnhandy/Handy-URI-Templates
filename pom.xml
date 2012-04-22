@@ -18,6 +18,13 @@
 		<connection>scm:git://github.com/damnhandy/Handy-URI-Templates.git</connection>
 		<developerConnection>scm:git://github.com/damnhandy/Handy-URI-Templates.git</developerConnection>
 	</scm>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<repositories>
 		<repository>
 			<id>OpenRDF</id>
@@ -116,7 +123,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 
@@ -129,34 +136,6 @@
 			<version>2.7.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.concordion</groupId>
-			<artifactId>concordion</artifactId>
-			<version>1.4.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.concordion</groupId>
-			<artifactId>concordion-extensions</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-
-
-		<!-- SLF4J -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.6</version>
-		</dependency>
 		<!-- JUnit -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -211,7 +190,6 @@
 			<version>1.6.4</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-	
+
 </project>
