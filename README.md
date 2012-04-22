@@ -64,7 +64,7 @@ And this Java object for an address:
 	
 The expanded URI will be:
 
-	/mapper?state=CA&city=Newport%20Beach
+	/mapper?city=Newport%20Beach&state=CA
  
 The DefaultVarExploder breaks down the object properties as follows:
 
@@ -72,11 +72,5 @@ The DefaultVarExploder breaks down the object properties as follows:
 * Getters or fields annotated with UriTransient will NOT included in the list
 * By default, the property name is used as the label in the URI. This can be overridden by placing the @VarName annotation on the field or getter method and specifying a name.
 * Field level annotation take priority of getter annotations
+* Property names are sorted in alphabetical order
 
-
-## Future Plans
-
-In addition to making the implementation fully compliant with RFC6570, I'm considering the following:
-
-* Include more options other than java.util.Map to supply parameter values. For example, it would be helpful to be able to explode a POJO into a URI parameter.
-* A URI Template Builder that can be used to produce URI Template strings for use in clients.
