@@ -27,9 +27,9 @@
 	</prerequisites>
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
 	<scm>
-		<url>https://github.com/damnhandy/Handy-URI-Templates</url>
-		<connection>scm:git:git@github.com/damnhandy/Handy-URI-Templates.git</connection>
-		<developerConnection>scm:git:git@github.com/damnhandy/Handy-URI-Templates.git</developerConnection>
+		<url>git@github.com:damnhandy/Handy-URI-Templates.git</url>
+		<connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
+		<developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
 	</scm>
 	<licenses>
 		<license>
