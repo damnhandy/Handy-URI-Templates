@@ -7,7 +7,7 @@
 	</parent>
 	<groupId>com.damnhhandy</groupId>
 	<artifactId>handy-uri-templates</artifactId>
-	<version>1.0.0-B1</version>
+	<version>1.0.0-B2-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 	<description>Handy URI Templates</description>
 	
