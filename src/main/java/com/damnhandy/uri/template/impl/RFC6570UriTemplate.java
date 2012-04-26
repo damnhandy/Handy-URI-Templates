@@ -3,11 +3,7 @@
  */
 package com.damnhandy.uri.template.impl;
 
-import info.aduna.net.UriUtil;
-
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.damnhandy.uri.template.UriTemplate;
+import com.damnhandy.uri.template.UriUtil;
 import com.damnhandy.uri.template.VarExploder;
 
 /**
@@ -116,7 +113,7 @@ public final class RFC6570UriTemplate extends UriTemplate
          {
             Object var = values.get(varSpec.getVariableName());
             String expanded = null;
-            
+
             boolean literal = true;
             if (var != null)
             {
@@ -268,25 +265,14 @@ public final class RFC6570UriTemplate extends UriTemplate
             variable = variable.substring(0, position);
          }
       }
-      // TODO: The URI encoding logic here is pretty hackish, needs help!
-      if (operator == Operator.NAME_LABEL || operator == Operator.RESERVED)
+
+      if (operator == Operator.FRAGMENT || operator == Operator.RESERVED)
       {
-         expanded = variable.replaceAll("%", "%25").replaceAll(" ", "%20");
-      }
-      else if (operator == Operator.FRAGMENT)
-      {
-         expanded = UriUtil.encodeUri(variable);
+         expanded = UriUtil.encodeFragment(variable);
       }
       else
       {
-         try
-         {
-            expanded = URLEncoder.encode(variable, "UTF-8").replaceAll("\\+", "%20");
-         }
-         catch (UnsupportedEncodingException e)
-         {
-            throw new VariableExpansionException(e);
-         }
+         expanded = UriUtil.encode(variable);
       }
 
       if (operator.useQueryString())
@@ -302,11 +288,7 @@ public final class RFC6570UriTemplate extends UriTemplate
 
          else
          {
-            if (expanded.isEmpty())
-            {
-               expanded = varSpec.getValue();
-            }
-            else if (varSpec.getModifier() == Modifier.EXPLODE)
+            if (varSpec.getModifier() == Modifier.EXPLODE)
             {
                if (operator.useVarNameWhenExploded() && format != VarSpec.VarFormat.PAIRS)
                {

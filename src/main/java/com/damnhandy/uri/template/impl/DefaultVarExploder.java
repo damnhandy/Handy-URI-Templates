@@ -74,12 +74,11 @@ public class DefaultVarExploder implements VarExploder
     */
    public DefaultVarExploder(Object source)
    {
-      this.source = source;
-      this.initValues();
+      this.setSource(source);
    }
 
    /**
-    * FIXME Comment this
+    * 
     * 
     * @return
     */
@@ -89,8 +88,15 @@ public class DefaultVarExploder implements VarExploder
       return values;
    }
 
+
+   public void setSource(Object source)
+   {
+      this.source = source;
+      this.initValues();
+   }
+
    /**
-    * FIXME Comment this
+    * 
     *
     */
    private void initValues()

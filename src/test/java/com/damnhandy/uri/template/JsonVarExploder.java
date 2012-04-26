@@ -26,11 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonVarExploder implements VarExploder
 {
-   
+
    private InputStream source;
-   
+
    private Map<String, Object> values;
-   
+
    /**
     * 
     * Create a new JsonVarExploder.
@@ -42,12 +42,12 @@ public class JsonVarExploder implements VarExploder
    {
       this(new FileInputStream(file));
    }
-   
-   public JsonVarExploder(String jsonText) 
+
+   public JsonVarExploder(String jsonText)
    {
       this(new ByteArrayInputStream(jsonText.getBytes()));
    }
-   
+
    /**
     * 
     * Create a new JsonVarExploder.
@@ -59,13 +59,15 @@ public class JsonVarExploder implements VarExploder
       this.source = in;
       initValues();
    }
-   
-   private void initValues() 
+
+   private void initValues()
    {
       ObjectMapper mapper = new ObjectMapper();
       try
       {
-         values = mapper.readValue(source, new TypeReference<Map<String, Object>>() { });
+         values = mapper.readValue(source, new TypeReference<Map<String, Object>>()
+         {
+         });
       }
       catch (JsonParseException e)
       {
@@ -80,7 +82,7 @@ public class JsonVarExploder implements VarExploder
          throw new VariableExpansionException(e);
       }
    }
-   
+
    @Override
    public Map<String, Object> getNameValuePairs()
    {

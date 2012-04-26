@@ -5,6 +5,7 @@ package com.damnhandy.uri.template;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.BitSet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,20 @@ public abstract class UriTemplate
    /**
     * 
     */
-   public static final String[] OPERATORS = {"+", "#", ".", "/", ";", "?", "&"};
+   public static final char[] OPERATORS = {'+', '#', '.', '/', ';', '?', '&'};
+
+   /**
+    * 
+    */
+   private static final BitSet OPERATOR_BITSET = new BitSet();
+
+   static
+   {
+      for (int i = 0; i < OPERATORS.length; i++)
+      {
+         OPERATOR_BITSET.set(OPERATORS[i]);
+      }
+   }
 
    /**
     * The URI template
@@ -161,14 +175,7 @@ public abstract class UriTemplate
     */
    protected boolean containsOperator(String op)
    {
-      for (String operator : UriTemplate.OPERATORS)
-      {
-         if (operator.equals(op))
-         {
-            return true;
-         }
-      }
-      return false;
+      return OPERATOR_BITSET.get(op.toCharArray()[0]);
    }
 
 }

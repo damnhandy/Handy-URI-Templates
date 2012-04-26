@@ -45,6 +45,7 @@ import com.damnhandy.uri.template.impl.DefaultVarExploder;
 public interface VarExploder
 {
 
+
    /**
     * Returns the properties of the source object a {@link Map} of 
     * name/value pairs.
