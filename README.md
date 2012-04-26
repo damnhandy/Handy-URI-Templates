@@ -44,11 +44,6 @@ Should the DefaultVarExploder not be suitable for your needs, custom VarExploder
 
 	UriTemplate.create("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
  
-Or by annotating your object with the ExplodeWith annotation:
-
-	@ExplodeWith(MyCustomVarExploder.class)
-	public class Address {...
- 
 Note: VarExploder implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, the Object.toString() method is invoked. Usually, this is not the behavior one is looking for.
 
 The DefaultVarExploder is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. Given the following URI template expression:
