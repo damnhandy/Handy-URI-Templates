@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -10,12 +11,12 @@
 	<version>1.0.0-B2-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 	<description>Handy URI Templates</description>
-	
+
 	<issueManagement>
 		<system>Github Issues</system>
 		<url>https://github.com/damnhandy/Handy-URI-Templates/issues</url>
 	</issueManagement>
-	
+
 	<properties>
 		<http.client>4.1.1</http.client>
 		<jackson.version>2.0.0</jackson.version>
@@ -45,18 +46,31 @@
 			<organizationUrl>http://www.damnhandy.com/</organizationUrl>
 		</developer>
 	</developers>
+
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Release</name>
+			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			      
+		</repository>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>sonatype-nexus-snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
-		<defaultGoal>install</defaultGoal>
-		<extensions>
-			<!-- Enabling the use of SSH -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>2.2</version>
-			</extension>
-		</extensions>
+		
+
 
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -72,7 +86,7 @@
 								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 							</configuration>
-							
+
 							<reports>
 								<report>summary</report>
 								<report>modules</report>
@@ -174,7 +188,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 
