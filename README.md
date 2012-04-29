@@ -69,7 +69,7 @@ A VarExploder is invoked when an explode modifier "*" is encountered within a va
 
 Should the DefaultVarExploder not be suitable for your needs, custom VarExploder implementations can be added by rolling your own implementation. A custom VarExploder implementation can be registered in one of two ways. By wrapping your object in your VarExploder:
 
-	UriTemplate.create("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
+	UriTemplate.expression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
  
 Note: VarExploder implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, the Object.toString() method is invoked. Usually, this is not the behavior one is looking for.
 
