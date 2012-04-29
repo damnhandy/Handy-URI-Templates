@@ -43,7 +43,7 @@ Values that are not Strings are rendered into the URI will have its `toString()`
 
 ## Using with HTTP Clients
 
-The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the 
+The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
 
 	  RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
