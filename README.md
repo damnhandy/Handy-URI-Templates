@@ -1,6 +1,6 @@
 # Handy URI Templates
 
-This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. 
+This project is a compliant implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java supporting up to level 4 expressions.
 
 ## Maven
 
