@@ -9,7 +9,7 @@ To use Handy URI Templates, you need to add the following dependency to your pom
 	<dependency>
 		<groupId>com.damnhhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.0.0-B3-SNAPSHOT</version>
+		<version>1.0.0.GA</version>
 	</dependency>
 
 ## Basic Usage
