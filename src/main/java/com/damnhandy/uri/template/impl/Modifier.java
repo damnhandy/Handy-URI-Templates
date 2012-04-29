@@ -3,6 +3,13 @@
  */
 package com.damnhandy.uri.template.impl;
 
+/**
+ * 
+ *
+ * 
+ * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
+ * @version $Revision: 1.1 $
+ */
 public enum Modifier {
 
    NONE         ("na"),
@@ -34,23 +41,5 @@ public enum Modifier {
    public String getValue()
    {
       return value;
-   }
-
-   /**
-    * 
-    * 
-    * @param value
-    * @return
-    */
-   public static Modifier fromValue(String value)
-   {
-      for (Modifier m : Modifier.values())
-      {
-         if (m.getValue().equalsIgnoreCase(value))
-         {
-            return m;
-         }
-      }
-      return null;
    }
 }

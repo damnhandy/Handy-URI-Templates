@@ -17,7 +17,7 @@ To use Handy URI Templates, you need to add the following dependency to your pom
 Using the library is simple:
 	
 	String uri = 
-		UriTemplate.expression("/{foo:1}{/foo,thing*}{?test1, test2}")
+		UriTemplate.fromExpression("/{foo:1}{/foo,thing*}{?test1, test2}")
 				   .set("foo", "one")
 				   .set("test1", "query")
 				   .set("test2", "blah")
@@ -47,7 +47,7 @@ The API can be used with existing HTTP frameworks like the most excellent [Async
 
 	  RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplate.expression("https://api.github.com/repos{/user,repo,function,id}")
+             UriTemplate.fromExpression("https://api.github.com/repos{/user,repo,function,id}")
                         .set("user", "damnhandy")
                         .set("repo", "Handy-URI-Templates")
                         .set("function","commits")
@@ -65,13 +65,13 @@ The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc
 
 ## POJOs as Composite Values
 
-A VarExploder is invoked when an explode modifier "*" is encountered within a variable name within a URI template expression and the replacement value is a complex type, such a some type of POJO. For most use cases, the DefaultVarExploder will be sufficient. Please refer to the DefaultVarExploder JavaDoc for more details on how it works.
+A `VarExploder` is invoked when an explode modifier "*" is encountered within a variable name within a URI template expression and the replacement value is a complex type, such a some type of POJO. For most use cases, the `DefaultVarExplode`r will be sufficient. Please refer to the `DefaultVarExploder` JavaDoc for more details on how it works.
 
-Should the DefaultVarExploder not be suitable for your needs, custom VarExploder implementations can be added by rolling your own implementation. A custom VarExploder implementation can be registered in one of two ways. By wrapping your object in your VarExploder:
+Should the `DefaultVarExploder` not be suitable for your needs, custom `VarExploder` implementations can be added by rolling your own implementation. A custom VarExploder implementation can be registered in one of two ways. By wrapping your object in your VarExploder:
 
-	UriTemplate.expression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
+	UriTemplate.fromExpression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
  
-Note: VarExploder implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, the Object.toString() method is invoked. Usually, this is not the behavior one is looking for.
+Note: VarExploder implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
 
 The DefaultVarExploder is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. Given the following URI template expression:
 
@@ -82,7 +82,7 @@ And this Java object for an address:
 	Address address = new Address();
 	address.setState("CA");
 	address.setCity("Newport Beach");
-	String result = UriTemplate.expression("/mapper{?address*}").set("address", address).expand();
+	String result = UriTemplate.fromExpression("/mapper{?address*}").set("address", address).expand();
 	
 The expanded URI will be:
 

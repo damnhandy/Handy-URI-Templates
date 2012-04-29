@@ -5,8 +5,10 @@ package com.damnhandy.uri.template.impl;
 
 /**
  * <p>
- * Represents an operator in a URI Template.
+ * An enum representing an operator in a URI Template.
  * </p>
+ * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
+ * @version $Revision: 1.1 $
  */
 public enum Operator {
 

@@ -4,12 +4,12 @@
 package com.damnhandy.uri.template.impl;
 
 /**
- * A UriEncodingException.
+ * 
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public class UriEncodingException extends RuntimeException
+public class UriEncodingException extends VariableExpansionException
 {
 
    /** The serialVersionUID */

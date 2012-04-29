@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.damnhandy.uri.template.impl.DefaultVarExploder;
 
 /**
  * Simple test to make sure that the properties of an object are correctly 

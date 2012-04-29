@@ -14,9 +14,35 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 
 /**
  * <p>
- * 
+ * This is the main class for creating and manipulating URI templates. This project implements
+ * <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a> and produces output 
+ * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-1.2">levels
+ * 1 through 4</a> as well as supports composite types. In addition to supporting {@link Map} 
+ * and {@link List} values as composite types, the library also supports the use of Java objects
+ * as well. Please see the {@link VarExploder} and {@link DefaultVarExploder} for more info. 
  * </p>
- *
+ * <h3>Basic Usage:</h3>
+ * <p>
+ * There are many ways to use this library. The simplest way is to create a template from a
+ * URI template expression string:
+ * </p>
+ * <pre>
+ * UriTemplate template = UriTemplate.fromExpression("http://example.com/search{?q,lang}");
+ * </pre>
+ * <p>
+ * Replacement values are added by calling the {@link #set(String, Object)} method on the template:
+ * </p>
+ * <pre>
+ * template.set("q","cat")
+ *         .set("lang","en");                               
+ * String uri = template.expand();
+ * </pre>
+ * <p>The {@link #expand()} method will replace the variable names with the supplied values
+ * and return the following URI:</p>
+ * <pre>
+ * http://example.com/search?q=cat&lang=en
+ * </pre>
+ * 
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -50,7 +76,7 @@ public abstract class UriTemplate
    /**
     * The URI expression
     */
-   protected String expression;
+   private StringBuilder expressionBuffer;
 
    /**
     * The collection of values that will be applied to the URI expression in the
@@ -66,60 +92,32 @@ public abstract class UriTemplate
     * @return
     * @since 1.0
     */
-   public static final UriTemplate expression(String expression)
+   public static final UriTemplate fromExpression(String expression)
    {
       return new RFC6570UriTemplate(expression);
    }
    
    /**
     * <p>
-    * Creates a {@link UriTemplate} from a base URI template expression, such as:
-    * </p>
-    * <pre>
-    * http://api.github.com
-    * </pre>
-    * <p>
-    * And appending a child path such as:
-    * </p>
-    * <pre>
-    * /repos/{user}/{repo}/commits
-    * </pre>
-    * <p>The resulting expression would result in:</p>
-    * <pre>
-    * http://api.github.com/repos/{user}/{repo}/commits
-    * </pre>
-    * @param baseExpression
-    * @param expression
-    * @return
-    * @since 1.0
-    */
-   public static UriTemplate expressionWithBase(String baseExpression, String expression)
-   {
-      StringBuilder b = new StringBuilder(baseExpression);
-      b.append(expression);
-      return expression(b.toString());
-   }
-   
-   /**
     * Creates a new {@link UriTemplate} from a root {@link UriTemplate}. This
-    * method work similar to {@link UriTemplateFactory#expressionWithBase(String, String)} with
-    * the difference being that the variables from the base template will be
-    * copied to the new {@link UriTemplate}. 
-    * 
+    * method will create a new {@link UriTemplate} from the base and copy the variables  
+    * from the base template to the new {@link UriTemplate}. 
+    * </p>
     * This method is useful when the base expression is less volatile than the child
-    * expression. 
-    * 
+    * expression and you want to merge the two.
+    * </p>
     * @param base
-    * @param expression
     * @return
     * @since 1.0
     */
-   public static UriTemplate expressionWithBase(UriTemplate base, String expression)
+   public static UriTemplate fromTemplate(UriTemplate base)
    {
-      UriTemplate template = expressionWithBase(base.getExpression(), expression);
+      UriTemplate template = fromExpression(base.getExpression());
       template.set(base.getValues());
       return template;
    }
+
+   
 
    /**
     * Expands the given expression string using the variable replacements
@@ -131,7 +129,7 @@ public abstract class UriTemplate
     * @return
     */
    public static String expand(String expression, Map<String, Object> values) {
-       UriTemplate template = expression(expression);
+       UriTemplate template = fromExpression(expression);
        template.set(values);
        return template.expand();
    }
@@ -144,9 +142,48 @@ public abstract class UriTemplate
     */
    public String getExpression()
    {
-      return expression;
+      return expressionBuffer.toString();
+   }
+   
+   /**
+    * <p>
+    * Appends the expression from a base URI template expression, such as:
+    * </p>
+    * <pre>
+    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com");
+    * </pre>
+    * 
+    * <p>
+    * A child expression can be appended by:
+    * </p>
+    * <pre>
+    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com")
+    *                                   .expression("/repos/{user}/{repo}/commits");
+    * 
+    * </pre>
+    * <p>The resulting expression would result in:</p>
+    * <pre>
+    * http://api.github.com/repos/{user}/{repo}/commits
+    * </pre>
+    * @param expression
+    * @return
+    * @since 1.0
+    * 
+    */
+   public UriTemplate expression(String expression)
+   {
+      if(expression == null)
+      {
+         return this;
+      }
+      this.expressionBuffer.append(expression.trim());
+      return this;
    }
 
+   protected void setExpression(String expression)
+   {
+      this.expressionBuffer = new StringBuilder(expression);
+   }
    /**
     * Returns the collection of name/value pairs contained in the instance.
     * 
@@ -164,9 +201,9 @@ public abstract class UriTemplate
     * @return
     * @since 1.0
     */
-   public UriTemplate setDefaultDateFormat(String dateFormatString)
+   public UriTemplate withDefaultDateFormat(String dateFormatString)
    {
-      return this.setDefaultDateFormat(new SimpleDateFormat(dateFormatString));
+      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));
    }
 
    /**
@@ -175,7 +212,7 @@ public abstract class UriTemplate
     * @return
     * @since 1.0
     */
-   public UriTemplate setDefaultDateFormat(DateFormat dateFormat)
+   public UriTemplate withDefaultDateFormat(DateFormat dateFormat)
    {
       defaultDateFormat = dateFormat;
       return this;

@@ -18,7 +18,7 @@ import com.damnhandy.uri.template.UriUtil;
 import com.damnhandy.uri.template.VarExploder;
 
 /**
- * A {@link AbstractUriTemplate} implementation that supports <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a>
+ * A {@link UriTemplate} implementation that supports <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a>
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -33,9 +33,9 @@ public final class RFC6570UriTemplate extends UriTemplate
     * 
     * @param expression
     */
-   public RFC6570UriTemplate(String template)
+   public RFC6570UriTemplate(String expression)
    {
-      this.expression = template;
+      this.setExpression(expression);
    }
 
    /**
@@ -58,7 +58,7 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    public String expand()
    {
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(expression);
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(getExpression());
       StringBuffer buffer = new StringBuffer();
       while (matcher.find())
       {

@@ -77,7 +77,8 @@ public class TestGitHubApis
       final CountDownLatch l = new CountDownLatch(1);
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplate.expressionWithBase(BASE, PATH_EXPRESSION)
+             UriTemplate.fromExpression(BASE)
+                        .expression(PATH_EXPRESSION)
                         .set("user", "damnhandy")
                         .set("repo", "Handy-URI-Templates")
                         .set("function","commits")
@@ -110,7 +111,8 @@ public class TestGitHubApis
       final CountDownLatch l = new CountDownLatch(1);
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-            UriTemplate.expressionWithBase(BASE, PATH_EXPRESSION)
+            UriTemplate.fromExpression(BASE)
+                       .expression(PATH_EXPRESSION)
                        .set("user", "damnhandy")
                        .set("repo", "Handy-URI-Templates")
                        .set("function","commits")

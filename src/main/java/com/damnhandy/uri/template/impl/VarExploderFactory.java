@@ -3,6 +3,7 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import com.damnhandy.uri.template.DefaultVarExploder;
 import com.damnhandy.uri.template.VarExploder;
 
 /**

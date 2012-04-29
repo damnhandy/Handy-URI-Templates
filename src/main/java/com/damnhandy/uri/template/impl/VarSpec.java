@@ -5,7 +5,7 @@ package com.damnhandy.uri.template.impl;
 
 
 /**
- * A VarSpec.
+ * Represents a variable in a URI template expression.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $

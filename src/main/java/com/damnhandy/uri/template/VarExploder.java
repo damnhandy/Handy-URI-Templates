@@ -5,14 +5,15 @@ package com.damnhandy.uri.template;
 
 import java.util.Map;
 
-import com.damnhandy.uri.template.impl.DefaultVarExploder;
+import com.damnhandy.uri.template.impl.VariableExpansionException;
+
 
 /**
  * 
  * <p>
  * A {@link VarExploder} is invoked when an explode modifier "*" is encountered within
  * a variable name within a URI expression expression and the replacement value is a complex 
- * type, such a some type of POJO. For most use cases, the {@link DefaultVarExploder} will be 
+ * type, such a some type of POJO or other data type. For most use cases, the {@link DefaultVarExploder} will be 
  * sufficient. Please refer to the {@link DefaultVarExploder} JavaDoc
  * for more details on how it works.
  * </p>
@@ -23,20 +24,18 @@ import com.damnhandy.uri.template.impl.DefaultVarExploder;
  * implementation can be registered in one of two ways. By wrapping your object in your {@link VarExploder}:
  * </p>
  * <pre>
- * AbstractUriTemplate.create("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
- * </pre>
- * <p>
- * Or by annotating your object with the {@link ExplodeWith} annotation:
- * </p>
- * <pre>
- * &#64;ExplodeWith(MyCustomVarExploder.class)
- * public class Address {...
+ * UriTemplate.fromExpression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
  * </pre>
  * <p>
  * <strong>Note:</strong> {@link VarExploder} implementations are <strong>ONLY</strong> invoked when the 
  * explode modifier "*" is declared in the URI Template expression. If the variable declaration does not 
- * specify the explode modifier, the {@link Object#toString()} method is invoked. Usually, this is not the
- * behavior one is looking for.
+ * specify the explode modifier, a {@link VariableExpansionException} will be raised.
+ * </p>
+ * 
+ * <p>
+ * Please see the unit test on example usage of a custom {@link VarExploder}.
+ * </p>
+ * 
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $

@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.damnhandy.uri.template.impl.DefaultVarExploder;
 
 /**
  * 
@@ -31,7 +30,7 @@ public class TestExplodeWithPOJO
       Address address = new Address();
       address.setState("CA");
       address.setCity("Newport Beach");
-      String result = UriTemplate.expression(EXPLODE_TEMPLATE).set("address", address).expand();
+      String result = UriTemplate.fromExpression(EXPLODE_TEMPLATE).set("address", address).expand();
 
       Assert.assertEquals("/mapper?city=Newport%20Beach&state=CA", result);
    }
@@ -42,7 +41,7 @@ public class TestExplodeWithPOJO
       Address address = new Address();
       address.setState("CA");
       address.setCity("Newport Beach");
-      String result = UriTemplate.expression(NON_EXPLODE_TEMPLATE).set("address", address).expand();
+      String result = UriTemplate.fromExpression(NON_EXPLODE_TEMPLATE).set("address", address).expand();
       Assert.assertNotSame("/mapper?state=CA&city=Newport%20Beach", result);
    }
 
@@ -55,7 +54,7 @@ public class TestExplodeWithPOJO
    public void testSimpleAddress() throws Exception
    {
       Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      String result = UriTemplate.expression(EXPLODE_TEMPLATE).set("address", address).expand();
+      String result = UriTemplate.fromExpression(EXPLODE_TEMPLATE).set("address", address).expand();
       Assert.assertEquals("/mapper?city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
    }
 
@@ -65,7 +64,7 @@ public class TestExplodeWithPOJO
       ExtendedAddress address = new ExtendedAddress("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
       address.setIgnored("This should be ignored");
       address.setLabel("A label");
-      String result = UriTemplate.expression(EXPLODE_TEMPLATE).set("address", address).expand();
+      String result = UriTemplate.fromExpression(EXPLODE_TEMPLATE).set("address", address).expand();
 
       Assert.assertEquals(
             "/mapper?city=Boston&country=USA&label=A%20label&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496",

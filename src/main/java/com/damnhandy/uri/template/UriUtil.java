@@ -11,8 +11,10 @@ import java.util.BitSet;
 import com.damnhandy.uri.template.impl.UriEncodingException;
 
 /**
+ * <p>
  * A light-weight utility class for applying encoding to values that are applied to 
- * expression values.
+ * expression values. 
+ * </p>
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $

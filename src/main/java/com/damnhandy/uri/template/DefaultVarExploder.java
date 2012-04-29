@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.damnhandy.uri.template.impl;
+package com.damnhandy.uri.template;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -13,14 +13,12 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.damnhandy.uri.template.UriTransient;
-import com.damnhandy.uri.template.VarExploder;
-import com.damnhandy.uri.template.VarName;
+import com.damnhandy.uri.template.impl.VariableExpansionException;
 
 /**
  * <p>
  * The {@link DefaultVarExploder} is a {@link VarExploder} implementation that takes in a Java object and
- * extracts the properties for use in a URI Template. Given the following URI expression expression: 
+ * extracts the properties for use in a URI Template. Given the following URI expression: 
  * </p>
  * <pre>
  * /mapper{?address*}
@@ -32,13 +30,13 @@ import com.damnhandy.uri.template.VarName;
  * Address address = new Address();
  * address.setState("CA");
  * address.setCity("Newport Beach");
- * String result = AbstractUriTemplate.create("/mapper{?address*}").set("address", address).expand();
+ * String result = UriTemplate.fromExpression("/mapper{?address*}").set("address", address).expand();
  * </pre>
  * <p>
  * The expanded URI will be:
  * </p>
  * <pre>
- * /mapper?state=CA&city=Newport%20Beach
+ * /mapper?city=Newport%20Beach&state=CA
  * </pre>
  * 
  * <p>
@@ -47,12 +45,16 @@ import com.damnhandy.uri.template.VarName;
  *  <li>All properties that contain a non-null return value will be included</li>
  *  <li>Getters or fields annotated with {@link UriTransient} will <b>NOT</b> included in the list</li>
  *  <li>By default, the property name is used as the label in the URI. This can be overridden by 
- *      placing the {@link @VarName} annotation on the field or getter method and specifying a name.</li>
+ *      placing the {@link VarName} annotation on the field or getter method and specifying a name.</li>
  *  <li>Field level annotation take priority of getter annotations</li>
  * </ul>
  * 
+ * @see VarName
+ * @see UriTransient
+ * @see VarExploder
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 public class DefaultVarExploder implements VarExploder
 {

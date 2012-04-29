@@ -21,23 +21,18 @@ import org.junit.Test;
  */
 public class TestWithDateFormats
 {
+   
+
 
    private static final String TEMPLATE = "/{date:4}/{date}";
 
+   
    private Date date;
 
    @Before
    public void setUp()
    {
-      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-      try
-      {
-         date = formatter.parse("2012-04-20T16:20:00.000-0400");
-      }
-      catch (ParseException e)
-      {
-         throw new RuntimeException(e);
-      }
+      date = formatDate("2012-04-20T16:20:00.000-0400");
    }
 
    /**
@@ -48,7 +43,7 @@ public class TestWithDateFormats
    @Test
    public void testWithDefaultDateFormat() throws Exception
    {
-      String uri = UriTemplate.expression(TEMPLATE).set("date", date).expand();
+      String uri = UriTemplate.fromExpression(TEMPLATE).set("date", date).expand();
       assertEquals("/2012/2012-04-20T16%3A20%3A00.000-0400", uri);
    }
 
@@ -61,7 +56,41 @@ public class TestWithDateFormats
    public void testWithCustomDateFormat() throws Exception
    {
       DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      String uri = UriTemplate.expression(TEMPLATE).set("date", date, format).expand();
+      String uri = UriTemplate.fromExpression(TEMPLATE).set("date", date, format).expand();
       assertEquals("/2012/2012-04-20", uri);
+   }
+   
+   @Test
+   public void testWithCustomDefaultDateFormat() throws Exception
+   {
+      UriTemplate template = UriTemplate.fromExpression(TEMPLATE)
+                                        .withDefaultDateFormat("yyyy-MM-dd")
+                                        .set("date",date);
+      assertEquals("/2012/2012-04-20", template.expand());
+   }
+   
+   @Test
+   public void testDateRangeQueryString() throws Exception
+   {
+      Date start = formatDate("2012-04-01T16:20:00.000-0400");
+      Date end = formatDate("2012-04-30T16:20:00.000-0400");
+      UriTemplate template = UriTemplate.fromExpression("/find{?start,end}")
+                                        .withDefaultDateFormat("yyyy-MM-dd")
+                                        .set("start",start)
+                                        .set("end", end);
+      assertEquals("/find?start=2012-04-01&end=2012-04-30",template.expand());
+   }
+   
+   private Date formatDate(String dateString)
+   {
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+      try
+      {
+         return formatter.parse(dateString);
+      }
+      catch (ParseException e)
+      {
+         throw new RuntimeException(e);
+      }
    }
 }
