@@ -24,7 +24,7 @@ import com.ning.http.client.Response;
 
 /**
  * <p>
- * Some simple tests to format UriTemplateFactory for the various GitHub APIs. This test assumes
+ * Some simple tests to format {@link UriTemplate} for the various GitHub APIs. This test assumes
  * that the following system properties are set:
  * </p>
  * <pre>
@@ -32,7 +32,7 @@ import com.ning.http.client.Response;
  * -Dgithub.password=<your github password>
  * </pre>
  * <p>
- * If the properties are set, the test will execute.
+ * If the properties are set, the test will not fail the build.
  * </p>
  * <p>This test demonstrates the utility of a single URI template that can be used
  * to express the majority of the functionality offered by the GitHub API. For this test,
