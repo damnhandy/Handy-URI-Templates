@@ -57,7 +57,7 @@ When `Request.getRawUrl()` is called, it will return:
 
 	"https://api.github.com/repos/damnhandy/Handy-URI-Templates/commits"
 
-Please have a look at the exmaple [test case](https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/examples/TestGitHubApis.java) for more details.
+Please have a look at the example [test case](https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/examples/TestGitHubApis.java) for more details.
 
 Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-ga/index.html) is just as similar.
 
