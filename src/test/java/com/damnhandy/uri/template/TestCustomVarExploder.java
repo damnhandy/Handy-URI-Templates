@@ -10,8 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.damnhandy.uri.template.UriTemplate;
-
 /**
  * A TestCustomVarExploder.
  * 

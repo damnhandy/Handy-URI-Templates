@@ -35,7 +35,7 @@ public class TestFormStyleQueryContinuation extends AbstractUriTemplateConforman
     * Create a new TestFormStyleQueryContinuation.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

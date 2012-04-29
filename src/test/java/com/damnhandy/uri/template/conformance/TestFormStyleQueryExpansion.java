@@ -36,7 +36,7 @@ public class TestFormStyleQueryExpansion extends AbstractUriTemplateConformanceT
     * Create a new TestFormStyleQueryExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

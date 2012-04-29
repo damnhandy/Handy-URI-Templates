@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.damnhandy.uri.template;
+package com.damnhandy.uri.template.impl;
 
 /**
  * A UriEncodingException.

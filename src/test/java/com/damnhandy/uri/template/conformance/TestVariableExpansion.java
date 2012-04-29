@@ -36,7 +36,7 @@ public class TestVariableExpansion extends AbstractUriTemplateConformanceTest
     * Create a new TestVariableExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

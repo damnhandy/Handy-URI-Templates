@@ -9,7 +9,7 @@
 	<artifactId>handy-uri-templates</artifactId>
 	<version>1.0.0-B3-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
-	<description>Handy URI Templates</description>
+	<description>Handy URI Templates is a URI Template processor supporting RFC6570 . The library allows clients to utilize templatized URIs and inject replacement variables and expand the template to create a URI.</description>
 
 	<issueManagement>
 		<system>Github Issues</system>
@@ -223,7 +223,6 @@
 
 	<dependencies>
 
-
 		<!-- JUnit -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -251,37 +250,13 @@
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- Apache HTTP Components -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>${http.client}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient-cache</artifactId>
-			<version>${http.client}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>${http.client}</version>
-			<scope>test</scope>
-		</dependency>
+		
 		<!-- Async HTTP Client -->
 		<dependency>
 			<groupId>com.ning</groupId>
 			<artifactId>async-http-client</artifactId>
 			<version>1.6.4</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>3.1.1.RELEASE</version>
 		</dependency>
 	</dependencies>
 

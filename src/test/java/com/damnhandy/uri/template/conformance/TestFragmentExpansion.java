@@ -35,7 +35,7 @@ public class TestFragmentExpansion extends AbstractUriTemplateConformanceTest
     * Create a new TestFragmentExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

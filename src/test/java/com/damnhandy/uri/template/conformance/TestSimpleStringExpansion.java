@@ -35,7 +35,7 @@ public class TestSimpleStringExpansion extends AbstractUriTemplateConformanceTes
     * Create a new TestSimpleStringExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

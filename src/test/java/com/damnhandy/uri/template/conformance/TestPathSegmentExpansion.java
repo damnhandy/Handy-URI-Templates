@@ -36,7 +36,7 @@ public class TestPathSegmentExpansion extends AbstractUriTemplateConformanceTest
     * Create a new TestPathSegmentExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

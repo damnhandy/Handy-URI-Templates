@@ -74,7 +74,7 @@ public abstract class AbstractUriTemplateConformanceTest
    private String testsuite;
 
    /**
-    * The template patter string
+    * The expression patter string
     */
    private String template;
 
@@ -89,7 +89,7 @@ public abstract class AbstractUriTemplateConformanceTest
    private Map<String, Object> variables;
 
    /**
-    * @param template
+    * @param expression
     * @param expected
     */
    public AbstractUriTemplateConformanceTest(Map<String, Object> vars, String template, String expected, String testsuite)
@@ -107,9 +107,9 @@ public abstract class AbstractUriTemplateConformanceTest
    @Test
    public void test() throws Exception
    {
-      UriTemplate t = UriTemplate.create(template);
+      UriTemplate t = UriTemplate.expression(template);
       String actual = t.expand(variables);
-      //String msg = testsuite + "->  Template: " + template + " Expected: " + expected + " Actual: " + actual;
+      //String msg = testsuite + "->  Template: " + expression + " Expected: " + expected + " Actual: " + actual;
       Assert.assertEquals(testsuite + "->  Template: " + template, expected, actual);
    }
 }

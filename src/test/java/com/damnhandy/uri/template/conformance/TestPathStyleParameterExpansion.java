@@ -36,7 +36,7 @@ public class TestPathStyleParameterExpansion extends AbstractUriTemplateConforma
     * Create a new TestPathStyleParameterExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

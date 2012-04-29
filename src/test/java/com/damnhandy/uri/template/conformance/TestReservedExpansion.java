@@ -36,7 +36,7 @@ public class TestReservedExpansion extends AbstractUriTemplateConformanceTest
     * Create a new TestReservedExpansion.
     * 
     * @param vars
-    * @param template
+    * @param expression
     * @param expected
     * @param testsuite
     */

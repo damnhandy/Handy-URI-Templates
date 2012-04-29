@@ -2,13 +2,22 @@
 
 This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. 
 
+## Maven
+
+To use Handy URI Templates, you need to add the following dependency to your pom.xml:
+
+	<dependency>
+		<groupId>com.damnhhandy</groupId>
+		<artifactId>handy-uri-templates</artifactId>
+		<version>1.0.0-B3-SNAPSHOT</version>
+	</dependency>
 
 ## Basic Usage
 
 Using the library is simple:
 	
 	String uri = 
-		UriTemplate.create("/{foo:1}{/foo,thing*}{?test1, test2}")
+		UriTemplate.expression("/{foo:1}{/foo,thing*}{?test1, test2}")
 				   .set("foo", "one")
 				   .set("test1", "query")
 				   .set("test2", "blah")
@@ -55,7 +64,7 @@ And this Java object for an address:
 	Address address = new Address();
 	address.setState("CA");
 	address.setCity("Newport Beach");
-	String result = UriTemplate.create("/mapper{?address*}").set("address", address).expand();
+	String result = UriTemplate.expression("/mapper{?address*}").set("address", address).expand();
 	
 The expanded URI will be:
 

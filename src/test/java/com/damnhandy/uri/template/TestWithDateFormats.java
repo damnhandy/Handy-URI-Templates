@@ -48,7 +48,7 @@ public class TestWithDateFormats
    @Test
    public void testWithDefaultDateFormat() throws Exception
    {
-      String uri = UriTemplate.create(TEMPLATE).set("date", date).expand();
+      String uri = UriTemplate.expression(TEMPLATE).set("date", date).expand();
       assertEquals("/2012/2012-04-20T16%3A20%3A00.000-0400", uri);
    }
 
@@ -61,7 +61,7 @@ public class TestWithDateFormats
    public void testWithCustomDateFormat() throws Exception
    {
       DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      String uri = UriTemplate.create(TEMPLATE).set("date", date, format).expand();
+      String uri = UriTemplate.expression(TEMPLATE).set("date", date, format).expand();
       assertEquals("/2012/2012-04-20", uri);
    }
 }

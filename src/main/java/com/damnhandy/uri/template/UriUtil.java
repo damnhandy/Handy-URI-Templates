@@ -8,9 +8,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.BitSet;
 
+import com.damnhandy.uri.template.impl.UriEncodingException;
+
 /**
  * A light-weight utility class for applying encoding to values that are applied to 
- * template values.
+ * expression values.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $

@@ -20,7 +20,7 @@ import com.damnhandy.uri.template.VarName;
 /**
  * <p>
  * The {@link DefaultVarExploder} is a {@link VarExploder} implementation that takes in a Java object and
- * extracts the properties for use in a URI Template. Given the following URI template template: 
+ * extracts the properties for use in a URI Template. Given the following URI expression expression: 
  * </p>
  * <pre>
  * /mapper{?address*}
@@ -32,7 +32,7 @@ import com.damnhandy.uri.template.VarName;
  * Address address = new Address();
  * address.setState("CA");
  * address.setCity("Newport Beach");
- * String result = UriTemplate.create("/mapper{?address*}").set("address", address).expand();
+ * String result = AbstractUriTemplate.create("/mapper{?address*}").set("address", address).expand();
  * </pre>
  * <p>
  * The expanded URI will be:
