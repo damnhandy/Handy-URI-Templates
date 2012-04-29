@@ -41,6 +41,24 @@ The basic types that the URI template engine supports are as follows:
 
 Values that are not Strings are rendered into the URI will have its `toString()` method called. Java objects can be treated as composite objects (as name/value pairs). 
 
+## Using with HTTP Clients
+
+The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the 
+
+	  RequestBuilder builder = new RequestBuilder("GET");
+      Request request = builder.setUrl(
+             UriTemplate.expression("https://api.github.com/repos{/user,repo,function,id}")
+                        .set("user", "damnhandy")
+                        .set("repo", "Handy-URI-Templates")
+                        .set("function","commits")
+                        .expand()).build();
+
+When `Request.getRawUrl()` is called, it will return:
+
+	"https://api.github.com/repos/damnhandy/Handy-URI-Templates/commits"
+
+Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-ga/index.html) is just as similar.
+
 ## Composite Values
 
 The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values an associative array of (name, value) pairs. Handy URI templates always treats lists as java.util.List and name/value pairs as a java.util.Map.  
