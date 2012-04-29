@@ -103,6 +103,7 @@ public abstract class UriTemplate
     * method will create a new {@link UriTemplate} from the base and copy the variables  
     * from the base template to the new {@link UriTemplate}. 
     * </p>
+    * <p>
     * This method is useful when the base expression is less volatile than the child
     * expression and you want to merge the two.
     * </p>
@@ -165,6 +166,29 @@ public abstract class UriTemplate
     * <pre>
     * http://api.github.com/repos/{user}/{repo}/commits
     * </pre>
+    * <p>
+    * Multiple expressions can be appended to the template as follows:
+    * </p>
+    * <pre>
+    *  UriTemplate template = UriTemplate.fromExpression("http://myhost")
+    *                                    .expression("{/version}")
+    *                                    .expression("{/myId}")
+    *                                    .expression("/things/{thingId}")
+    *                                    .set("myId","damnhandy")
+    *                                    .set("version","v1")
+    *                                    .set("thingId","12345");
+    * </pre>
+    * <p>This will result in the following template and URI:</p>
+    * <pre>
+    * Template: http://myhost{/version}{/myId}/things/{thingId}
+    * URI:      http://myhost/v1/damnhandy/things/12345
+    * </pre>
+    * <p>
+    * Since a URI template is not a URI, there no way to accurately determine 
+    * how the variable expression should be delimited. Therefore, it is up to 
+    * the expression author to include the necessary delimiters in each sub 
+    * expression.
+    * </p>
     * @param expression
     * @return
     * @since 1.0
