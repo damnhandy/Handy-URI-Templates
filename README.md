@@ -7,9 +7,9 @@ This project is a compliant implementation of [RFC6570](http://tools.ietf.org/ht
 To use Handy URI Templates, you need to add the following dependency to your pom.xml:
 
 	<dependency>
-		<groupId>com.damnhhandy</groupId>
+		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.0.0.GA</version>
+		<version>1.0.1.GA</version>
 	</dependency>
 
 ## Basic Usage
