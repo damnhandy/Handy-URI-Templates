@@ -20,6 +20,7 @@
             "undef"      : null
         },
         "testcases": [
+        	["{?hello,var}", "?hello=Hello%20World%21&var=value"],
 			["{;who}", ";who=fred"],
 			["{?who}", "?who=fred"],
 			["{?half}", "?half=50%25"],
