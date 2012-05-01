@@ -120,7 +120,25 @@ public final class RFC6570UriTemplate extends UriTemplate
                literal = var.getClass().isPrimitive();
                if (var.getClass().isArray())
                {
-                  var = arrayToList(var);
+                  if(var instanceof char[][])
+                  {
+                     char[][] chars = (char[][]) var;
+                     List<String> strings = new ArrayList<String>();
+                     for(char[] c : chars)
+                     {
+                        strings.add(String.valueOf(c));
+                     }
+                     var = strings;
+                  }
+                  else if(var instanceof char[])
+                  {
+                     var = String.valueOf((char[]) var);
+                  }
+                  else
+                  {
+                     var = arrayToList(var);
+                  }
+                  
                }
             }
 
@@ -192,7 +210,9 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       while (i.hasNext())
       {
-         String value = i.next().toString();
+         Object obj = i.next();
+         checkValue(obj);
+         String value = obj.toString();
          stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));
       }
 
@@ -201,6 +221,18 @@ public final class RFC6570UriTemplate extends UriTemplate
          return varSpec.getVariableName() + "=" + joinParts(joiner, stringValues);
       }
       return joinParts(joiner, stringValues);
+   }
+
+   /** 
+    * 
+    * @param obj
+    */
+   private void checkValue(Object obj)
+   {
+      if(obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())
+      {
+         throw new VariableExpansionException("Nested data structures are not supported.");
+      }
    }
 
    /**
@@ -228,7 +260,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
 
          String key = entry.getKey();
-
+         checkValue(entry.getValue());
          String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
                + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
 
@@ -390,7 +422,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * Takes an array of objects and convertes them to a {@link List}.
+    * Takes an array of objects and converts them to a {@link List}.
     * 
     * @param array
     * @return
@@ -401,7 +433,12 @@ public final class RFC6570UriTemplate extends UriTemplate
       int length = Array.getLength(array);
       for (int i = 0; i < length; i++)
       {
-         list.add(Array.get(array, i));
+         Object element = Array.get(array, i);
+         if(element.getClass().isArray())
+         {
+            throw new VariableExpansionException("Multi-dimenesional arrays are not supported.");
+         } 
+         list.add(element);
       }
       return list;
    }
