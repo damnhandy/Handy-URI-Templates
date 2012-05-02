@@ -41,7 +41,7 @@ The API can be used with existing HTTP frameworks like the most excellent [Async
                         .set("function","commits")
                         .expand()).build();
 
-When `Request.getRawUrl()` is called, it will return:
+When `Request.getUrl()` is called, it will return:
 
 	"https://api.github.com/repos/damnhandy/Handy-URI-Templates/commits"
 
@@ -105,8 +105,8 @@ The expanded URI will be:
 The DefaultVarExploder breaks down the object properties as follows:
 
 * All properties that contain a non-null return value will be included
-* Getters or fields annotated with UriTransient will NOT included in the list
-* By default, the property name is used as the label in the URI. This can be overridden by placing the @VarName annotation on the field or getter method and specifying a name.
+* Getters or fields annotated with `@UriTransient` will be excluded 
+* By default, the property name is used as the label in the URI. This can be overridden by placing the `@VarName` annotation on the field or getter method and specifying a name.
 * Field level annotation take priority of getter annotations
 * Property names are sorted in alphabetical order
 
