@@ -35,6 +35,9 @@ import com.ning.http.client.RequestBuilder;
 public class TestFacebookGraphApi extends AbstractExampleTest
 {
    
+   private static final String GRAPH_API_EXPRESSION = 
+            "https://graph.facebook.com{/id*}{?q,ids,fields,type,center,distance,limit,offset,until,since,access_token}";
+
    /**
     * Checks assumptions that the Facebook Access token is set.
     *
@@ -48,11 +51,40 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiFQL() throws Exception
    {
-      String uri = UriTemplate.fromExpression("https://graph.facebook.com/fql{?q,access_token}")
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                              .set("id","fql")
                               .set("q", "SELECT uid2 FROM friend WHERE uid1=me()")
                               .set("access_token", System.getProperty("fb.access_token"))
                               .expand();
       Assert.assertEquals("https://graph.facebook.com/fql?q=SELECT%20uid2%20FROM%20friend%20WHERE%20uid1%3Dme%28%29&access_token="+System.getProperty("fb.access_token"), uri);
+      RequestBuilder builder = new RequestBuilder("GET");
+      Request request = builder.setUrl(uri).build();
+      executeRequest(createClient(), request);
+   }
+   
+   @Test
+   public void facebookGraphApiAllFields() throws Exception
+   {
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                              .set("id", "bgolub")
+                              .set("access_token", System.getProperty("fb.access_token"))
+                              .expand();
+      
+      Assert.assertEquals("https://graph.facebook.com/bgolub?access_token="+System.getProperty("fb.access_token"), uri);
+      RequestBuilder builder = new RequestBuilder("GET");
+      Request request = builder.setUrl(uri).build();
+      executeRequest(createClient(), request);
+   }
+   
+   @Test
+   public void facebookGraphApiGetSubResource() throws Exception
+   {
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                              .set("id", new String[] {"bgolub","albums"})
+                              .set("access_token", System.getProperty("fb.access_token"))
+                              .expand();
+      
+      Assert.assertEquals("https://graph.facebook.com/bgolub/albums?access_token="+System.getProperty("fb.access_token"), uri);
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(uri).build();
       executeRequest(createClient(), request);
@@ -66,7 +98,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiSelectiveFields() throws Exception
    {
-      String uri = UriTemplate.fromExpression("https://graph.facebook.com/{id}{?fields,access_token}")
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
                               .set("id", "bgolub")
                               .set("fields", new String[] {"id", "name", "picture"})
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -92,7 +124,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
       fields.add("name");
       fields.add("picture");
       
-      String uri = UriTemplate.fromExpression("https://graph.facebook.com/{id}{?fields,access_token}")
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
                               .set("id", "bgolub")
                               .set("fields", fields)
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -112,7 +144,8 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiPlacesSearch() throws Exception 
    {
-      String uri = UriTemplate.fromExpression("https://graph.facebook.com/search{?q,type, center, distance, limit, offset, until, since, access_token}")
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                              .set("id","search")
                               .set("q", "coffee")
                               .set("type","place")
                               .set("center", new float[] {37.76f,-122.427f})
@@ -126,7 +159,17 @@ public class TestFacebookGraphApi extends AbstractExampleTest
             "https://graph.facebook.com/search?q=coffee&type=place&center=37.76,-122.427&distance=1000&limit=5&offset=10&access_token="
                   + System.getProperty("fb.access_token"), uri);
       RequestBuilder builder = new RequestBuilder("GET");
-      Request request = builder.setUrl(uri).build();
+      Request request = 
+            builder.setUrl(UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                                      .set("id","search")
+                                      .set("q", "coffee")
+                                      .set("type","place")
+                                      .set("center", new float[] {37.76f,-122.427f})
+                                      .set("distance", 1000)
+                                      .set("limit", 5)
+                                      .set("offset", 10)
+                                      .set("access_token", System.getProperty("fb.access_token"))
+                                      .expand()).build();
       executeRequest(createClient(), request);
    }
 }

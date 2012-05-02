@@ -115,23 +115,22 @@ public final class RFC6570UriTemplate extends UriTemplate
             Object value = values.get(varSpec.getVariableName());
             String expanded = null;
 
-            boolean literal = true;
+            boolean explodable = isExplodable(value);
             if (value != null)
             {
-               literal = value.getClass().isPrimitive();
                if (value.getClass().isArray())
                {
-                  if(value instanceof char[][])
+                  if (value instanceof char[][])
                   {
                      char[][] chars = (char[][]) value;
                      List<String> strings = new ArrayList<String>();
-                     for(char[] c : chars)
+                     for (char[] c : chars)
                      {
                         strings.add(String.valueOf(c));
                      }
                      value = strings;
                   }
-                  else if(value instanceof char[])
+                  else if (value instanceof char[])
                   {
                      value = String.valueOf((char[]) value);
                   }
@@ -139,11 +138,11 @@ public final class RFC6570UriTemplate extends UriTemplate
                   {
                      value = arrayToList(value);
                   }
-                  
+
                }
             }
 
-            if (!literal && varSpec.getModifier() == Modifier.EXPLODE)
+            if (explodable && varSpec.getModifier() == Modifier.EXPLODE)
             {
                VarExploder exploder = VarExploderFactory.getExploder(value, varSpec);
                expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
@@ -156,7 +155,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             /*
              * Format the date if we have a java.util.Date
              */
-            if(value instanceof Date)
+            if (value instanceof Date)
             {
                value = defaultDateFormat.format((Date) value);
             }
@@ -193,6 +192,18 @@ public final class RFC6570UriTemplate extends UriTemplate
          }
       }
       return replacements;
+   }
+
+   private boolean isExplodable(Object value)
+   {
+      if (!values.getClass().isPrimitive())
+      {
+         if (value instanceof Collection || value instanceof Map || value.getClass().isArray())
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    /**
@@ -237,7 +248,7 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    private void checkValue(Object obj)
    {
-      if(obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())
+      if (obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())
       {
          throw new VariableExpansionException("Nested data structures are not supported.");
       }
@@ -442,10 +453,10 @@ public final class RFC6570UriTemplate extends UriTemplate
       for (int i = 0; i < length; i++)
       {
          Object element = Array.get(array, i);
-         if(element.getClass().isArray())
+         if (element.getClass().isArray())
          {
             throw new VariableExpansionException("Multi-dimenesional arrays are not supported.");
-         } 
+         }
          list.add(element);
       }
       return list;
