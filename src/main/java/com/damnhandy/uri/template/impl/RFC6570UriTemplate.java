@@ -6,6 +6,7 @@ package com.damnhandy.uri.template.impl;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -111,32 +112,32 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
          if (values.containsKey(varSpec.getVariableName()))
          {
-            Object var = values.get(varSpec.getVariableName());
+            Object value = values.get(varSpec.getVariableName());
             String expanded = null;
 
             boolean literal = true;
-            if (var != null)
+            if (value != null)
             {
-               literal = var.getClass().isPrimitive();
-               if (var.getClass().isArray())
+               literal = value.getClass().isPrimitive();
+               if (value.getClass().isArray())
                {
-                  if(var instanceof char[][])
+                  if(value instanceof char[][])
                   {
-                     char[][] chars = (char[][]) var;
+                     char[][] chars = (char[][]) value;
                      List<String> strings = new ArrayList<String>();
                      for(char[] c : chars)
                      {
                         strings.add(String.valueOf(c));
                      }
-                     var = strings;
+                     value = strings;
                   }
-                  else if(var instanceof char[])
+                  else if(value instanceof char[])
                   {
-                     var = String.valueOf((char[]) var);
+                     value = String.valueOf((char[]) value);
                   }
                   else
                   {
-                     var = arrayToList(var);
+                     value = arrayToList(value);
                   }
                   
                }
@@ -144,38 +145,45 @@ public final class RFC6570UriTemplate extends UriTemplate
 
             if (!literal && varSpec.getModifier() == Modifier.EXPLODE)
             {
-               VarExploder exploder = VarExploderFactory.getExploder(var, varSpec);
+               VarExploder exploder = VarExploderFactory.getExploder(value, varSpec);
                expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
             }
-            if (varSpec.getModifier() != Modifier.EXPLODE && var instanceof VarExploder)
+            if (varSpec.getModifier() != Modifier.EXPLODE && value instanceof VarExploder)
             {
                throw new VariableExpansionException(varSpec.getVariableName() + " was passed a "
                      + VarExploder.class.getSimpleName() + " but the variable did not include the explode modifer.");
             }
             /*
+             * Format the date if we have a java.util.Date
+             */
+            if(value instanceof Date)
+            {
+               value = defaultDateFormat.format((Date) value);
+            }
+            /*
              * The variable value contains a list of values
              */
-            if (var instanceof Collection)
+            if (value instanceof Collection)
             {
-               expanded = this.expandCollection(operator, varSpec, (Collection) var);
+               expanded = this.expandCollection(operator, varSpec, (Collection) value);
             }
             /*
              * The variable value contains a list of key-value pairs
              */
-            else if (var instanceof Map)
+            else if (value instanceof Map)
             {
-               expanded = expandMap(operator, varSpec, (Map) var);
+               expanded = expandMap(operator, varSpec, (Map) value);
             }
             /*
              * The variable value is null or has o value.
              */
-            else if (var == null)
+            else if (value == null)
             {
                expanded = null;
             }
             else if (expanded == null)
             {
-               expanded = this.expandStringValue(operator, varSpec, var.toString(), VarSpec.VarFormat.SINGLE);
+               expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
             }
             if (expanded != null)
             {

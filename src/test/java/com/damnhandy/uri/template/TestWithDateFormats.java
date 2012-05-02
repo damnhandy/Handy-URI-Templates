@@ -47,18 +47,6 @@ public class TestWithDateFormats
       assertEquals("/2012/2012-04-20T16%3A20%3A00.000-0400", uri);
    }
 
-   /**
-    * Tests date format with a user supplied {@link DateFormat}
-    * 
-    * @throws Exception
-    */
-   @Test
-   public void testWithCustomDateFormat() throws Exception
-   {
-      DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      String uri = UriTemplate.fromExpression(TEMPLATE).set("date", date, format).expand();
-      assertEquals("/2012/2012-04-20", uri);
-   }
    
    @Test
    public void testWithCustomDefaultDateFormat() throws Exception

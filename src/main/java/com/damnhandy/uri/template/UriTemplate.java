@@ -53,7 +53,7 @@ public abstract class UriTemplate
    /**
     * 
     */
-   private DateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+   protected DateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
    /**
     * 
@@ -268,26 +268,11 @@ public abstract class UriTemplate
     */
    public UriTemplate set(String variableName, Date value)
    {
-      String date = defaultDateFormat.format(value);
-      values.put(variableName, date);
+      //String date = defaultDateFormat.format(value);
+      values.put(variableName, value);
       return this;
    }
 
-   /**
-    * Sets a Date value into the list of variable substitutions using a user
-    * defined {@link DateFormat}.
-    * 
-    * @param variableName
-    * @param value
-    * @param format
-    * @return
-    * @since 1.0
-    */
-   public UriTemplate set(String variableName, Date value, DateFormat format)
-   {
-      values.put(variableName, format.format(value));
-      return this;
-   }
 
    /**
     * Adds the name/value pairs in the supplied {@link Map} to the collection
