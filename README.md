@@ -29,18 +29,6 @@ This will result in the following URI:
 
 	"/o/one/A%20test?test1=query&test2=blah"
 
-## Java types
-
-The basic types that the URI template engine supports are as follows:
-
-* arrays
-* java.lang.String
-* java.util.List<Object>
-* java.util.Map<String, Object>	
-
-
-Values that are not Strings are rendered into the URI will have its `toString()` method called. Java objects can be treated as composite objects (as name/value pairs). 
-
 ## Using with HTTP Clients
 
 The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
@@ -61,21 +49,45 @@ Please have a look at the example [test case](https://github.com/damnhandy/Handy
 
 Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-ga/index.html) is just as similar.
 
+## Supported Value Types
+
+While the `set()` method accepts any Java object, the following Java types are preferred:
+
+* primitive and Object types such as:
+  * int & Integer
+  * double & Double
+  * char & Character
+  * float & Float
+  * double & Double
+  * short & Short
+  * long & Long
+* Arrays of the above types
+* java.util.List<Object>
+* java.util.Map<String, Object>	
+* java.util.Date. Dates will be formted using the templates default formatter.
+* Anything with a `toString()` method
+
+Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings. 
+
+## Unsupported Value Types
+
+The template processor will not accept the following types of value combinations:
+
+* with the exception of character arrays, multi dimensional arrays are not supported.
+* Collections of Collections
+* Maps that have values of type
+
+If you need such data structures in a URI, consider implementing your own `VarExploder` to handle this use case.
+
 ## Composite Values
 
-The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values an associative array of (name, value) pairs. Handy URI templates always treats lists as java.util.List and name/value pairs as a java.util.Map.  
+The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values of an associative array of (name, value) pairs. The template processor always treats lists as java.util.List and name/value pairs as a java.util.Map. Lists and Maps work with any supported type that is not anoth List, Map, or array. 
 
 ## POJOs as Composite Values
 
-A `VarExploder` is invoked when an explode modifier "*" is encountered within a variable name within a URI template expression and the replacement value is a complex type, such a some type of POJO. For most use cases, the `DefaultVarExplode`r will be sufficient. Please refer to the `DefaultVarExploder` JavaDoc for more details on how it works.
+The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a `VarExploder` is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
 
-Should the `DefaultVarExploder` not be suitable for your needs, custom `VarExploder` implementations can be added by rolling your own implementation. A custom VarExploder implementation can be registered in one of two ways. By wrapping your object in your VarExploder:
-
-	UriTemplate.fromExpression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
- 
-Note: VarExploder implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
-
-The DefaultVarExploder is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. Given the following URI template expression:
+For most use cases, the `DefaultVarExploder` should be sufficient. The DefaultVarExploder is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. Given the following URI template expression:
 
 	/mapper{?address*}
  
@@ -97,4 +109,14 @@ The DefaultVarExploder breaks down the object properties as follows:
 * By default, the property name is used as the label in the URI. This can be overridden by placing the @VarName annotation on the field or getter method and specifying a name.
 * Field level annotation take priority of getter annotations
 * Property names are sorted in alphabetical order
+
+Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` works.
+
+But should the `DefaultVarExploder` not be suitable for your needs, custom `VarExploder` implementations can be added by rolling your own implementation. A custom VarExploder implementation can be registered by wrapping your object in your VarExploder:
+
+	UriTemplate.fromExpression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
+ 
+Note: All `VarExploder` implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
+
+
 
