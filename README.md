@@ -9,7 +9,7 @@ To use Handy URI Templates, you need to add the following dependency to your pom
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.0.2.GA</version>
+		<version>1.0.2</version>
 	</dependency>
 
 If you feel like using the bleeding edge version, you can use a snapshot release:
@@ -29,7 +29,7 @@ In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository
     </repository>
 
 You can also download the artifact
-	https://oss.sonatype.org/content/repositories/releases/com/damnhandy/handy-uri-templates/1.0.2.GA/
+	https://oss.sonatype.org/content/repositories/releases/com/damnhandy/handy-uri-templates/1.0.2/
     
 ## Basic Usage
 
