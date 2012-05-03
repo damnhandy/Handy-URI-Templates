@@ -196,12 +196,19 @@ public final class RFC6570UriTemplate extends UriTemplate
 
    private boolean isExplodable(Object value)
    {
-      if (!values.getClass().isPrimitive())
+      if(value == null)
       {
-         if (value instanceof Collection || value instanceof Map || value.getClass().isArray())
-         {
-            return true;
-         }
+         return false;
+      }
+      
+      if (value instanceof Collection || value instanceof Map || value.getClass().isArray())
+      {
+         return true;
+      }
+      
+      if (!value.getClass().isPrimitive() && !value.getClass().isAssignableFrom(CharSequence.class))
+      {
+         return true;
       }
       return false;
    }
