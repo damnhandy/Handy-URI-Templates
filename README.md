@@ -29,7 +29,8 @@ In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository
     </repository>
 
 You can also download the artifact
-	https://oss.sonatype.org/content/repositories/releases/com/damnhandy/handy-uri-templates/1.0.2/
+	http://search.maven.org
+	
     
 ## Basic Usage
 
@@ -47,6 +48,8 @@ Using the library is simple:
 This will result in the following URI:
 
 	"/o/one/A%20test?test1=query&test2=blah"
+	
+You can find more in the [JavaDocs](http://damnhandy.com/handy-uri-templates/apidocs/).
 
 ## Using with HTTP Clients
 
