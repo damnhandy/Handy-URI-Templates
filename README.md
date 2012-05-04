@@ -34,8 +34,7 @@ In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository
     </repository>
 ```
 
-You can also download the artifact
-	http://search.maven.org
+You can also download the artifact at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates)
 	
     
 ## Basic Usage
