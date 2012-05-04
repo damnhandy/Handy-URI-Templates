@@ -22,11 +22,13 @@ If you feel like using the bleeding edge version, you can use a snapshot release
 
 In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository:
 
+```xml
 	<repository>
         <id>sonatype-nexus-snapshots</id>   
         <name>sonatype-nexus-snapshots</name>
 		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
+```
 
 You can also download the artifact
 	http://search.maven.org
@@ -36,6 +38,7 @@ You can also download the artifact
 
 Using the library is simple:
 	
+```java
 	String uri = 
 		UriTemplate.fromExpression("/{foo:1}{/foo,thing*}{?test1, test2}")
 				   .set("foo", "one")
@@ -43,7 +46,7 @@ Using the library is simple:
 				   .set("test2", "blah")
 				   .set("thing", "A test")
 				   .expand();
-
+```
 
 This will result in the following URI:
 
@@ -55,6 +58,7 @@ You can find more in the [JavaDocs](http://damnhandy.com/handy-uri-templates/api
 
 The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
 
+```java
 	  RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
              UriTemplate.fromExpression("https://api.github.com/repos{/user,repo,function,id}")
@@ -62,6 +66,7 @@ The API can be used with existing HTTP frameworks like the most excellent [Async
                         .set("repo", "Handy-URI-Templates")
                         .set("function","commits")
                         .expand()).build();
+```
 
 When `Request.getUrl()` is called, it will return:
 
@@ -115,13 +120,15 @@ For most use cases, the `DefaultVarExploder` should be sufficient. The `DefaultV
  
 And this Java object for an address:
 
+```java
 	Address address = new Address();
 	address.setState("CA");
 	address.setCity("Newport Beach");
 	String result = UriTemplate.fromExpression("/mapper{?address*}")
 	                           .set("address", address)
 	                           .expand();
-	
+```
+
 The expanded URI will be:
 
 	/mapper?city=Newport%20Beach&state=CA
@@ -138,10 +145,12 @@ Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` wo
 
 Should the `DefaultVarExploder` not be suitable for your needs, custom `VarExploder` implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
 
+```java
 	UriTemplate.fromExpression("/mapper{?address*}")
 	           .set("address", new MyCustomVarExploder(address))
 	           .expand();
- 
+```
+
 Note: All `VarExploder` implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
 
 
