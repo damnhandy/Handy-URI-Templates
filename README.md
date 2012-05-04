@@ -6,19 +6,23 @@ This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc657
 
 To use Handy URI Templates, you need to add the following dependency to your pom.xml:
 
+```xml
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
 		<version>1.0.2</version>
 	</dependency>
+```
 
 If you feel like using the bleeding edge version, you can use a snapshot release:
 
+```xml
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
 	</dependency>
+```
 
 In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository:
 
