@@ -9,7 +9,7 @@
 	<artifactId>handy-uri-templates</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
-	<description>Handy URI Templates is a URI Template processor supporting RFC6570 . The library allows clients to utilize templatized URIs and inject replacement variables and expand the template to create a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
+	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
 
 	<issueManagement>
 		<system>Github Issues</system>
@@ -261,4 +261,9 @@
 	</dependencies>
 
 
+	<inceptionYear>April 30, 2012</inceptionYear>
+	<organization>
+		<url>http://damnhandy.com</url>
+		<name>Ryan J. McDonough</name>
+	</organization>
 </project>
