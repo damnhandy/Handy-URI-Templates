@@ -14,7 +14,7 @@ To use Handy URI Templates, you need to add the following dependency to your pom
 	</dependency>
 ```
 
-If you feel like using the bleeding edge version, you can use a snapshot release:
+If you feel like using a development version, you can use a snapshot release:
 
 ```xml
 	<dependency>
