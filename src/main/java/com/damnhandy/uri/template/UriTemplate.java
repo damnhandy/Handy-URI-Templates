@@ -50,6 +50,7 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
  */
 public abstract class UriTemplate
 {
+   public static final String DEFAULT_SEPARATOR = ",";
    /**
     * 
     */

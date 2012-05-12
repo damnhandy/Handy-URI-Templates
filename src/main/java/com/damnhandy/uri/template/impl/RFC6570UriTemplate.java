@@ -84,7 +84,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       String result = joinParts(operator.getSeparator(), replacements);
       if (result != null)
       {
-         if (operator == Operator.RESERVED || operator == Operator.NAME_LABEL)
+         if (operator == Operator.RESERVED)
          {
             return result;
          }
@@ -225,14 +225,10 @@ public final class RFC6570UriTemplate extends UriTemplate
    {
       List<String> stringValues = new ArrayList<String>();
       Iterator<?> i = variable.iterator();
-      String joiner = operator.getSeparator();
-      if (varSpec.getModifier() == Modifier.EXPLODE)
+      String separator = operator.getSeparator();
+      if (varSpec.getModifier() != Modifier.EXPLODE)
       {
-         joiner = operator.getExplodeSeparator();
-      }
-      else
-      {
-         joiner = operator.getListSeparator();
+         separator = operator.getListSeparator();
       }
       while (i.hasNext())
       {
@@ -244,9 +240,9 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       if (varSpec.getModifier() != Modifier.EXPLODE && operator.useVarNameWhenExploded())
       {
-         return varSpec.getVariableName() + "=" + joinParts(joiner, stringValues);
+         return varSpec.getVariableName() + "=" + joinParts(separator, stringValues);
       }
-      return joinParts(joiner, stringValues);
+      return joinParts(separator, stringValues);
    }
 
    /** 

@@ -3,24 +3,39 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import static com.damnhandy.uri.template.UriTemplate.DEFAULT_SEPARATOR;
+
 /**
  * <p>
  * An enum representing an operator in a URI Template.
  * </p>
+ *       Type    Separator
+                 ","     (default)
+        +        ","
+        #        ","
+        .        "."
+        /        "/"
+        ;        ";"
+        ?        "&"
+        &        "&"
+ * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
 public enum Operator {
 
-   NONE        ("",  ",", ",", false, false), 
-   RESERVED    ("+", ",", ",", false, false), 
-   FRAGMENT    ("#", ",", ",", false, false), 
-   NAME_LABEL  (".", ",", ".", false, false), 
-   PATH        ("/", "/", "/", false, false), 
-   MATRIX      (";", ";", ";", true, true), 
-   QUERY       ("?", "&", "&", true, true), 
-   CONTINUATION("&", "&", "&", true, true);
+   
+   
+   NONE        ("",  DEFAULT_SEPARATOR,  false), 
+   RESERVED    ("+", DEFAULT_SEPARATOR,  false), 
+   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false), 
+   NAME_LABEL  (".", ".",  false), 
+   PATH        ("/", "/",  false), 
+   MATRIX      (";", ";",  true), 
+   QUERY       ("?", "&",  true), 
+   CONTINUATION("&", "&",  true);
 
+   
    /**
     * 
     */
@@ -36,15 +51,6 @@ public enum Operator {
     */
    private boolean queryString;
 
-   /**
-    * 
-    */
-   private String explodeSeparator;
-
-   /**
-    * 
-    */
-   private boolean varNameWhenExploded;
 
    /**
     * 
@@ -53,14 +59,11 @@ public enum Operator {
     * @param operator
     * @param separator
     */
-   private Operator(String operator, String separator, String explodeJoiner, boolean queryString,
-         boolean varNameWhenExploded)
+   private Operator(String operator, String separator, boolean queryString)
    {
       this.operator = operator;
       this.separator = separator;
       this.queryString = queryString;
-      this.explodeSeparator = explodeJoiner;
-      this.varNameWhenExploded = varNameWhenExploded;
    }
 
    public String getOperator()
@@ -71,11 +74,6 @@ public enum Operator {
    public String getSeparator()
    {
       return this.separator;
-   }
-
-   public String getExplodeSeparator()
-   {
-      return explodeSeparator;
    }
 
    /**
@@ -92,7 +90,7 @@ public enum Operator {
     */
    public String getListSeparator()
    {
-      return ",";
+      return DEFAULT_SEPARATOR;
    }
 
    /**
@@ -107,7 +105,7 @@ public enum Operator {
     */
    public boolean useVarNameWhenExploded()
    {
-      return varNameWhenExploded;
+      return queryString;
    }
 
    /**
