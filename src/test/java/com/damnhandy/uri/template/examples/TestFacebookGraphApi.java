@@ -56,8 +56,10 @@ public class TestFacebookGraphApi extends AbstractExampleTest
                               .set("q", "SELECT uid2 FROM friend WHERE uid1=me()")
                               .set("access_token", System.getProperty("fb.access_token"))
                               .expand();
+      System.out.println(uri);
       Assert.assertEquals("https://graph.facebook.com/fql?q=SELECT%20uid2%20FROM%20friend%20WHERE%20uid1%3Dme%28%29&access_token="+System.getProperty("fb.access_token"), uri);
       RequestBuilder builder = new RequestBuilder("GET");
+      
       Request request = builder.setUrl(uri).build();
       executeRequest(createClient(), request);
    }
@@ -116,6 +118,26 @@ public class TestFacebookGraphApi extends AbstractExampleTest
     * 
     * @throws Exception
     */
+   @Test
+   public void facebookGraphApiSelectiveFieldsWithListWithAlbums() throws Exception
+   {
+      List<String> fields = new ArrayList<String>(3);
+      fields.add("id");
+      fields.add("name");
+      fields.add("count");
+      
+      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+                              .set("id", new String[] {"bgolub","albums"})
+                              .set("fields", fields)
+                              .set("access_token", System.getProperty("fb.access_token"))
+                              .expand();
+      System.out.println(uri);
+      Assert.assertEquals("https://graph.facebook.com/bgolub/albums?fields=id,name,count&access_token="+System.getProperty("fb.access_token"), uri);
+      RequestBuilder builder = new RequestBuilder("GET");
+      Request request = builder.setUrl(uri).build();
+      executeRequest(createClient(), request);
+   }
+   
    @Test
    public void facebookGraphApiSelectiveFieldsWithList() throws Exception
    {
