@@ -40,7 +40,7 @@ public class TestPathStyleParameterExpansion extends AbstractUriTemplateConforma
     * @param expected
     * @param testsuite
     */
-   public TestPathStyleParameterExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestPathStyleParameterExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

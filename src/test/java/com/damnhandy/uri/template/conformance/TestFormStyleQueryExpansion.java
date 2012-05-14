@@ -40,7 +40,7 @@ public class TestFormStyleQueryExpansion extends AbstractUriTemplateConformanceT
     * @param expected
     * @param testsuite
     */
-   public TestFormStyleQueryExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestFormStyleQueryExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

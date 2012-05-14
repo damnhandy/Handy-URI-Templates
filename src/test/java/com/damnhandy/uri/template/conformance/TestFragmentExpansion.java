@@ -39,9 +39,8 @@ public class TestFragmentExpansion extends AbstractUriTemplateConformanceTest
     * @param expected
     * @param testsuite
     */
-   public TestFragmentExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestFragmentExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
-      // FIXME TestFragmentExpansion constructor
       super(vars, template, expected, testsuite);
    }
 

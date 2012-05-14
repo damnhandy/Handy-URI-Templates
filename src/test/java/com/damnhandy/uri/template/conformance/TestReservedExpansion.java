@@ -40,7 +40,7 @@ public class TestReservedExpansion extends AbstractUriTemplateConformanceTest
     * @param expected
     * @param testsuite
     */
-   public TestReservedExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestReservedExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       // FIXME TestReservedExpansion constructor
       super(vars, template, expected, testsuite);

@@ -25,7 +25,7 @@ public class TestSpecExamplesBySection extends AbstractUriTemplateConformanceTes
       return loadTestData(file);
    }
 
-   public TestSpecExamplesBySection(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestSpecExamplesBySection(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

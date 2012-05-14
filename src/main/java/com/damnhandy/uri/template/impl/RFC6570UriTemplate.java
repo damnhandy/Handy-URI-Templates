@@ -237,7 +237,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       while (i.hasNext())
       {
          Object obj = i.next();
-         //checkValue(obj);
+         checkValue(obj);
          String value = obj.toString();
          stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));
       }
@@ -286,7 +286,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
 
          String key = entry.getKey();
-         //checkValue(entry.getValue());
+         checkValue(entry.getValue());
          String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
                + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
 

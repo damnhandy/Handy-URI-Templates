@@ -40,7 +40,7 @@ public class TestVariableExpansion extends AbstractUriTemplateConformanceTest
     * @param expected
     * @param testsuite
     */
-   public TestVariableExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestVariableExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

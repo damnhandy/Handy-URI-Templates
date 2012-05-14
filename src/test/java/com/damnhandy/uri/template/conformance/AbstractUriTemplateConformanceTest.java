@@ -53,15 +53,15 @@ public abstract class AbstractUriTemplateConformanceTest
          String name = entry.getKey();
          Map<String, Object> testsuite = (Map<String, Object>) entry.getValue();
          Map<String, Object> variables = (Map<String, Object>) testsuite.get("variables");
-         List<List<String>> testcases = (List<List<String>>) testsuite.get("testcases");
+         List<List<Object>> testcases = (List<List<Object>>) testsuite.get("testcases");
 
-         for (List<String> test : testcases)
+         for (List<Object> test : testcases)
          {
             Object[] p = new Object[4];
             p[0] = variables;
-            p[1] = test.get(0);
-            p[2] = test.get(1);
-            p[3] = name;
+            p[1] = test.get(0); // expression
+            p[2] = test.get(1); // expected result
+            p[3] = name;        // test suite label
             params.add(p);
          }
       }
@@ -81,7 +81,7 @@ public abstract class AbstractUriTemplateConformanceTest
    /**
     * The expected result
     */
-   private String expected;
+   private Object expected;
 
    /**
     * The collection of variables to be used on each test
@@ -92,7 +92,7 @@ public abstract class AbstractUriTemplateConformanceTest
     * @param expression
     * @param expected
     */
-   public AbstractUriTemplateConformanceTest(Map<String, Object> vars, String template, String expected, String testsuite)
+   public AbstractUriTemplateConformanceTest(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       this.template = template;
       this.expected = expected;
@@ -104,12 +104,29 @@ public abstract class AbstractUriTemplateConformanceTest
     * 
     * @throws Exception
     */
+   @SuppressWarnings("unchecked")
    @Test
    public void test() throws Exception
    {
       UriTemplate t = UriTemplate.fromExpression(template);
       String actual = t.expand(variables);
-      //String msg = testsuite + "->  Template: " + expression + " Expected: " + expected + " Actual: " + actual;
-      Assert.assertEquals(testsuite + "->  Template: " + template, expected, actual);
+      if(expected instanceof String)
+      {
+         Assert.assertEquals(testsuite + "->  Template: " + template, expected, actual);
+      }
+      else if(expected instanceof Collection)
+      {
+         List<String> combinations = (List<String>) expected;
+         boolean match = false;
+         for(String combo : combinations)
+         {
+            if(combo.equals(combo))
+            {
+               match = true;
+               break;
+            }
+         }
+         Assert.assertTrue(testsuite + "->  Template: " + template + " did not match an combindation", match);
+      }
    }
 }

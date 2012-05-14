@@ -40,7 +40,7 @@ public class TestPathSegmentExpansion extends AbstractUriTemplateConformanceTest
     * @param expected
     * @param testsuite
     */
-   public TestPathSegmentExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestPathSegmentExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }

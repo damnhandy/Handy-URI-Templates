@@ -39,7 +39,7 @@ public class TestSimpleStringExpansion extends AbstractUriTemplateConformanceTes
     * @param expected
     * @param testsuite
     */
-   public TestSimpleStringExpansion(Map<String, Object> vars, String template, String expected, String testsuite)
+   public TestSimpleStringExpansion(Map<String, Object> vars, String template, Object expected, String testsuite)
    {
       super(vars, template, expected, testsuite);
    }
