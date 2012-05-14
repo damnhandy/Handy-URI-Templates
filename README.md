@@ -142,7 +142,7 @@ The `DefaultVarExploder` breaks down the object properties as follows:
 * Getters or fields annotated with `@UriTransient` will be excluded 
 * By default, the property name is used as the label in the URI. This can be overridden by placing the `@VarName` annotation on the field or getter method and specifying a name.
 * Field level annotation take priority of getter annotations
-* Property names are sorted in alphabetical order
+* Property names are sorted in the order that they are found in the target class.
 
 Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` works.
 
