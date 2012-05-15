@@ -3,6 +3,7 @@
  */
 package com.damnhandy.uri.template;
 
+import java.util.Collection;
 import java.util.Map;
 
 import com.damnhandy.uri.template.impl.VariableExpansionException;
@@ -52,5 +53,13 @@ public interface VarExploder
     * @return the object properties as name/value pairs.
     */
    Map<String, Object> getNameValuePairs();
+   
+   /**
+    * Returns the properties of the source object a {@link Collection} of 
+    * object values.
+    * 
+    * @return
+    */
+   Collection<Object> getValues();
 
 }

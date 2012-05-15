@@ -142,16 +142,22 @@ public final class RFC6570UriTemplate extends UriTemplate
                }
             }
 
-            if (explodable && varSpec.getModifier() == Modifier.EXPLODE)
+            if (explodable && varSpec.getModifier() == Modifier.EXPLODE && value instanceof VarExploder)
+            {
+               VarExploder exploder = (VarExploder) value;
+               expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
+            }
+            else if (explodable && varSpec.getModifier() == Modifier.EXPLODE && !(value instanceof CharSequence))
             {
                VarExploder exploder = VarExploderFactory.getExploder(value, varSpec);
                expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
-            }
-            if (varSpec.getModifier() != Modifier.EXPLODE && value instanceof VarExploder)
+            } 
+            else if (explodable && varSpec.getModifier() != Modifier.EXPLODE && value instanceof VarExploder)
             {
-               throw new VariableExpansionException(varSpec.getVariableName() + " was passed a "
-                     + VarExploder.class.getSimpleName() + " but the variable did not include the explode modifer.");
+               VarExploder exploder = (VarExploder) value;
+               expanded = expandCollection(operator, varSpec, exploder.getValues());
             }
+            
             /*
              * Format the date if we have a java.util.Date
              */
@@ -183,7 +189,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             else if (expanded == null)
             {
                expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
-            }
+            } 
             if (expanded != null)
             {
                replacements.add(expanded);

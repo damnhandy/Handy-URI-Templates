@@ -9,9 +9,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Map;
 
-import com.damnhandy.uri.template.VarExploder;
 import com.damnhandy.uri.template.impl.VariableExpansionException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,6 +48,14 @@ public class JsonVarExploder implements VarExploder
       this(new ByteArrayInputStream(jsonText.getBytes()));
    }
 
+   /**
+    * 
+    */
+   @Override
+   public Collection<Object> getValues() 
+   {
+      return values.values();
+   }
    /**
     * 
     * Create a new JsonVarExploder.

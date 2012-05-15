@@ -38,11 +38,10 @@ public class TestExplodeWithPOJO
    @Test
    public void testExplodeAddressWithNoExplodeOperator() throws Exception
    {
-      Address address = new Address();
-      address.setState("CA");
-      address.setCity("Newport Beach");
+      Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
       String result = UriTemplate.fromExpression(NON_EXPLODE_TEMPLATE).set("address", address).expand();
-      Assert.assertNotSame("/mapper?state=CA&city=Newport%20Beach", result);
+      System.out.println(result);
+      Assert.assertEquals("/mapper?address=Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
    }
 
    /**

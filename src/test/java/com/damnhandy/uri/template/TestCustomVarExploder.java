@@ -10,8 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.damnhandy.uri.template.impl.VariableExpansionException;
-
 /**
  * Tests a custom {@link VarExploder} that is used to expand a JSON object into
  * a template variable.
@@ -56,17 +54,17 @@ public class TestCustomVarExploder
    }
    
    /**
-    * Because the template lacks an explode modifier but is being passed
-    * a custom {@link VarExploder}, the test must fail.
+    * 
     *
     */
-   @Test(expected=VariableExpansionException.class)
+   @Test
    public void testWrappedExploderWithInvalidTemplate()
    {
       Map<String, Object> values = new HashMap<String, Object>();
       values.put("address", new JsonVarExploder(JSON));
       String result = UriTemplate.expand(BAD_EXPLODE_TEMPLATE, values);
-      Assert.assertEquals("/mapper?city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
+      System.out.println(result);
+      Assert.assertEquals("/mapper?address=Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
       
    }
 }

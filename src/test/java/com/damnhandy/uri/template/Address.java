@@ -7,7 +7,6 @@ package com.damnhandy.uri.template;
  * 
  * A Address POJO.
  */
-
 public class Address
 {
 
@@ -153,12 +152,5 @@ public class Address
    public void setCountry(String country)
    {
       this.country = country;
-   }
-
-   @Override
-   public String toString()
-   {
-      return "Address [street=" + street + ", city=" + city + ", postalCode=" + postalCode
-            + ", state=" + state + ", country=" + country + ", ignored=" + ignored + "]";
    }
 }

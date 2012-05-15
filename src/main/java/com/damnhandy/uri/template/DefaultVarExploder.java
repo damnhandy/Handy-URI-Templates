@@ -10,6 +10,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class DefaultVarExploder implements VarExploder
    /**
     * The objects properties that have been extracted to a {@link Map}
     */
-   private Map<String, Object> values = new LinkedHashMap<String, Object>();
+   private Map<String, Object> pairs = new LinkedHashMap<String, Object>();
 
    /**
     * 
@@ -87,7 +88,7 @@ public class DefaultVarExploder implements VarExploder
    @Override
    public Map<String, Object> getNameValuePairs()
    {
-      return values;
+      return pairs;
    }
 
 
@@ -131,7 +132,7 @@ public class DefaultVarExploder implements VarExploder
             }
             if (value != null)
             {
-               values.put(name, value);
+               pairs.put(name, value);
             }
          }
 
@@ -154,17 +155,17 @@ public class DefaultVarExploder implements VarExploder
          {
             String fieldName = field.getName();
 
-            if (values.containsKey(fieldName))
+            if (pairs.containsKey(fieldName))
             {
                if (field.isAnnotationPresent(UriTransient.class))
                {
-                  values.remove(fieldName);
+                  pairs.remove(fieldName);
                }
                else if (field.isAnnotationPresent(VarName.class))
                {
                   String name = field.getAnnotation(VarName.class).value();
-                  values.put(name, values.get(fieldName));
-                  values.remove(fieldName);
+                  pairs.put(name, pairs.get(fieldName));
+                  pairs.remove(fieldName);
                }
             }
          }
@@ -202,6 +203,13 @@ public class DefaultVarExploder implements VarExploder
       {
          throw new VariableExpansionException(e);
       }
+   }
+
+   @Override
+   public Collection<Object> getValues()
+   {
+      Collection<Object> c = pairs.values();
+      return c;
    }
 
 }
