@@ -269,7 +269,6 @@ public abstract class UriTemplate
     */
    public UriTemplate set(String variableName, Date value)
    {
-      //String date = defaultDateFormat.format(value);
       values.put(variableName, value);
       return this;
    }
