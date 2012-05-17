@@ -8,6 +8,7 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -36,6 +37,7 @@ public class TestExplodeWithPOJO
    }
 
    @Test
+   @Ignore
    public void testExplodeAddressWithNoExplodeOperator() throws Exception
    {
       Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
