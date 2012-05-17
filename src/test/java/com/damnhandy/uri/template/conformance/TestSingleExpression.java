@@ -35,21 +35,30 @@ public class TestSingleExpression
       VALUES.put("path", "/foo/bar");
       VALUES.put("x", "1024");
       VALUES.put("y", "768");
-      VALUES.put("list", new String[] {"red", "green", "blue"});
+      VALUES.put("id", "person");
+      VALUES.put("token", "12345");
+      VALUES.put("fields", new String[]{"id", "name", "picture"});
+      VALUES.put("format", "json");
+      VALUES.put("q", "URI Templates");
+      VALUES.put("page", "5");
+      VALUES.put("lang", "en");
+      VALUES.put("geocode", new String[]{"37.76", "-122.427"});
+      VALUES.put("list", new String[]{"red", "green", "blue"});
       Map<String, Object> keys = new HashMap<String, Object>();
       keys.put("comma", ",");
       keys.put("dot", ".");
-      keys.put("semi", ";"); 
+      keys.put("semi", ";");
       VALUES.put("keys", keys);
    }
-   
+
    @Test
-   public void testExpression() throws Exception {
-      UriTemplate template = UriTemplate.fromExpression("{keys}").set(VALUES);
-      
-      URI expected = new URI("comma,%2C,dot,.,semi,%3B");
+   public void testExpression() throws Exception
+   {
+      UriTemplate template = UriTemplate.fromExpression("/search.{format}{?q,geocode,lang,locale,page,result_type}").set(VALUES);
+
+      URI expected = new URI("/search.json?q=URI%20Templates&lang=en&geocode=37.76,-122.427&page=5");
       URI result = new URI(template.expand());
- 
+
       Assert.assertEquals(expected, result);
    }
 }

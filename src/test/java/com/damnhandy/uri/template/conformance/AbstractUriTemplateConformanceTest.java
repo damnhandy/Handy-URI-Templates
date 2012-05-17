@@ -71,22 +71,22 @@ public abstract class AbstractUriTemplateConformanceTest
    /**
     * The name of the testsuite
     */
-   private String testsuite;
+   protected String testsuite;
 
    /**
     * The expression patter string
     */
-   private String template;
+   protected String template;
 
    /**
     * The expected result
     */
-   private Object expected;
+   protected Object expected;
 
    /**
     * The collection of variables to be used on each test
     */
-   private Map<String, Object> variables;
+   protected Map<String, Object> variables;
 
    /**
     * @param expression
