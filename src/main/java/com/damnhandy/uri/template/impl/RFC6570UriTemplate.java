@@ -29,6 +29,7 @@ public final class RFC6570UriTemplate extends UriTemplate
 
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
 
+  
    /**
     * Create a new RFC6570UriTemplate.
     * 
@@ -70,7 +71,6 @@ public final class RFC6570UriTemplate extends UriTemplate
       matcher.appendTail(buffer);
       return buffer.toString();
    }
-
    /**
     * 
     * 
@@ -200,6 +200,12 @@ public final class RFC6570UriTemplate extends UriTemplate
       return replacements;
    }
 
+   /**
+    * 
+    * 
+    * @param value
+    * @return
+    */
    private boolean isExplodable(Object value)
    {
       if(value instanceof CharSequence)
@@ -416,22 +422,23 @@ public final class RFC6570UriTemplate extends UriTemplate
          operator = Operator.fromOpCode(firstChar);
          token = token.substring(1, token.length());
       }
-
+      
       String[] values = token.split(",");
-      List<VarSpec> vars = new ArrayList<VarSpec>();
+      List<VarSpec> varspecs = new ArrayList<VarSpec>();
 
       for (String value : values)
       {
          value = value.trim();
+        
          int subStrPos = value.indexOf(Modifier.PREFIX.getValue());
          /*
-          * Prefex variable 
+          * Prefix variable 
           */
          if (subStrPos > 0)
          {
             String[] pair = value.split(Modifier.PREFIX.getValue());
             Integer pos = Integer.valueOf(value.substring(subStrPos + 1));
-            vars.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
+            varspecs.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
          }
 
          /*
@@ -439,17 +446,18 @@ public final class RFC6570UriTemplate extends UriTemplate
           */
          else if (value.lastIndexOf(Modifier.EXPLODE.getValue()) > 0)
          {
-            vars.add(new VarSpec(value, Modifier.EXPLODE));
+            varspecs.add(new VarSpec(value, Modifier.EXPLODE));
          }
          /*
           * Standard Value
           */
          else
          {
-            vars.add(new VarSpec(value, Modifier.NONE));
+            varspecs.add(new VarSpec(value, Modifier.NONE));
          }
       }
-      return findExpressions(operator, vars);
+      String result = findExpressions(operator, varspecs);
+      return result;
 
    }
 
