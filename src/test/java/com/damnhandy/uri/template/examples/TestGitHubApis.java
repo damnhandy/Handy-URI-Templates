@@ -3,9 +3,12 @@
  */
 package com.damnhandy.uri.template.examples;
 
+import java.net.InetAddress;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
@@ -37,6 +40,7 @@ import com.ning.http.client.RequestBuilder;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
+//@Ignore
 public class TestGitHubApis extends AbstractExampleTest
 {
 
@@ -46,12 +50,14 @@ public class TestGitHubApis extends AbstractExampleTest
    
    public static final String PAGINATION = "{?page,per_page}";
    /**
-    * Checks assumptions that the username and password properties are set.
+    * Checks assumptions that the username and password properties are set and that
+    * the host is reachable.
     *
     */
    @BeforeClass
-   public static void setUp()
+   public static void setUp() throws Exception
    {
+      Assume.assumeTrue(InetAddress.getByName("api.github.com").isReachable(1000));
       Assume.assumeNotNull(System.getProperty("github.username"), 
                            System.getProperty("github.password"));
 

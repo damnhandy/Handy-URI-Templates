@@ -3,7 +3,11 @@
  */
 package com.damnhandy.uri.template.examples;
 
+import java.net.InetAddress;
+
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
@@ -16,6 +20,7 @@ import com.ning.http.client.RequestBuilder;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
+//@Ignore
 public class TestTwitterSearchApi extends AbstractExampleTest
 {
 
@@ -23,6 +28,17 @@ public class TestTwitterSearchApi extends AbstractExampleTest
 
    private static final String SEARCH_PARAMS = "{?q,callback,geocode,lang,locale,page,result_type,rpp,show_user,until,since_id,max_id,include_entities,result_type}";
 
+   /**
+    * Check to make sure that search.twitter.com is reachable
+    * 
+    * @throws Exception
+    */
+   @BeforeClass
+   public static void setUp() throws Exception
+   {
+      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(1000));
+
+   }
    /**
     * 
     * 
