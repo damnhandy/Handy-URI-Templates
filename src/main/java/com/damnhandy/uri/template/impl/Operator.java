@@ -5,35 +5,41 @@ package com.damnhandy.uri.template.impl;
 
 import static com.damnhandy.uri.template.UriTemplate.DEFAULT_SEPARATOR;
 
+import com.damnhandy.uri.template.UriTemplate.Encoding;
+
 /**
  * <p>
  * An enum representing an operator in a URI Template.
  * </p>
- *       Type    Separator
-                 ","     (default)
-        +        ","
-        #        ","
-        .        "."
-        /        "/"
-        ;        ";"
-        ?        "&"
-        &        "&"
+ * <pre>
+ *  .------------------------------------------------------------------.
+ *  |          NUL     +      .       /       ;      ?      &      #   |
+ *  |------------------------------------------------------------------|
+ *  | first |  ""     ""     "."     "/"     ";"    "?"    "&"    "#"  |
+ *  | sep   |  ","    ","    "."     "/"     ";"    "&"    "&"    ","  |
+ *  | named | false  false  false   false   true   true   true   false |
+ *  | ifemp |  ""     ""     ""      ""      ""     "="    "="    ""   |
+ *  | allow |   U     U+R     U       U       U      U      U     U+R  |
+ *  `------------------------------------------------------------------'
+ *  </pre>
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public enum Operator {
 
+public enum Operator {
+   
+  
    
    
-   NONE        ("",  DEFAULT_SEPARATOR,  false), 
-   RESERVED    ("+", DEFAULT_SEPARATOR,  false), 
-   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false), 
-   NAME_LABEL  (".", ".",  false), 
-   PATH        ("/", "/",  false), 
-   MATRIX      (";", ";",  true), 
-   QUERY       ("?", "&",  true), 
-   CONTINUATION("&", "&",  true);
+   NONE        ("",  DEFAULT_SEPARATOR,  false, "", Encoding.U), 
+   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "", Encoding.UR), 
+   NAME_LABEL  (".", ".",                false, "", Encoding.U), 
+   PATH        ("/", "/",                false, "", Encoding.U), 
+   MATRIX      (";", ";",                true,  "", Encoding.U), 
+   QUERY       ("?", "&",                true,  "=", Encoding.U), 
+   CONTINUATION("&", "&",                true,  "=", Encoding.U),
+   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "", Encoding.UR);
 
    
    /**
@@ -49,9 +55,17 @@ public enum Operator {
    /**
     * 
     */
-   private boolean queryString;
+   private boolean named;
 
-
+   /**
+    * 
+    */
+   private Encoding encoding = Encoding.U;
+   
+   /**
+    * 
+    */
+   private String empty = "";
    /**
     * 
     * Create a new Operator.
@@ -59,11 +73,13 @@ public enum Operator {
     * @param operator
     * @param separator
     */
-   private Operator(String operator, String separator, boolean queryString)
+   private Operator(String operator, String separator, boolean named, String empty, Encoding encoding)
    {
       this.operator = operator;
       this.separator = separator;
-      this.queryString = queryString;
+      this.named = named;
+      this.encoding = encoding;
+      this.empty = empty;
    }
 
    public String getOperator()
@@ -81,11 +97,28 @@ public enum Operator {
     * 
     * @return
     */
-   public boolean useQueryString()
+   public Encoding getEncoding() {
+      return encoding;
+   }
+   /**
+    * 
+    * 
+    * @return
+    */
+   public boolean isNamed()
    {
-      return queryString;
+      return named;
    }
 
+   /**
+    * 
+    * 
+    * @return
+    */
+   public String ifEmptyString()
+   {
+      return empty;
+   }
    /**
     */
    public String getListSeparator()
@@ -105,7 +138,7 @@ public enum Operator {
     */
    public boolean useVarNameWhenExploded()
    {
-      return queryString;
+      return named;
    }
 
    /**
