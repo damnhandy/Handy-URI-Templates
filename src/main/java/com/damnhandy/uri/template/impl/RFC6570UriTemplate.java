@@ -29,7 +29,7 @@ public final class RFC6570UriTemplate extends UriTemplate
 
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
 
-  
+
    /**
     * Create a new RFC6570UriTemplate.
     * 
@@ -60,17 +60,29 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    public String expand()
    {
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(getExpression());
+      
+      final String expression = getExpression();
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(expression);
       StringBuffer buffer = new StringBuffer();
+      int count = 0;
       while (matcher.find())
       {
+         
          String token = matcher.group();
          String value = buildVarSpecs(token.substring(1, token.length() - 1));
          matcher.appendReplacement(buffer, value);
+         count++;
+      }
+      if(count == 0)
+      {
+         throw new ExpressionParseException("no variables found");
       }
       matcher.appendTail(buffer);
+      
       return buffer.toString();
    }
+   
+   
    /**
     * 
     * 
@@ -336,7 +348,7 @@ public final class RFC6570UriTemplate extends UriTemplate
          }
       }
 
-      if (operator == Operator.FRAGMENT || operator == Operator.RESERVED)
+      if (operator.getEncoding() == Encoding.UR)
       {
          expanded = UriUtil.encodeFragment(variable);
       }
@@ -345,7 +357,7 @@ public final class RFC6570UriTemplate extends UriTemplate
          expanded = UriUtil.encode(variable);
       }
 
-      if (operator.useQueryString())
+      if (operator.isNamed())
       {
          if (expanded.isEmpty() && !operator.getSeparator().equals("&"))
          {
@@ -429,7 +441,6 @@ public final class RFC6570UriTemplate extends UriTemplate
       for (String value : values)
       {
          value = value.trim();
-        
          int subStrPos = value.indexOf(Modifier.PREFIX.getValue());
          /*
           * Prefix variable 
@@ -456,9 +467,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             varspecs.add(new VarSpec(value, Modifier.NONE));
          }
       }
-      String result = findExpressions(operator, varspecs);
-      return result;
-
+      return findExpressions(operator, varspecs);
    }
 
    /**
@@ -482,4 +491,6 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       return list;
    }
+   
+  
 }
