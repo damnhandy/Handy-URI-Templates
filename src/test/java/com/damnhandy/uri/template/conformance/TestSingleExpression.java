@@ -3,7 +3,6 @@
  */
 package com.damnhandy.uri.template.conformance;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +55,8 @@ public class TestSingleExpression
    {
       UriTemplate template = UriTemplate.fromExpression("/search.{format}{?q,geocode,lang,locale,page,result_type}").set(VALUES);
 
-      URI expected = new URI("/search.json?q=URI%20Templates&lang=en&geocode=37.76,-122.427&page=5");
-      URI result = new URI(template.expand());
-
+      String expected = "/search.json?q=URI%20Templates&geocode=37.76,-122.427&lang=en&page=5";
+      String result = template.expand();
       Assert.assertEquals(expected, result);
    }
 }
