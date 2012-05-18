@@ -12,7 +12,7 @@ To use Handy URI Templates, you need to add the following dependency to your pom
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.0-B1</version>
+		<version>1.0.2</version>
 	</dependency>
 ```
 
