@@ -4,7 +4,7 @@
 package com.damnhandy.uri.template.impl;
 
 /**
- * This {@link RuntimeException} is raised when the the template process
+ * This {@link RuntimeException} is raised when the the template processor
  * encounters an issue parsing the URI template expression. It indicates 
  * the expression is malformed. 
  * 
