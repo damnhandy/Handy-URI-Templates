@@ -3,7 +3,7 @@
  */
 package com.damnhandy.uri.template.conformance;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -27,7 +27,7 @@ public class TestSingleExpression
 
    static
    {
-      VALUES = new HashMap<String, Object>();
+      VALUES = new LinkedHashMap<String, Object>();
       VALUES.put("var", "value");
       VALUES.put("hello", "HelloWorld!");
       VALUES.put("empty", "");
@@ -43,7 +43,7 @@ public class TestSingleExpression
       VALUES.put("lang", "en");
       VALUES.put("geocode", new String[]{"37.76", "-122.427"});
       VALUES.put("list", new String[]{"red", "green", "blue"});
-      Map<String, Object> keys = new HashMap<String, Object>();
+      Map<String, Object> keys = new LinkedHashMap<String, Object>();
       keys.put("comma", ",");
       keys.put("dot", ".");
       keys.put("semi", ";");
@@ -53,9 +53,9 @@ public class TestSingleExpression
    @Test
    public void testExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.fromExpression("/search.{format}{?q,geocode,lang,locale,page,result_type}").set(VALUES);
+      UriTemplate template = UriTemplate.fromExpression("{/keys}").set(VALUES);
 
-      String expected = "/search.json?q=URI%20Templates&geocode=37.76,-122.427&lang=en&page=5";
+      String expected = "/comma,%2C,dot,.,semi,%3B";
       String result = template.expand();
       Assert.assertEquals(expected, result);
    }

@@ -126,7 +126,7 @@ public abstract class AbstractUriTemplateConformanceTest
                break;
             }
          }
-         Assert.assertTrue(testsuite + "->  Template: " + template + " did not match an combination", match);
+         Assert.assertTrue(testsuite + "->  Template: " + template + " returned "+actual+" and did not match any combination", match);
       }
    }
 }
