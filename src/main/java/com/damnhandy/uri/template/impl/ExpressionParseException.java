@@ -4,7 +4,9 @@
 package com.damnhandy.uri.template.impl;
 
 /**
- *
+ * This {@link RuntimeException} is raised when the the template process
+ * encounters an issue parsing the URI template expression. It indicates 
+ * the expression is malformed. 
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
