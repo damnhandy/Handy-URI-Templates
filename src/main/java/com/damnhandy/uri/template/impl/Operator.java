@@ -32,14 +32,14 @@ public enum Operator {
   
    
    
-   NONE        ("",  DEFAULT_SEPARATOR,  false, "", Encoding.U), 
-   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "", Encoding.UR), 
-   NAME_LABEL  (".", ".",                false, "", Encoding.U), 
-   PATH        ("/", "/",                false, "", Encoding.U), 
-   MATRIX      (";", ";",                true,  "", Encoding.U), 
+   NONE        ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U), 
+   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "",  Encoding.UR), 
+   NAME_LABEL  (".", ".",                false, "",  Encoding.U), 
+   PATH        ("/", "/",                false, "",  Encoding.U), 
+   MATRIX      (";", ";",                true,  "",  Encoding.U), 
    QUERY       ("?", "&",                true,  "=", Encoding.U), 
    CONTINUATION("&", "&",                true,  "=", Encoding.U),
-   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "", Encoding.UR);
+   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "",  Encoding.UR);
 
    
    /**
@@ -164,6 +164,10 @@ public enum Operator {
          if (op.getOperator().equalsIgnoreCase(opCode))
          {
             return op;
+         }
+         else if (opCode.equalsIgnoreCase("!") || opCode.equalsIgnoreCase("="))
+         {
+            throw new ExpressionParseException(opCode + " is not a valid operator.");
          }
       }
       return null;
