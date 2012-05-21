@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -51,7 +52,7 @@
 			<id>sonatype-nexus-staging</id>
 			<name>Sonatype Release</name>
 			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-			      
+
 		</repository>
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>
@@ -61,7 +62,14 @@
 	</distributionManagement>
 
 	<build>
-		
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>uritemplate-tests</directory>
+			</testResource>
+		</testResources>
 
 
 		<plugins>
@@ -250,7 +258,7 @@
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Async HTTP Client -->
 		<dependency>
 			<groupId>com.ning</groupId>
