@@ -43,26 +43,58 @@ public class TestDifferentDataTypes
    private static final char[][] MULTI_CHAR_ARRAY = {CHAR_ARRAY, {'t', 'w', 'o'}};
 
    @Test
+   public void testInts() throws Exception {
+      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INT_COUNT).expand());
+   }
+   
+   @Test
+   public void testIntegers() throws Exception {
+      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INTEGER_COUNT).expand());
+   }
+  
+   @Test
+   public void testLongs() throws Exception {
+      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", LONG_COUNT).expand());
+   }
+   
+   @Test
+   public void testFloats() throws Exception {
+      assertEquals("1.01,2.02,3.03", UriTemplate.fromExpression(TEMPLATE_1).set("count", FLOAT_COUNT).expand());
+   }
+   
+   @Test
+   public void testDoubles() throws Exception {
+      assertEquals("1.02,2.04,3.05", UriTemplate.fromExpression(TEMPLATE_1).set("count", DOUBLE_COUNT).expand());
+   }
+   
+   @Test
+   public void testExplodeDoubles() throws Exception {
+      assertEquals("1.02,2.04,3.05", UriTemplate.fromExpression(TEMPLATE_2).set("count", DOUBLE_COUNT).expand());
+   }
+   
+   @Test
+   public void testCharArray() throws Exception {
+      assertEquals("one", UriTemplate.fromExpression(TEMPLATE_1).set("count", CHAR_ARRAY).expand());
+   }
+   
+   @Test
+   public void testMultiCharArray() throws Exception {
+      assertEquals("one,two", UriTemplate.fromExpression(TEMPLATE_1).set("count", MULTI_CHAR_ARRAY).expand());
+   }
+   
+   @Test
+   public void test() throws Exception {
+      
+   }
+   
+   @Test
    public void testTypes() throws Exception
    {
-
-      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INT_COUNT).expand());
-      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INTEGER_COUNT).expand());
-      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", LONG_COUNT).expand());
-      assertEquals("1.01,2.02,3.03", UriTemplate.fromExpression(TEMPLATE_1).set("count", FLOAT_COUNT).expand());
-      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INT_COUNT).expand());
-      assertEquals("1.02,2.04,3.05", UriTemplate.fromExpression(TEMPLATE_1).set("count", DOUBLE_COUNT).expand());
-
       assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_2).set("count", INT_COUNT).expand());
       assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_2).set("count", INTEGER_COUNT).expand());
       assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_2).set("count", LONG_COUNT).expand());
       assertEquals("1.01,2.02,3.03", UriTemplate.fromExpression(TEMPLATE_2).set("count", FLOAT_COUNT).expand());
-      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_2).set("count", INT_COUNT).expand());
-      assertEquals("1.02,2.04,3.05", UriTemplate.fromExpression(TEMPLATE_2).set("count", DOUBLE_COUNT).expand());
-
-      assertEquals("one", UriTemplate.fromExpression(TEMPLATE_1).set("count", CHAR_ARRAY).expand());
-
-      assertEquals("one,two", UriTemplate.fromExpression(TEMPLATE_1).set("count", MULTI_CHAR_ARRAY).expand());
+      assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_2).set("count", INT_COUNT).expand());      
    }
 
    @Test(expected = VariableExpansionException.class)

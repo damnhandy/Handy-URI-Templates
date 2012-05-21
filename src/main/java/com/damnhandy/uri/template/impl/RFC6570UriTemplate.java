@@ -26,9 +26,15 @@ import com.damnhandy.uri.template.VarExploder;
  */
 public final class RFC6570UriTemplate extends UriTemplate
 {
-
+   /**
+    * Regex to locate the variable lists
+    */
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
 
+   /**
+    * Regex to validate the variable name.
+    */
+   private static final Pattern VARNAME_REGEX = Pattern.compile("([A-Za-z0-9\\_]|%[A-Fa-f0-9]{2})+");
 
    /**
     * Create a new RFC6570UriTemplate.
@@ -127,7 +133,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             Object value = values.get(varSpec.getVariableName());
             String expanded = null;
 
-            boolean explodable = isExplodable(value);
+            
             if (value != null)
             {
                if (value.getClass().isArray())
@@ -153,22 +159,35 @@ public final class RFC6570UriTemplate extends UriTemplate
 
                }
             }
+            boolean explodable = isExplodable(value);
+            if(explodable && varSpec.getModifier() == Modifier.PREFIX)
+            {
+               throw new VariableExpansionException("Prefix modifiers are not applicable to variables that have composite values.");
+            }
+            
+            if (explodable) {
+               VarExploder exploder;
+               if (value instanceof VarExploder)
+               {
+                  exploder = (VarExploder) value;
+               }
+               else
+               {
+                  exploder = VarExploderFactory.getExploder(value, varSpec);
+               }
+               if(varSpec.getModifier() == Modifier.EXPLODE)
+               {
+                  expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
+               }
+               else if (varSpec.getModifier() != Modifier.EXPLODE)
+               {
+                  expanded = expandCollection(operator, varSpec, exploder.getValues());
+               }
+            }
+            
+            
+            
 
-            if (explodable && varSpec.getModifier() == Modifier.EXPLODE && value instanceof VarExploder)
-            {
-               VarExploder exploder = (VarExploder) value;
-               expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
-            }
-            else if (explodable && varSpec.getModifier() == Modifier.EXPLODE && !(value instanceof CharSequence))
-            {
-               VarExploder exploder = VarExploderFactory.getExploder(value, varSpec);
-               expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
-            } 
-            else if (explodable && varSpec.getModifier() != Modifier.EXPLODE && value instanceof VarExploder)
-            {
-               VarExploder exploder = (VarExploder) value;
-               expanded = expandCollection(operator, varSpec, exploder.getValues());
-            }
             
             /*
              * Format the date if we have a java.util.Date
@@ -220,27 +239,45 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    private boolean isExplodable(Object value)
    {
-      if(value instanceof CharSequence)
-      {
-         return false;
-      }
       if(value == null)
       {
          return false;
       }
-      
       if (value instanceof Collection || value instanceof Map || value.getClass().isArray())
       {
          return true;
       }
-      
-      if (!value.getClass().isPrimitive() && !value.getClass().isAssignableFrom(CharSequence.class))
+      if (!isSimpleType(value))
       {
          return true;
       }
       return false;
    }
 
+   /**
+    * Returns true of the object is:
+    * 
+    * <ul>
+    * <li>a primitive type</li>
+    * <li>an instance of {@link CharSequence}</li>
+    * <li>an instance of {@link Number} <li>
+    * <li>an instance of {@link Date} <li>
+    * </ul>
+    * 
+    * @param value
+    * @return
+    */
+   private boolean isSimpleType(Object value)
+   {
+    
+      if(value.getClass().isPrimitive() || value instanceof Number
+            || value instanceof CharSequence || value instanceof Date)
+      {
+         return true;
+      }
+      
+      return false;
+   }
    /**
     * 
     * 
@@ -435,41 +472,58 @@ public final class RFC6570UriTemplate extends UriTemplate
          token = token.substring(1, token.length());
       }
       
-      String[] values = token.split(",");
+      String[] varspecStrings = token.split(",");
       List<VarSpec> varspecs = new ArrayList<VarSpec>();
 
-      for (String value : values)
+      for (String varname : varspecStrings)
       {
-         value = value.trim();
-         int subStrPos = value.indexOf(Modifier.PREFIX.getValue());
+         varname = varname.trim();
+         int subStrPos = varname.indexOf(Modifier.PREFIX.getValue());
          /*
           * Prefix variable 
           */
          if (subStrPos > 0)
          {
-            String[] pair = value.split(Modifier.PREFIX.getValue());
-            Integer pos = Integer.valueOf(value.substring(subStrPos + 1));
-            varspecs.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
+            String[] pair = varname.split(Modifier.PREFIX.getValue());
+            try
+            {
+               validateVarname(pair[0]);
+               Integer pos = Integer.valueOf(varname.substring(subStrPos + 1));
+               varspecs.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
+            }
+            catch (NumberFormatException e)
+            {
+               throw new ExpressionParseException("The prefix value for "+ pair[0]+ " was not a number", e);
+            }
          }
 
          /*
           * Variable will be exploded
           */
-         else if (value.lastIndexOf(Modifier.EXPLODE.getValue()) > 0)
+         else if (varname.lastIndexOf(Modifier.EXPLODE.getValue()) > 0)
          {
-            varspecs.add(new VarSpec(value, Modifier.EXPLODE));
+            validateVarname(varname.substring(0, (varname.length() - 1)));
+            varspecs.add(new VarSpec(varname, Modifier.EXPLODE));
          }
          /*
           * Standard Value
           */
          else
          {
-            varspecs.add(new VarSpec(value, Modifier.NONE));
+            validateVarname(varname);
+            varspecs.add(new VarSpec(varname, Modifier.NONE));
          }
       }
       return findExpressions(operator, varspecs);
    }
 
+   private void validateVarname(String varname) {
+      Matcher matcher = VARNAME_REGEX.matcher(varname);
+      if(!matcher.matches())
+      {
+         throw new ExpressionParseException("The variable name "+varname+" contains invalid characters");
+      }
+   }
    /**
     * Takes an array of objects and converts them to a {@link List}.
     * 
