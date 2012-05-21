@@ -34,7 +34,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * Regex to validate the variable name.
     */
-   private static final Pattern VARNAME_REGEX = Pattern.compile("([A-Za-z0-9\\_]|%[A-Fa-f0-9]{2})+");
+   private static final Pattern VARNAME_REGEX = Pattern.compile("([A-Za-z0-9\\_\\.]|%[A-Fa-f0-9]{2})+");
 
    /**
     * Create a new RFC6570UriTemplate.
