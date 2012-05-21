@@ -120,13 +120,13 @@ public abstract class AbstractUriTemplateConformanceTest
          boolean match = false;
          for(String combo : combinations)
          {
-            if(combo.equals(combo))
+            if(combo.equalsIgnoreCase(actual))
             {
                match = true;
                break;
             }
          }
-         Assert.assertTrue(testsuite + "->  Template: " + template + " did not match an combindation", match);
+         Assert.assertTrue(testsuite + "->  Template: " + template + " did not match an combination", match);
       }
    }
 }
