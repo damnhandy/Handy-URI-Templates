@@ -2,17 +2,17 @@
 
 This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java supporting up to level 4 expressions. It features a fluent API and Java objects as template values. 
 
-As of version 1.1.0-B1, it is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
+As of version `1.1.1`, it is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
 ## Maven
 
-To use Handy URI Templates, you need to add the following dependency to your pom.xml:
+To use the latest version of Handy URI Templates, you need to add the following dependency to your pom.xml:
 
 ```xml
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.0.2</version>
+		<version>1.1.1</version>
 	</dependency>
 ```
 
@@ -22,7 +22,7 @@ If you feel like using a development version, you can use a snapshot release:
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.0-B2-SNAPSHOT</version>
+		<version>1.1.2-SNAPSHOT</version>
 	</dependency>
 ```
 
