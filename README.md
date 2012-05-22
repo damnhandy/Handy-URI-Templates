@@ -1,8 +1,15 @@
 # Handy URI Templates
 
-This project is an implementation of [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java supporting up to level 4 expressions. It features a fluent API and Java objects as template values. 
+Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. The template process supports the following features:
 
-As of version `1.1.1`, it is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
+* Fluent Java API for manipulating uritemplates 
+* Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
+* Java objects as template values
+* Support for rendering date values 
+* Template expression validation
+* Custom object expanders
+
+As of version `1.1.1`, Handy URI Templates is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
 ## Maven
 
@@ -12,7 +19,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.1</version>
+		<version>1.1.2</version>
 	</dependency>
 ```
 
@@ -22,11 +29,11 @@ If you feel like using a development version, you can use a snapshot release:
 	<dependency>
 		<groupId>com.damnhandy</groupId>
 		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.2-SNAPSHOT</version>
+		<version>1.1.3-SNAPSHOT</version>
 	</dependency>
 ```
 
-In order to use a SNAPSHOT, you'll have to add the Sonatype snapshots repository:
+In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
 
 ```xml
 	<repository>
