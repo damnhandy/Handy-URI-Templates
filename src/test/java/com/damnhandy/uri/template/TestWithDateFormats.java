@@ -8,7 +8,9 @@ import static org.junit.Assert.assertEquals;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +34,10 @@ public class TestWithDateFormats
    @Before
    public void setUp()
    {
-      date = formatDate("2012-04-20T16:20:00.000-0400");
+      Calendar cal = new GregorianCalendar(2012, Calendar.APRIL, 20);
+      cal.set(Calendar.HOUR_OF_DAY, 16);
+      cal.set(Calendar.MINUTE, 20);
+      date = cal.getTime();
    }
 
    /**
