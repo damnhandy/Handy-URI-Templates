@@ -295,4 +295,8 @@
 		<url>http://damnhandy.com</url>
 		<name>Ryan J. McDonough</name>
 	</organization>
+	<ciManagement>
+		<system>jenkins</system>
+		<url>https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/</url>
+	</ciManagement>
 </project>
