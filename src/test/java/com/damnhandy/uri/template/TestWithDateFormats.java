@@ -35,7 +35,7 @@ public class TestWithDateFormats
    @Before
    public void setUp()
    {
-      Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/New_York"));
+      Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT-04:00"));
       cal.set(Calendar.YEAR, 2012);
       cal.set(Calendar.MONTH, Calendar.APRIL);
       cal.set(Calendar.DAY_OF_MONTH, 20);
