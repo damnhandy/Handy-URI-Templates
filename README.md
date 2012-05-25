@@ -1,5 +1,7 @@
 # Handy URI Templates
 
+[![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
+
 Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. The template process supports the following features:
 
 * Fluent Java API for manipulating uritemplates 
@@ -8,6 +10,7 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 * Support for rendering date values 
 * Template expression validation
 * Custom object expanders
+
 
 
 As of version `1.1.1`, Handy URI Templates is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
