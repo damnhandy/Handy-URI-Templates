@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -52,6 +53,7 @@ public class TestWithDateFormats
     * @throws Exception
     */
    @Test
+   @Ignore
    public void testWithDefaultDateFormat() throws Exception
    {
       String uri = UriTemplate.fromExpression(TEMPLATE).set("date", date).expand();
