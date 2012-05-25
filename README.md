@@ -15,6 +15,10 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 As of version `1.1.1`, Handy URI Templates is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
+## Continuous Integration 
+
+This project is running continuous builds [Jenkins](http://jenkins-ci.org) on [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) sinvce you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail even when they shouldn't. With that said, put more stock in the Jenkins build results.
+
 ## Maven
 
 To use the latest version of Handy URI Templates, you need to add the following dependency to your pom.xml:
