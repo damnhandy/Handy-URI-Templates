@@ -9,6 +9,7 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 * Template expression validation
 * Custom object expanders
 
+
 As of version `1.1.1`, Handy URI Templates is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
 ## Maven
