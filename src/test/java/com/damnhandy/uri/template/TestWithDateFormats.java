@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,9 +35,14 @@ public class TestWithDateFormats
    @Before
    public void setUp()
    {
-      Calendar cal = new GregorianCalendar(2012, Calendar.APRIL, 20);
+      Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("America/New_York"));
+      cal.set(Calendar.YEAR, 2012);
+      cal.set(Calendar.MONTH, Calendar.APRIL);
+      cal.set(Calendar.DAY_OF_MONTH, 20);
       cal.set(Calendar.HOUR_OF_DAY, 16);
       cal.set(Calendar.MINUTE, 20);
+      cal.set(Calendar.SECOND, 0);
+      cal.set(Calendar.MILLISECOND, 0);
       date = cal.getTime();
    }
 
