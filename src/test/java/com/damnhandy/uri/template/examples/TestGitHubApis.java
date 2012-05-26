@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
@@ -40,7 +39,6 @@ import com.ning.http.client.RequestBuilder;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-//@Ignore
 public class TestGitHubApis extends AbstractExampleTest
 {
 

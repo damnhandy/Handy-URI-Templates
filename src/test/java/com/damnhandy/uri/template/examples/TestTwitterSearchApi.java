@@ -20,7 +20,6 @@ import com.ning.http.client.RequestBuilder;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-//@Ignore
 public class TestTwitterSearchApi extends AbstractExampleTest
 {
 
