@@ -41,7 +41,19 @@ public class TestDifferentDataTypes
    private static final char[] CHAR_ARRAY = {'o', 'n', 'e'};
 
    private static final char[][] MULTI_CHAR_ARRAY = {CHAR_ARRAY, {'t', 'w', 'o'}};
+   
+   private static final boolean FLAG = false;
 
+   @Test
+   public void testBooleanPrimitive() throws Exception {
+      assertEquals("/set?flag=false", UriTemplate.fromExpression("/set{?flag}").set("flag", FLAG).expand());
+   }
+   
+   @Test
+   public void testBooleanObject() throws Exception {
+      assertEquals("/set?flag=false", UriTemplate.fromExpression("/set{?flag}").set("flag", Boolean.FALSE).expand());
+   }
+   
    @Test
    public void testInts() throws Exception {
       assertEquals("1,2,3", UriTemplate.fromExpression(TEMPLATE_1).set("count", INT_COUNT).expand());

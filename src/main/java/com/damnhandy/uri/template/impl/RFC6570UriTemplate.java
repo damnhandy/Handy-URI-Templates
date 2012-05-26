@@ -270,8 +270,11 @@ public final class RFC6570UriTemplate extends UriTemplate
    private boolean isSimpleType(Object value)
    {
     
-      if(value.getClass().isPrimitive() || value instanceof Number
-            || value instanceof CharSequence || value instanceof Date)
+      if(value.getClass().isPrimitive() ||
+            value instanceof Number || 
+            value instanceof CharSequence || 
+            value instanceof Date || 
+            value instanceof Boolean)
       {
          return true;
       }

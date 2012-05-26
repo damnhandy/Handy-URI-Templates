@@ -36,8 +36,7 @@ public class TestTwitterSearchApi extends AbstractExampleTest
    @BeforeClass
    public static void setUp() throws Exception
    {
-      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(1000));
-
+      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(4000));  
    }
    /**
     * 
