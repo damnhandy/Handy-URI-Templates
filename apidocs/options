@@ -1,24 +1,24 @@
 -classpath
-'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/classes'
+'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/checkout/target/classes'
 -encoding
 'UTF-8'
 -protected
 -sourcepath
-'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/src/main/java'
+'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/checkout/src/main/java'
 -author
 -bottom
 'Copyright &#169; April 30, 2012-2012 <a href="http://damnhandy.com">Ryan J. McDonough</a>. All Rights Reserved.'
 -charset
 'UTF-8'
 -d
-'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/site/apidocs'
+'/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/checkout/target/site/apidocs'
 -docencoding
 'UTF-8'
 -doctitle
-'Handy URI Templates 1.1.3-SNAPSHOT API'
+'Handy URI Templates 1.1.3 API'
 -linkoffline
-'http://download.oracle.com/javase/6/docs/api' '/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/javadoc-bundle-options'
+'http://download.oracle.com/javase/6/docs/api' '/Users/rmcdonough/Documents/Code/GitHub/Handy-URI-Templates/target/checkout/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'Handy URI Templates 1.1.3-SNAPSHOT API'
+'Handy URI Templates 1.1.3 API'
