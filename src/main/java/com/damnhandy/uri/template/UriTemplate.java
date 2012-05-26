@@ -63,7 +63,7 @@ public abstract class UriTemplate
    /**
     * 
     */
-   public static final char[] OPERATORS = {'+', '#', '.', '/', ';', '?', '&'};
+   protected static final char[] OPERATORS = {'+', '#', '.', '/', ';', '?', '&'};
 
    /**
     * 

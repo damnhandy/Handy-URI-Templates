@@ -21,9 +21,9 @@ import com.damnhandy.uri.template.impl.UriEncodingException;
  */
 public final class UriUtil
 {
-   public static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};
+   protected static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};
 
-   public static final char[] SUB_DELIMS_CHARS = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='};
+   protected static final char[] SUB_DELIMS_CHARS = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='};
 
    private static final BitSet RESERVED;
 
