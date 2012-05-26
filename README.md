@@ -72,7 +72,7 @@ This will result in the following URI:
 
 	"/o/one/A%20test?test1=query&test2=blah"
 	
-You can find more in the [JavaDocs](http://damnhandy.com/handy-uri-templates/apidocs/).
+You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html).
 
 ## Using with HTTP Clients
 
@@ -98,7 +98,7 @@ Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-g
 
 ## Supported Value Types
 
-While the `set()` method accepts any Java object, the following Java types are preferred:
+While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/UriTemplate.html) accepts any Java object, the following Java types are preferred:
 
 * primitive and Object types such as:
   * int & Integer
@@ -132,9 +132,9 @@ The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc
 
 ## POJOs as Composite Values
 
-The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a `VarExploder` is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
+The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a `[VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html)` is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
 
-For most use cases, the `DefaultVarExploder` should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
+For most use cases, the `[DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html)` should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
 
 	/mapper{?address*}
  
@@ -153,7 +153,7 @@ The expanded URI will be:
 
 	/mapper?city=Newport%20Beach&state=CA
  
-The `DefaultVarExploder` breaks down the object properties as follows:
+The `[DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html)` breaks down the object properties as follows:
 
 * All properties that contain a non-null return value will be included
 * Getters or fields annotated with `@UriTransient` will be excluded 
