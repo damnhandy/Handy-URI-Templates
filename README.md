@@ -132,9 +132,9 @@ The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc
 
 ## POJOs as Composite Values
 
-The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a `[VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html)` is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
+The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
 
-For most use cases, the `[DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html)` should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
+For most use cases, the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
 
 	/mapper{?address*}
  
@@ -153,7 +153,7 @@ The expanded URI will be:
 
 	/mapper?city=Newport%20Beach&state=CA
  
-The `[DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html)` breaks down the object properties as follows:
+The [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) breaks down the object properties as follows:
 
 * All properties that contain a non-null return value will be included
 * Getters or fields annotated with `@UriTransient` will be excluded 
@@ -163,7 +163,7 @@ The `[DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidoc
 
 Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` works.
 
-Should the `DefaultVarExploder` not be suitable for your needs, custom `VarExploder` implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
+Should the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) not be suitable for your needs, custom [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
 
 ```java
 	UriTemplate.fromExpression("/mapper{?address*}")
@@ -171,7 +171,7 @@ Should the `DefaultVarExploder` not be suitable for your needs, custom `VarExplo
 	           .expand();
 ```
 
-Note: All `VarExploder` implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
+Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
 
 License
 -------
