@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -10,20 +11,16 @@
 	<version>1.1.4-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
-
-	<issueManagement>
-		<system>Github Issues</system>
-		<url>https://github.com/damnhandy/Handy-URI-Templates/issues</url>
-	</issueManagement>
-
-	<properties>
-		<http.client>4.1.1</http.client>
-		<jackson.version>2.0.0</jackson.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 	<prerequisites>
 		<maven>3.0.3</maven>
 	</prerequisites>
+
+	<properties>
+		<http.client>4.1.1</http.client>
+		<jackson.version>2.0.2</jackson.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
 	<scm>
 		<url>git@github.com:damnhandy/Handy-URI-Templates.git</url>
@@ -37,7 +34,19 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
+	<inceptionYear>April 30, 2012</inceptionYear>
+	<organization>
+		<url>http://damnhandy.com</url>
+		<name>Ryan J. McDonough</name>
+	</organization>
+	<ciManagement>
+		<system>jenkins</system>
+		<url>https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/</url>
+	</ciManagement>
+	<issueManagement>
+		<system>Github Issues</system>
+		<url>https://github.com/damnhandy/Handy-URI-Templates/issues</url>
+	</issueManagement>
 	<developers>
 		<developer>
 			<name>Ryan J. McDonough</name>
@@ -294,6 +303,28 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- JAX-RS -->
+
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>1.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>1.12</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- JSON -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -301,12 +332,7 @@
 			<version>${jackson.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson.version}</version>
-			<scope>test</scope>
-		</dependency>
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -324,13 +350,5 @@
 	</dependencies>
 
 
-	<inceptionYear>April 30, 2012</inceptionYear>
-	<organization>
-		<url>http://damnhandy.com</url>
-		<name>Ryan J. McDonough</name>
-	</organization>
-	<ciManagement>
-		<system>jenkins</system>
-		<url>https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/</url>
-	</ciManagement>
+
 </project>
