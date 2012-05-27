@@ -40,7 +40,6 @@ public class TestExplodeWithPOJO
    {
       Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
       String result = UriTemplate.fromExpression(NON_EXPLODE_TEMPLATE).set("address", address).expand();
-      System.out.println(result);
       Assert.assertEquals("/mapper?address=Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
    }
 
