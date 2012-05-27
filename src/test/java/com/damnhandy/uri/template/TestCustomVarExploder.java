@@ -63,7 +63,6 @@ public class TestCustomVarExploder
       Map<String, Object> values = new HashMap<String, Object>();
       values.put("address", new JsonVarExploder(JSON));
       String result = UriTemplate.expand(BAD_EXPLODE_TEMPLATE, values);
-      System.out.println(result);
       Assert.assertEquals("/mapper?address=Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
       
    }
