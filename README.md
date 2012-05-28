@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
 
-Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. The template process supports the following features:
+Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
 
 * Fluent Java API for manipulating uritemplates 
 * Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
@@ -11,13 +11,11 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 * Template expression validation
 * Custom object expanders
 
-
-
-As of version `1.1.1`, Handy URI Templates is passing all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
+As of version `1.1.1`, Handy URI Templates is passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
 ## Continuous Integration 
 
-This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) sinvce you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail even when they shouldn't. With that said, put more stock in the Jenkins build results.
+This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) sinvce you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail sometimes even when they shouldn't. With that said, put more stock in the Jenkins build results.
 
 ## Maven
 
@@ -61,16 +59,16 @@ Using the library is simple:
 ```java
 	String uri = 
 		UriTemplate.fromExpression("/{foo:1}{/foo,thing*}{?test1, test2}")
-				   .set("foo", "one")
-				   .set("test1", "query")
-				   .set("test2", "blah")
+				   .set("foo", "houses")
+				   .set("query", "Ask something")
+				   .set("other", "someting else")
 				   .set("thing", "A test")
 				   .expand();
 ```
 
 This will result in the following URI:
 
-	"/o/one/A%20test?test1=query&test2=blah"
+	"/h/houses/A%20test?query=Ask%20something&other=something%20else"
 	
 You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html).
 
