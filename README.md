@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
 
-Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
+Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
 
 * Fluent Java API for manipulating uritemplates 
 * Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
@@ -15,7 +15,7 @@ As of version `1.1.1`, Handy URI Templates is passes all tests defined by the [u
 
 ## Continuous Integration 
 
-This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) sinvce you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail sometimes even when they shouldn't. With that said, put more stock in the Jenkins build results.
+This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) since you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail sometimes even when they shouldn't. With that said, put more stock in the Jenkins build results.
 
 ## Maven
 
