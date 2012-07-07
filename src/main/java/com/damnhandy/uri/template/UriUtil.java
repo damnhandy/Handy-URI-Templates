@@ -23,7 +23,7 @@ public final class UriUtil
 {
    static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};
 
-   static final char[] SUB_DELIMS_CHARS = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='};
+   static final char[] SUB_DELIMS_CHARS = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=', '<', '>', '{','}'};
 
    private static final BitSet RESERVED;
 
