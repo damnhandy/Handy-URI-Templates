@@ -34,7 +34,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * Regex to validate the variable name.
     */
-   private static final Pattern VARNAME_REGEX = Pattern.compile("([A-Za-z0-9\\_\\.]|%[A-Fa-f0-9]{2})+");
+   static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
 
    /**
     * Create a new RFC6570UriTemplate.
@@ -84,7 +84,6 @@ public final class RFC6570UriTemplate extends UriTemplate
          throw new ExpressionParseException("no variables found");
       }
       matcher.appendTail(buffer);
-      
       return buffer.toString();
    }
    
@@ -480,7 +479,6 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       for (String varname : varspecStrings)
       {
-         varname = varname.trim();
          int subStrPos = varname.indexOf(Modifier.PREFIX.getValue());
          /*
           * Prefix variable 
@@ -525,6 +523,11 @@ public final class RFC6570UriTemplate extends UriTemplate
       if(!matcher.matches())
       {
          throw new ExpressionParseException("The variable name "+varname+" contains invalid characters");
+      }
+      
+      if(varname.contains(" "))
+      {
+         throw new ExpressionParseException("The variable name "+varname+" cannot contain spaces (leading or trailing)");
       }
    }
    /**
