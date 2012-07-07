@@ -318,7 +318,7 @@ public abstract class UriTemplate
     * @param op
     * @return
     */
-   protected boolean containsOperator(String op)
+   public static boolean containsOperator(String op)
    {
       return OPERATOR_BITSET.get(op.toCharArray()[0]);
    }
