@@ -32,7 +32,7 @@ public enum Operator {
   
    
    
-   NONE        ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U), 
+   NUL         ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U), 
    RESERVED    ("+", DEFAULT_SEPARATOR,  false, "",  Encoding.UR), 
    NAME_LABEL  (".", ".",                false, "",  Encoding.U), 
    PATH        ("/", "/",                false, "",  Encoding.U), 
