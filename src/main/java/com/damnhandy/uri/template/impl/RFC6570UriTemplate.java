@@ -39,11 +39,11 @@ public final class RFC6570UriTemplate extends UriTemplate
    /**
     * Create a new RFC6570UriTemplate.
     * 
-    * @param expression
+    * @param template
     */
-   public RFC6570UriTemplate(String expression)
+   public RFC6570UriTemplate(String template)
    {
-      this.setExpression(expression);
+      this.setTemplate(template);
    }
 
    /**
@@ -67,8 +67,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    public String expand()
    {
       
-      final String expression = getExpression();
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(expression);
+      final String template = getTemplate();
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(template);
       StringBuffer buffer = new StringBuffer();
       int count = 0;
       while (matcher.find())
@@ -466,7 +466,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    private String buildVarSpecs(String token)
    {
       // Check for URI operators
-      Operator operator = Operator.NONE;
+      Operator operator = Operator.NUL;
       String firstChar = token.substring(0, 1);
       if (containsOperator(firstChar))
       {

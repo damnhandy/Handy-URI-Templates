@@ -81,7 +81,7 @@ public abstract class UriTemplate
    /**
     * The URI expression
     */
-   private StringBuilder expressionBuffer;
+   private StringBuilder templateBuffer;
 
    /**
     * The collection of values that will be applied to the URI expression in the
@@ -96,10 +96,24 @@ public abstract class UriTemplate
     * @param expression
     * @return
     * @since 1.0
+    * @deprecated use {@link #fromTemplate(String)} instead
     */
+   @Deprecated
    public static final UriTemplate fromExpression(String expression)
    {
       return new RFC6570UriTemplate(expression);
+   }
+   
+   /**
+    * Creates a new {@link UriTemplate} from the template.
+    * 
+    * @param expression
+    * @return
+    * @since 1.2
+    */
+   public static final UriTemplate fromTemplate(String template)
+   {
+      return new RFC6570UriTemplate(template);
    }
    
    /**
@@ -109,7 +123,7 @@ public abstract class UriTemplate
     * from the base template to the new {@link UriTemplate}. 
     * </p>
     * <p>
-    * This method is useful when the base expression is less volatile than the child
+    * This method is useful when the base template is less volatile than the child
     * expression and you want to merge the two.
     * </p>
     * @param base
@@ -118,7 +132,7 @@ public abstract class UriTemplate
     */
    public static UriTemplate fromTemplate(UriTemplate base)
    {
-      UriTemplate template = fromExpression(base.getExpression());
+      UriTemplate template = fromTemplate(base.getTemplate());
       template.set(base.getValues());
       return template;
    }
@@ -145,10 +159,23 @@ public abstract class UriTemplate
     * 
     * @return
     * @since 1.0
+    * @deprecated use {@link #getTemplate()} instead.
     */
+   @Deprecated
    public String getExpression()
    {
-      return expressionBuffer.toString();
+      return getTemplate();
+   }
+   
+   /**
+    * Returns the original URI template expression.
+    * 
+    * @return
+    * @since 1.2
+    */
+   public String getTemplate() 
+   {
+      return templateBuffer.toString();
    }
    
    /**
@@ -176,9 +203,9 @@ public abstract class UriTemplate
     * </p>
     * <pre>
     *  UriTemplate template = UriTemplate.fromExpression("http://myhost")
-    *                                    .expression("{/version}")
-    *                                    .expression("{/myId}")
-    *                                    .expression("/things/{thingId}")
+    *                                    .appendTemplate("{/version}")
+    *                                    .appendTemplate("{/myId}")
+    *                                    .appendTemplate("/things/{thingId}")
     *                                    .set("myId","damnhandy")
     *                                    .set("version","v1")
     *                                    .set("thingId","12345");
@@ -194,24 +221,42 @@ public abstract class UriTemplate
     * the expression author to include the necessary delimiters in each sub 
     * expression.
     * </p>
-    * @param expression
+    * @param template
     * @return
-    * @since 1.0
+    * @since 1.2
     * 
     */
-   public UriTemplate expression(String expression)
+   public UriTemplate appendTemplate(String template)
    {
-      if(expression == null)
+      if(template == null)
       {
          return this;
       }
-      this.expressionBuffer.append(expression.trim());
+      this.templateBuffer.append(template.trim());
       return this;
    }
 
-   protected void setExpression(String expression)
+   /**
+    * FIXME Comment this
+    * 
+    * @param expression
+    * @return
+    * @deprecated use {@link #template(String)} instead
+    */
+   @Deprecated
+   public UriTemplate expression(String expression)
    {
-      this.expressionBuffer = new StringBuilder(expression);
+      return this.appendTemplate(expression);
+   }
+   
+   /**
+    * FIXME Comment this
+    * 
+    * @param template
+    */
+   protected void setTemplate(String template)
+   {
+      this.templateBuffer = new StringBuilder(template);
    }
    /**
     * Returns the collection of name/value pairs contained in the instance.
