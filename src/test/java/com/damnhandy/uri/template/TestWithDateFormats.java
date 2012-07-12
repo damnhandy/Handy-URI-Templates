@@ -56,7 +56,7 @@ public class TestWithDateFormats
    @Ignore
    public void testWithDefaultDateFormat() throws Exception
    {
-      String uri = UriTemplate.fromExpression(TEMPLATE).set("date", date).expand();
+      String uri = UriTemplate.fromTemplate(TEMPLATE).set("date", date).expand();
       assertEquals("/2012/2012-04-20T16%3A20%3A00.000-0400", uri);
    }
 
@@ -64,7 +64,7 @@ public class TestWithDateFormats
    @Test
    public void testWithCustomDefaultDateFormat() throws Exception
    {
-      UriTemplate template = UriTemplate.fromExpression(TEMPLATE)
+      UriTemplate template = UriTemplate.fromTemplate(TEMPLATE)
                                         .withDefaultDateFormat("yyyy-MM-dd")
                                         .set("date",date);
       assertEquals("/2012/2012-04-20", template.expand());
@@ -75,7 +75,7 @@ public class TestWithDateFormats
    {
       Date start = formatDate("2012-04-01T16:20:00.000-0400");
       Date end = formatDate("2012-04-30T16:20:00.000-0400");
-      UriTemplate template = UriTemplate.fromExpression("/find{?start,end}")
+      UriTemplate template = UriTemplate.fromTemplate("/find{?start,end}")
                                         .withDefaultDateFormat("yyyy-MM-dd")
                                         .set("start",start)
                                         .set("end", end);

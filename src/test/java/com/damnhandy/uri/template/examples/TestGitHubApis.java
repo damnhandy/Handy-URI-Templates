@@ -69,9 +69,9 @@ public class TestGitHubApis extends AbstractExampleTest
       
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplate.fromExpression(BASE)
-                        .expression("/users/{user}/repos")
-                        .expression(PAGINATION)
+             UriTemplate.fromTemplate(BASE)
+                        .append("/users/{user}/repos")
+                        .append(PAGINATION)
                         .set("user", "damnhandy")
                         .set("repo", "repos")
                         .set("page", 1)
@@ -94,8 +94,8 @@ public class TestGitHubApis extends AbstractExampleTest
       
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplate.fromExpression(BASE)
-                        .expression(PATH_EXPRESSION)
+             UriTemplate.fromTemplate(BASE)
+                        .append(PATH_EXPRESSION)
                         .set("user", "damnhandy")
                         .set("repo", "Handy-URI-Templates")
                         .set("function","commits")
@@ -117,8 +117,8 @@ public class TestGitHubApis extends AbstractExampleTest
       
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-            UriTemplate.fromExpression(BASE)
-                       .expression(PATH_EXPRESSION)
+            UriTemplate.fromTemplate(BASE)
+                       .append(PATH_EXPRESSION)
                        .set("user", "damnhandy")
                        .set("repo", "Handy-URI-Templates")
                        .set("function","commits")

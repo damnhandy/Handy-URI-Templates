@@ -43,7 +43,7 @@ public class TestNegativeTests extends AbstractUriTemplateConformanceTest
    @Test
    public void test() throws Exception
    {
-      UriTemplate t = UriTemplate.fromExpression(template);
+      UriTemplate t = UriTemplate.fromTemplate(template);
       boolean pass = true;
       try
       {

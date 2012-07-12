@@ -108,7 +108,7 @@ public abstract class AbstractUriTemplateConformanceTest
    @Test
    public void test() throws Exception
    {
-      UriTemplate t = UriTemplate.fromExpression(template);
+      UriTemplate t = UriTemplate.fromTemplate(template);
       String actual = t.expand(variables);
       if(expected instanceof String)
       {

@@ -46,8 +46,8 @@ public class TestTwitterSearchApi extends AbstractExampleTest
    public void testSearch() throws Exception
    {
       RequestBuilder builder = new RequestBuilder("GET");
-      String uri = UriTemplate.fromExpression(SEARCH_BASE)
-                              .expression(SEARCH_PARAMS)
+      String uri = UriTemplate.fromTemplate(SEARCH_BASE)
+                              .append(SEARCH_PARAMS)
                               .set("format", "json")
                               .set("q", "URI Templates")
                               .set("rpp", "5")

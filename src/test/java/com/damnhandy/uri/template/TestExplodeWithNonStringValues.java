@@ -20,7 +20,7 @@ public class TestExplodeWithNonStringValues
    @Test
    public void testExpandInteger() throws Exception
    {
-      String result = UriTemplate.fromExpression(expression).set("foo", new Integer(300)).expand();
+      String result = UriTemplate.fromTemplate(expression).set("foo", new Integer(300)).expand();
       Assert.assertEquals("/3/300", result);
    }
 }

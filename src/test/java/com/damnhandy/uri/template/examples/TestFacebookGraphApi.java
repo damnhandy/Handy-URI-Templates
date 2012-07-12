@@ -53,7 +53,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiFQL() throws Exception
    {
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id","fql")
                               .set("q", "SELECT uid2 FROM friend WHERE uid1=me()")
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -69,7 +69,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiAllFields() throws Exception
    {
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id", "bgolub")
                               .set("access_token", System.getProperty("fb.access_token"))
                               .expand();
@@ -83,7 +83,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiGetSubResource() throws Exception
    {
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id", new String[] {"bgolub","albums"})
                               .set("access_token", System.getProperty("fb.access_token"))
                               .expand();
@@ -102,7 +102,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiSelectiveFields() throws Exception
    {
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id", "bgolub")
                               .set("fields", new String[] {"id", "name", "picture"})
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -128,7 +128,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
       fields.add("name");
       fields.add("count");
       
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id", new String[] {"bgolub","albums"})
                               .set("fields", fields)
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -148,7 +148,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
       fields.add("name");
       fields.add("picture");
       
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id", "bgolub")
                               .set("fields", fields)
                               .set("access_token", System.getProperty("fb.access_token"))
@@ -168,7 +168,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
    @Test
    public void facebookGraphApiPlacesSearch() throws Exception 
    {
-      String uri = UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+      String uri = UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                               .set("id","search")
                               .set("q", "coffee")
                               .set("type","place")
@@ -184,7 +184,7 @@ public class TestFacebookGraphApi extends AbstractExampleTest
                   + System.getProperty("fb.access_token"), uri);
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = 
-            builder.setUrl(UriTemplate.fromExpression(GRAPH_API_EXPRESSION)
+            builder.setUrl(UriTemplate.fromTemplate(GRAPH_API_EXPRESSION)
                                       .set("id","search")
                                       .set("q", "coffee")
                                       .set("type","place")

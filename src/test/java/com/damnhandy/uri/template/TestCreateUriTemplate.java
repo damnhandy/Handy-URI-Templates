@@ -22,12 +22,12 @@ public class TestCreateUriTemplate
    @Test
    public void testFromTemplate() throws Exception
    {
-      UriTemplate base = UriTemplate.fromExpression("http://myhost{/version,myId}")
+      UriTemplate base = UriTemplate.fromTemplate("http://myhost{/version,myId}")
                                     .set("myId","damnhandy")
                                     .set("version","v1"); // URI versioning is silly, but this is just for examples
       
       UriTemplate child = UriTemplate.fromTemplate(base)
-                                     .expression("/things/{thingId}")
+                                     .append("/things/{thingId}")
                                      .set("thingId","12345");
       
       
@@ -45,18 +45,18 @@ public class TestCreateUriTemplate
    @Test
    public void testMultpleExpressions() throws Exception
    {
-      UriTemplate template = UriTemplate.fromExpression("http://myhost")
-                                        .expression("{/version}")
-                                        .expression("{/myId}")
-                                        .expression(null)
-                                        .expression(" ")
-                                        .expression("/things/{thingId}")
+      UriTemplate template = UriTemplate.fromTemplate("http://myhost")
+                                        .append("{/version}")
+                                        .append("{/myId}")
+                                        .append(null)
+                                        .append(" ")
+                                        .append("/things/{thingId}")
                                         .set("myId","damnhandy")
                                         .set("version","v1")
                                         .set("thingId","12345");
       
       Assert.assertEquals(3, template.getValues().size());
-      Assert.assertEquals("http://myhost{/version}{/myId}/things/{thingId}", template.getExpression());
+      Assert.assertEquals("http://myhost{/version}{/myId}/things/{thingId}", template.getTemplate());
       Assert.assertEquals("http://myhost/v1/damnhandy/things/12345", template.expand());
    }
 }

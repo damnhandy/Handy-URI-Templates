@@ -53,7 +53,7 @@ public class TestSingleExpression
    @Test
    public void testExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.fromExpression("{/keys}").set(VALUES);
+      UriTemplate template = UriTemplate.fromTemplate("{/keys}").set(VALUES);
 
       String expected = "/comma,%2C,dot,.,semi,%3B";
       String result = template.expand();
