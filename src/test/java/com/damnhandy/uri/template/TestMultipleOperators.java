@@ -7,6 +7,8 @@ package com.damnhandy.uri.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 /**
@@ -35,9 +37,10 @@ public class TestMultipleOperators
    @Test
    public void testMultiplePathOperators() 
    {
-      String expression = "/base{/group_id,id}/pages{/page,lang}{?format,q}";
-      UriTemplate t = UriTemplate.fromExpression(expression);
+      UriTemplate t = UriTemplate.fromTemplate("/base{/group_id,id}/pages{/page,lang}{?format,q}");
       String uri = t.expand(VALUES);
-      System.out.println(uri);
+      Assert.assertEquals("/base/12345/pages/5/en?format=json&q=URI%20Templates", uri);
+     
+      
    }
 }
