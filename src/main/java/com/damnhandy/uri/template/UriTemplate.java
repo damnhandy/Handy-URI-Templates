@@ -24,10 +24,10 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
  * <h3>Basic Usage:</h3>
  * <p>
  * There are many ways to use this library. The simplest way is to create a template from a
- * URI template expression string:
+ * URI template  string:
  * </p>
  * <pre>
- * UriTemplate template = UriTemplate.fromExpression("http://example.com/search{?q,lang}");
+ * UriTemplate template = UriTemplate.fromTemplate("http://example.com/search{?q,lang}");
  * </pre>
  * <p>
  * Replacement values are added by calling the {@link #set(String, Object)} method on the template:
@@ -149,7 +149,7 @@ public abstract class UriTemplate
     * @return
     */
    public static String expand(String expression, Map<String, Object> values) {
-       UriTemplate template = fromExpression(expression);
+       UriTemplate template = fromTemplate(expression);
        template.set(values);
        return template.expand();
    }
@@ -171,7 +171,7 @@ public abstract class UriTemplate
     * Returns the original URI template expression.
     * 
     * @return
-    * @since 1.2
+    * @since 1.1.4
     */
    public String getTemplate() 
    {
@@ -202,10 +202,10 @@ public abstract class UriTemplate
     * Multiple expressions can be appended to the template as follows:
     * </p>
     * <pre>
-    *  UriTemplate template = UriTemplate.fromExpression("http://myhost")
-    *                                    .appendTemplate("{/version}")
-    *                                    .appendTemplate("{/myId}")
-    *                                    .appendTemplate("/things/{thingId}")
+    *  UriTemplate template = UriTemplate.fromTemplate("http://myhost")
+    *                                    .append("{/version}")
+    *                                    .append("{/myId}")
+    *                                    .append("/things/{thingId}")
     *                                    .set("myId","damnhandy")
     *                                    .set("version","v1")
     *                                    .set("thingId","12345");
@@ -223,10 +223,10 @@ public abstract class UriTemplate
     * </p>
     * @param template
     * @return
-    * @since 1.2
+    * @since 1.1.4
     * 
     */
-   public UriTemplate appendTemplate(String template)
+   public UriTemplate append(String template)
    {
       if(template == null)
       {
@@ -246,7 +246,7 @@ public abstract class UriTemplate
    @Deprecated
    public UriTemplate expression(String expression)
    {
-      return this.appendTemplate(expression);
+      return this.append(expression);
    }
    
    /**
@@ -293,7 +293,7 @@ public abstract class UriTemplate
    }
 
    /**
-    * Sets a value on the URI expression.
+    * Sets a value on the URI template expression variable.
     * 
     * @param variableName
     * @param value
@@ -325,7 +325,7 @@ public abstract class UriTemplate
 
    /**
     * Adds the name/value pairs in the supplied {@link Map} to the collection
-    * of values within this expression instance.
+    * of values within this URI template instance.
     * 
     * @param values
     * @return
@@ -338,7 +338,7 @@ public abstract class UriTemplate
    }
 
    /**
-    * Expand the URI expression using the supplied values
+    * Expand the URI template using the supplied values
     * 
     * @param vars
     *            The values that will be used in the expansion

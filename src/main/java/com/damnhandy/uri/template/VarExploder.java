@@ -25,7 +25,7 @@ import com.damnhandy.uri.template.impl.VariableExpansionException;
  * implementation can be registered in one of two ways. By wrapping your object in your {@link VarExploder}:
  * </p>
  * <pre>
- * UriTemplate.fromExpression("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
+ * UriTemplate.fromTemplate("/mapper{?address*}").set("address", new MyCustomVarExploder(address)).expand();
  * </pre>
  * <p>
  * <strong>Note:</strong> {@link VarExploder} implementations are <strong>ONLY</strong> invoked when the 

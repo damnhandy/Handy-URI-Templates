@@ -31,7 +31,7 @@ import com.damnhandy.uri.template.impl.VariableExpansionException;
  * Address address = new Address();
  * address.setState("CA");
  * address.setCity("Newport Beach");
- * String result = UriTemplate.fromExpression("/mapper{?address*}").set("address", address).expand();
+ * String result = UriTemplate.fromTemplate("/mapper{?address*}").set("address", address).expand();
  * </pre>
  * <p>
  * The expanded URI will be:
