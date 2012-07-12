@@ -58,7 +58,7 @@ Using the library is simple:
 	
 ```java
 	String uri = 
-		UriTemplate.fromExpression("/{foo:1}{/foo,thing*}{?test1, test2}")
+		UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?test1, test2}")
 				   .set("foo", "houses")
 				   .set("query", "Ask something")
 				   .set("other", "someting else")
@@ -79,7 +79,7 @@ The API can be used with existing HTTP frameworks like the most excellent [Async
 ```java
 	  RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplate.fromExpression("https://api.github.com/repos{/user,repo,function,id}")
+             UriTemplate.fromTemplate("https://api.github.com/repos{/user,repo,function,id}")
                         .set("user", "damnhandy")
                         .set("repo", "Handy-URI-Templates")
                         .set("function","commits")
@@ -142,7 +142,7 @@ And this Java object for an address:
 	Address address = new Address();
 	address.setState("CA");
 	address.setCity("Newport Beach");
-	String result = UriTemplate.fromExpression("/mapper{?address*}")
+	String result = UriTemplate.fromTemplate("/mapper{?address*}")
 	                           .set("address", address)
 	                           .expand();
 ```
@@ -164,7 +164,7 @@ Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` wo
 Should the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) not be suitable for your needs, custom [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
 
 ```java
-	UriTemplate.fromExpression("/mapper{?address*}")
+	UriTemplate.fromTemplate("/mapper{?address*}")
 	           .set("address", new MyCustomVarExploder(address))
 	           .expand();
 ```
