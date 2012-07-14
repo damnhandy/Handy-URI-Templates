@@ -13,8 +13,7 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.damnhandy.uri.template.UriTemplate;
-import com.damnhandy.uri.template.impl.ExpressionParseException;
-import com.damnhandy.uri.template.impl.VariableExpansionException;
+import com.damnhandy.uri.template.impl.UriTemplateParseException;
 
 /**
  * 
@@ -43,22 +42,18 @@ public class TestNegativeTests extends AbstractUriTemplateConformanceTest
    @Test
    public void test() throws Exception
    {
-      UriTemplate t = UriTemplate.fromTemplate(template);
       boolean pass = true;
+      String actual = "";
       try
       {
-         String actual = t.expand(variables);
+         UriTemplate t = UriTemplate.fromTemplate(template);
+         actual = t.expand(variables);
          System.out.println(actual);
       }
-      catch (ExpressionParseException e)
+      catch (UriTemplateParseException e)
       {
          pass = false;
       }
-
-      catch (VariableExpansionException e)
-      {
-         pass = false;
-      }
-      Assert.assertFalse("Expected "+template+" to fail",pass);
+      Assert.assertFalse("Expected "+template+" to fail but got "+actual,pass);
    }
 }
