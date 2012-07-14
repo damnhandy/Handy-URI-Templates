@@ -89,6 +89,10 @@ public abstract class UriTemplate
     */
    protected Map<String, Object> values = new HashMap<String, Object>();
 
+   /**
+    * 
+    */
+   protected Expression[] expressions;
    
    /**
     * Creates a new {@link UriTemplate} from the expression.
@@ -137,8 +141,39 @@ public abstract class UriTemplate
       return template;
    }
 
+   /**
+    * FIXME Comment this
+    *
+    */
+   protected abstract void initExpressions();
+   /**
+    * FIXME Comment this
+    * 
+    * @return
+    */
+   public int expressionCount() 
+   {
+      if(expressions == null)
+      {
+         initExpressions();
+      }
+      return expressions.length;
+   }
    
-
+   /**
+    * FIXME Comment this
+    * 
+    * @return
+    */
+   public Expression[] getExpressions()
+   {
+      if(expressions == null)
+      {
+         initExpressions();
+      }
+      return expressions;
+   }
+ 
    /**
     * Expands the given expression string using the variable replacements
     * in the supplied {@link Map}.
@@ -233,6 +268,7 @@ public abstract class UriTemplate
          return this;
       }
       this.templateBuffer.append(template.trim());
+      initExpressions();
       return this;
    }
 

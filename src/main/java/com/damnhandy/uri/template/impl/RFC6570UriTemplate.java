@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.damnhandy.uri.template.Expression;
 import com.damnhandy.uri.template.UriTemplate;
 import com.damnhandy.uri.template.UriUtil;
 import com.damnhandy.uri.template.VarExploder;
@@ -30,12 +32,13 @@ public final class RFC6570UriTemplate extends UriTemplate
     * Regex to locate the variable lists
     */
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
-
+   
    /**
     * Regex to validate the variable name.
     */
    static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
 
+   
    /**
     * Create a new RFC6570UriTemplate.
     * 
@@ -44,6 +47,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    public RFC6570UriTemplate(String template)
    {
       this.setTemplate(template);
+      this.initExpressions();
    }
 
    /**
@@ -59,6 +63,25 @@ public final class RFC6570UriTemplate extends UriTemplate
       return expand();
    }
 
+   
+   /**
+    * FIXME Comment this
+    *
+    */
+   protected void initExpressions()
+   {
+      final String templateString = getTemplate();
+      Matcher matcher = URI_TEMPLATE_REGEX.matcher(templateString);
+      List<ExpressionImpl> expressionList = new LinkedList<ExpressionImpl>();
+      while (matcher.find())
+      {
+         String token = matcher.group();      
+         ExpressionImpl e = buildExpression(token);
+         expressionList.add(e);
+      }
+      expressions = expressionList.toArray(new ExpressionImpl[expressionList.size()]);
+   }
+   
    /**
     * 
     * 
@@ -66,25 +89,18 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    public String expand()
    {
-      
-      final String template = getTemplate();
-      Matcher matcher = URI_TEMPLATE_REGEX.matcher(template);
-      StringBuffer buffer = new StringBuffer();
-      int count = 0;
-      while (matcher.find())
+      initExpressions();
+      if(expressions == null || expressions.length == 0)
       {
-         
-         String token = matcher.group();
-         String value = buildVarSpecs(token.substring(1, token.length() - 1));
-         matcher.appendReplacement(buffer, value);
-         count++;
+         throw new ExpressionParseException("No were expressions found in the URI template.");
       }
-      if(count == 0)
+      String template = getTemplate();
+      for(Expression expression : expressions)
       {
-         throw new ExpressionParseException("no variables found");
+         String replacement = expressionReplacementString(expression);
+         template = template.replaceAll(expression.getReplacementPattern(), replacement);
       }
-      matcher.appendTail(buffer);
-      return buffer.toString();
+      return template;
    }
    
    
@@ -95,8 +111,10 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param varSpecs
     * @return
     */
-   private String findExpressions(Operator operator, List<VarSpec> varSpecs)
+   private String expressionReplacementString(Expression expression)
    {
+      Operator operator = expression.getOperator();
+      List<VarSpec> varSpecs = expression.getVarSpecs();
       List<String> replacements = expandVariables(operator, varSpecs);
       String result = joinParts(operator.getSeparator(), replacements);
       if (result != null)
@@ -463,8 +481,10 @@ public final class RFC6570UriTemplate extends UriTemplate
     * @param token
     * @return
     */
-   private String buildVarSpecs(String token)
+   private ExpressionImpl buildExpression(String parsedExpression)
    {
+      String expressionReplacement = Pattern.quote(parsedExpression);
+      String token = parsedExpression.substring(1, parsedExpression.length() - 1);
       // Check for URI operators
       Operator operator = Operator.NUL;
       String firstChar = token.substring(0, 1);
@@ -473,7 +493,6 @@ public final class RFC6570UriTemplate extends UriTemplate
          operator = Operator.fromOpCode(firstChar);
          token = token.substring(1, token.length());
       }
-      
       String[] varspecStrings = token.split(",");
       List<VarSpec> varspecs = new ArrayList<VarSpec>();
 
@@ -515,7 +534,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             varspecs.add(new VarSpec(varname, Modifier.NONE));
          }
       }
-      return findExpressions(operator, varspecs);
+      return new ExpressionImpl(expressionReplacement, operator, varspecs);
    }
 
    private void validateVarname(String varname) {
