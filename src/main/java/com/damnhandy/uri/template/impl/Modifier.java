@@ -12,10 +12,9 @@ package com.damnhandy.uri.template.impl;
  */
 public enum Modifier {
 
-   NONE         ("na"),
-   PREFIX       (":" ), 
-   EXPLODE      ("*" ),
-   DEFAULT_VALUE("=" );
+   NONE         (""),
+   PREFIX       (":"), 
+   EXPLODE      ("*");
 
    /**
     * 
