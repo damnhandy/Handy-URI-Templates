@@ -9,6 +9,7 @@ import java.util.List;
 import com.damnhandy.uri.template.impl.ExpressionImpl;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.VarSpec;
+
 /**
  * <p>
  * An Expression represents the text between '{' and '}', including the enclosing
@@ -23,15 +24,183 @@ import com.damnhandy.uri.template.impl.VarSpec;
                             The expression
  * </pre>
  * <p>
- * This interface models this representation and adds helper functions for replacement and reverse matching.
+ * This class models this representation and adds helper functions for replacement and reverse matching.
  * </p>
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  * @see ExpressionImpl
  * @since 1.2
  */
-public interface Expression
+public abstract class Expression
 {
+   /**
+    * Creates a new {@link ExpressionBuilder} to create a simple expression according 
+    * to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.2">3.2.2</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.simple().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder simple()
+   {
+      return ExpressionBuilder.create(Operator.NUL);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression that will use reserved expansion
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.3">3.2.3</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.reserved().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {+var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder reserved()
+   {
+      return ExpressionBuilder.create(Operator.RESERVED);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression with a fragment operator
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.4">3.2.4</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.fragment().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {#var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder fragment()
+   {
+      return ExpressionBuilder.create(Operator.FRAGMENT);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression using label expansion
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.5">3.2.5</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.label().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {.var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder label()
+   {
+      return ExpressionBuilder.create(Operator.NAME_LABEL);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression using path expansion
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.6">3.2.6</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.path().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {/var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder path()
+   {
+      return ExpressionBuilder.create(Operator.PATH);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression using path-style parameter 
+    * (a.k.a. matrix parameter) expansion according to 
+    * section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.7">3.2.7</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.matrix().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {;var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder matrix()
+   {
+      return ExpressionBuilder.create(Operator.MATRIX);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression using form-style query string expansion
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.8">3.2.8</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.query().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {?var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder query()
+   {
+      return ExpressionBuilder.create(Operator.QUERY);
+   }
+
+   /**
+    * Creates a new {@link ExpressionBuilder} to create an expression using form-style query continuation expansion
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.9">3.2.9</a>. 
+    * Calling: 
+    * <pre>
+    * String exp = Expression.continuation().var("var").build().toString();
+    * </pre>
+    * <p>
+    * Will return the following expression:
+    * </p>
+    * <pre>
+    * {&var}
+    * </pre>
+    * 
+    * @return
+    */
+   public static ExpressionBuilder continuation()
+   {
+      return ExpressionBuilder.create(Operator.CONTINUATION);
+   }
 
    /**
     * Get the replacementToken.

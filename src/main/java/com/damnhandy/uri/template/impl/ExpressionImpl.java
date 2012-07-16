@@ -15,7 +15,7 @@ import com.damnhandy.uri.template.Expression;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public final class ExpressionImpl implements Expression
+public final class ExpressionImpl extends Expression
 {
 
    /**
@@ -25,7 +25,7 @@ public final class ExpressionImpl implements Expression
     * </pre>
     */
    private String replacementPattern;
-   
+
    /**
     * That {@link Operator} value that is associated with this Expression
     */
@@ -35,7 +35,6 @@ public final class ExpressionImpl implements Expression
     * The the parsed {@link VarSpec} instances found in the expression. 
     */
    private List<VarSpec> varSpecs;
-   
 
    /**
     * Create a new Expression.
@@ -90,24 +89,22 @@ public final class ExpressionImpl implements Expression
    public String toString()
    {
       StringBuilder b = new StringBuilder();
-      b.append("Expression:");
-      b.append("\n\tPattern: ").append(getReplacementPattern());
-      b.append("\n\tOperator: ").append(this.getOperator().getOperator());
-      b.append("\n\tVarSpecs: ");
+      b.append("{").append(this.getOperator().getOperator());
       for (int i = 0; i < varSpecs.size(); i++)
       {
-         if (i == 0)
-         {
-            b.append("{");
-         }
          VarSpec v = varSpecs.get(i);
-         b.append("\n\t\t{").append(v).append("},");
-         if (i == (varSpecs.size() - 1))
+         b.append(v.getValue());
+         b.append(v.getModifier().getValue());
+         if (v.getModifier() == Modifier.PREFIX)
          {
-            b.append("\n\t}");
+            b.append(v.getPosition());
+         }
+         if (i != (varSpecs.size() - 1))
+         {
+            b.append(",");
          }
       }
-      return b.toString();
+      return b.append("}").toString();
    }
 
    @Override
