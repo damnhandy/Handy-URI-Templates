@@ -104,7 +104,8 @@ public final class UriUtil
          for (int i = 0; i < source.length; i++)
          {
             byte c = source[i];
-            if (chars.get(c) || c <= 0x20)
+            // fixed unsigned problem
+            if (chars.get(c & 0xff) || c <= 0x20)
             {
                out.write('%');
                char hex1 = Character.toUpperCase(Character.forDigit((c >> 4) & 0xF, 16));
