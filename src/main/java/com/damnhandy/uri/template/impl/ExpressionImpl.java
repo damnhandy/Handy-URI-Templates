@@ -84,7 +84,9 @@ public final class ExpressionImpl extends Expression
    }
 
    /**
+    * Returns the string representation of the expression.
     * 
+    * @see Object#toString()
     */
    public String toString()
    {
