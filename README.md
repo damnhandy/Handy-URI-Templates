@@ -39,6 +39,16 @@ If you feel like using a development version, you can use a snapshot release:
 	</dependency>
 ```
 
+Or for the more bleeding edge features:
+
+```xml
+    <dependency>
+		<groupId>com.damnhandy</groupId>
+		<artifactId>handy-uri-templates</artifactId>
+		<version>1.2.0-SNAPSHOT</version>
+	</dependency>
+```
+
 In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
 
 ```xml
