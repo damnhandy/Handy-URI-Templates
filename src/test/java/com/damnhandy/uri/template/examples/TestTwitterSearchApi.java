@@ -1,5 +1,5 @@
 /*
- * 
+ *
  */
 package com.damnhandy.uri.template.examples;
 
@@ -10,13 +10,13 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.damnhandy.uri.template.UriTemplate;
+import com.damnhandy.uri.template.UriTemplateBuilder;
 import com.ning.http.client.Request;
 import com.ning.http.client.RequestBuilder;
 
 /**
- * 
- * 
+ *
+ *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
@@ -29,35 +29,36 @@ public class TestTwitterSearchApi extends AbstractExampleTest
 
    /**
     * Check to make sure that search.twitter.com is reachable
-    * 
+    *
     * @throws Exception
     */
    @BeforeClass
    public static void setUp() throws Exception
    {
-      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(4000));  
+      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(4000));
    }
    /**
-    * 
-    * 
+    *
+    *
     * @throws Exception
     */
    @Test
    public void testSearch() throws Exception
    {
       RequestBuilder builder = new RequestBuilder("GET");
-      String uri = UriTemplate.fromTemplate(SEARCH_BASE)
-                              .append(SEARCH_PARAMS)
-                              .set("format", "json")
-                              .set("q", "URI Templates")
-                              .set("rpp", "5")
-                              .set("include_entities", true)
-                              .set("result_type", "mixed")
-                              .expand();
+      String uri = UriTemplateBuilder.fromTemplate(SEARCH_BASE)
+                                     .append(SEARCH_PARAMS)
+                                     .build()
+                                     .set("format", "json")
+                                     .set("q", "URI Templates")
+                                     .set("rpp", "5")
+                                     .set("include_entities", true)
+                                     .set("result_type", "mixed")
+                                     .expand();
       Request request = builder.setUrl(uri).build();
       Assert.assertEquals("http://search.twitter.com/search.json?q=URI%20Templates&result_type=mixed&rpp=5&include_entities=true&result_type=mixed", uri);
       executeRequest(createClient(), request);
    }
 
-   
+
 }

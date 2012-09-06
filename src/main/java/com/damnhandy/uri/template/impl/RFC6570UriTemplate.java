@@ -22,7 +22,7 @@ import com.damnhandy.uri.template.VarExploder;
 
 /**
  * A {@link UriTemplate} implementation that supports <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a>
- * 
+ *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
@@ -32,27 +32,27 @@ public final class RFC6570UriTemplate extends UriTemplate
     * Regex to locate the variable lists
     */
    private static final Pattern URI_TEMPLATE_REGEX = Pattern.compile("\\{[^{}]+\\}");
-   
+
    /**
     * Regex to validate the variable name.
     */
    static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
 
-   
+
    /**
     * Create a new RFC6570UriTemplate.
-    * 
+    *
     * @param template
     */
-   public RFC6570UriTemplate(String template)
+   public RFC6570UriTemplate(final String template)
    {
-      this.setTemplate(template);
+      this.template = template;
       this.initExpressions();
    }
 
    /**
     * Expand the URI expression using the supplied values
-    * 
+    *
     * @param values The values that will be used in the expansion
     * @return the expanded URI as a String
     */
@@ -63,7 +63,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       return expand();
    }
 
-   
+
    /**
     * FIXME Comment this
     *
@@ -75,21 +75,20 @@ public final class RFC6570UriTemplate extends UriTemplate
       List<ExpressionImpl> expressionList = new LinkedList<ExpressionImpl>();
       while (matcher.find())
       {
-         String token = matcher.group();      
+         String token = matcher.group();
          ExpressionImpl e = buildExpression(token);
          expressionList.add(e);
       }
       expressions = expressionList.toArray(new ExpressionImpl[expressionList.size()]);
    }
-   
+
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    public String expand()
    {
-      initExpressions();
       if(expressions == null || expressions.length == 0)
       {
          throw new ExpressionParseException("No were expressions found in the URI template.");
@@ -102,11 +101,11 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       return template;
    }
-   
-   
+
+
    /**
-    * 
-    * 
+    *
+    *
     * @param operator
     * @param varSpecs
     * @return
@@ -132,8 +131,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param operator
     * @param varSpecs
     * @return
@@ -150,7 +149,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             Object value = values.get(varSpec.getVariableName());
             String expanded = null;
 
-            
+
             if (value != null)
             {
                if (value.getClass().isArray())
@@ -181,7 +180,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             {
                throw new VariableExpansionException("Prefix modifiers are not applicable to variables that have composite values.");
             }
-            
+
             if (explodable) {
                VarExploder exploder;
                if (value instanceof VarExploder)
@@ -201,11 +200,11 @@ public final class RFC6570UriTemplate extends UriTemplate
                   expanded = expandCollection(operator, varSpec, exploder.getValues());
                }
             }
-            
-            
-            
 
-            
+
+
+
+
             /*
              * Format the date if we have a java.util.Date
              */
@@ -237,7 +236,7 @@ public final class RFC6570UriTemplate extends UriTemplate
             else if (expanded == null)
             {
                expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
-            } 
+            }
             if (expanded != null)
             {
                replacements.add(expanded);
@@ -249,8 +248,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param value
     * @return
     */
@@ -273,34 +272,34 @@ public final class RFC6570UriTemplate extends UriTemplate
 
    /**
     * Returns true of the object is:
-    * 
+    *
     * <ul>
     * <li>a primitive type</li>
     * <li>an instance of {@link CharSequence}</li>
     * <li>an instance of {@link Number} <li>
     * <li>an instance of {@link Date} <li>
     * </ul>
-    * 
+    *
     * @param value
     * @return
     */
    private boolean isSimpleType(Object value)
    {
-    
+
       if(value.getClass().isPrimitive() ||
-            value instanceof Number || 
-            value instanceof CharSequence || 
-            value instanceof Date || 
+            value instanceof Number ||
+            value instanceof CharSequence ||
+            value instanceof Date ||
             value instanceof Boolean)
       {
          return true;
       }
-      
+
       return false;
    }
    /**
-    * 
-    * 
+    *
+    *
     * @param operator
     * @param varSpec
     * @param variable
@@ -330,8 +329,8 @@ public final class RFC6570UriTemplate extends UriTemplate
       return joinParts(separator, stringValues);
    }
 
-   /** 
-    * 
+   /**
+    *
     * @param obj
     */
    private void checkValue(Object obj)
@@ -343,8 +342,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param operator
     * @param varSpec
     * @param variable
@@ -384,8 +383,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param operator
     * @param varSpec
     * @param variable
@@ -440,8 +439,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param joiner
     * @param parts
     * @return
@@ -476,8 +475,8 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @param token
     * @return
     */
@@ -500,7 +499,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
          int subStrPos = varname.indexOf(Modifier.PREFIX.getValue());
          /*
-          * Prefix variable 
+          * Prefix variable
           */
          if (subStrPos > 0)
          {
@@ -543,7 +542,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       {
          throw new ExpressionParseException("The variable name "+varname+" contains invalid characters");
       }
-      
+
       if(varname.contains(" "))
       {
          throw new ExpressionParseException("The variable name "+varname+" cannot contain spaces (leading or trailing)");
@@ -551,7 +550,7 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
    /**
     * Takes an array of objects and converts them to a {@link List}.
-    * 
+    *
     * @param array
     * @return
     */
@@ -570,6 +569,6 @@ public final class RFC6570UriTemplate extends UriTemplate
       }
       return list;
    }
-   
-  
+
+
 }

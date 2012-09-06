@@ -41,6 +41,7 @@ public class TestSingleExpression
       VALUES.put("q", "URI Templates");
       VALUES.put("page", "5");
       VALUES.put("lang", "en");
+      VALUES.put("null", null);
       VALUES.put("geocode", new String[]{"37.76", "-122.427"});
       VALUES.put("list", new String[]{"red", "green", "blue"});
       Map<String, Object> keys = new LinkedHashMap<String, Object>();
@@ -53,9 +54,9 @@ public class TestSingleExpression
    @Test
    public void testExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.fromTemplate("{/keys}").set(VALUES);
+      UriTemplate template = UriTemplate.fromTemplate("{/null}").set(VALUES);
 
-      String expected = "/comma,%2C,dot,.,semi,%3B";
+      String expected = "";//"/comma,%2C,dot,.,semi,%3B";
       String result = template.expand();
       Assert.assertEquals(expected, result);
    }

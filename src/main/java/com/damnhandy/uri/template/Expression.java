@@ -36,9 +36,9 @@ import com.damnhandy.uri.template.impl.VarSpec;
 public abstract class Expression
 {
    /**
-    * Creates a new {@link ExpressionBuilder} to create a simple expression according 
-    * to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.2">3.2.2</a>. 
-    * Calling: 
+    * Creates a new {@link ExpressionBuilder} to create a simple expression according
+    * to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.2">3.2.2</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.simple().var("var").build().toString();
     * </pre>
@@ -48,7 +48,7 @@ public abstract class Expression
     * <pre>
     * {var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder simple()
@@ -58,8 +58,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression that will use reserved expansion
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.3">3.2.3</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.3">3.2.3</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.reserved().var("var").build().toString();
     * </pre>
@@ -69,7 +69,7 @@ public abstract class Expression
     * <pre>
     * {+var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder reserved()
@@ -79,8 +79,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression with a fragment operator
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.4">3.2.4</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.4">3.2.4</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.fragment().var("var").build().toString();
     * </pre>
@@ -90,7 +90,7 @@ public abstract class Expression
     * <pre>
     * {#var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder fragment()
@@ -100,8 +100,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression using label expansion
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.5">3.2.5</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.5">3.2.5</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.label().var("var").build().toString();
     * </pre>
@@ -111,7 +111,7 @@ public abstract class Expression
     * <pre>
     * {.var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder label()
@@ -121,8 +121,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression using path expansion
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.6">3.2.6</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.6">3.2.6</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.path().var("var").build().toString();
     * </pre>
@@ -132,7 +132,7 @@ public abstract class Expression
     * <pre>
     * {/var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder path()
@@ -141,10 +141,10 @@ public abstract class Expression
    }
 
    /**
-    * Creates a new {@link ExpressionBuilder} to create an expression using path-style parameter 
-    * (a.k.a. matrix parameter) expansion according to 
-    * section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.7">3.2.7</a>. 
-    * Calling: 
+    * Creates a new {@link ExpressionBuilder} to create an expression using path-style parameter
+    * (a.k.a. matrix parameter) expansion according to
+    * section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.7">3.2.7</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.matrix().var("var").build().toString();
     * </pre>
@@ -154,7 +154,7 @@ public abstract class Expression
     * <pre>
     * {;var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder matrix()
@@ -164,8 +164,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression using form-style query string expansion
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.8">3.2.8</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.8">3.2.8</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.query().var("var").build().toString();
     * </pre>
@@ -175,7 +175,7 @@ public abstract class Expression
     * <pre>
     * {?var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder query()
@@ -185,8 +185,8 @@ public abstract class Expression
 
    /**
     * Creates a new {@link ExpressionBuilder} to create an expression using form-style query continuation expansion
-    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.9">3.2.9</a>. 
-    * Calling: 
+    * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.9">3.2.9</a>.
+    * Calling:
     * <pre>
     * String exp = Expression.continuation().var("var").build().toString();
     * </pre>
@@ -196,7 +196,7 @@ public abstract class Expression
     * <pre>
     * {&var}
     * </pre>
-    * 
+    *
     * @return
     */
    public static ExpressionBuilder continuation()
@@ -206,41 +206,49 @@ public abstract class Expression
 
    /**
     * Get the replacementToken.
-    * 
+    *
     * @return the replacementToken.
     */
    public abstract String getReplacementPattern();
 
    /**
     * Get the {@link Operator} value for this expression.
-    * 
+    *
     * @return the operator value.
     */
    public abstract Operator getOperator();
 
    /**
     * Get the varSpecs.
-    * 
+    *
     * @return the varSpecs.
     */
    public abstract List<VarSpec> getVarSpecs();
-   
+
+
+   /**
+    *
+    * A ExpressionBuilder.
+    *
+    * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
+    * @version $Revision: 1.1 $
+    */
    public static class ExpressionBuilder
    {
       /**
-       * 
+       *
        */
       private Operator operator;
 
       /**
-       * 
+       *
        */
       private List<VarSpec> varSpecs = new LinkedList<VarSpec>();
 
       /**
-       * 
+       *
        * Create a new ExpressionBuilder.
-       * 
+       *
        * @param operator
        */
       private ExpressionBuilder(Operator operator)
@@ -248,14 +256,29 @@ public abstract class Expression
          this.operator = operator;
       }
 
+      /**
+       *
+       *
+       * @param operator
+       * @return
+       */
       static ExpressionBuilder create(Operator operator)
       {
          return new ExpressionBuilder(operator);
       }
 
       /**
-       * FIXME Comment this
-       * 
+       * Adds a variable name to the expression.
+       *
+       * <pre>
+       * builder.var("foo");
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo}
+       * </pre>
+       *
        * @param varName
        * @return
        */
@@ -265,8 +288,17 @@ public abstract class Expression
       }
 
       /**
-       * FIXME Comment this
-       * 
+       * Adds a variable name to the expression with an explode modifier.
+       *
+       * <pre>
+       * builder.var("foo",true);
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo*}
+       * </pre>
+       *
        * @param varName
        * @param explode
        * @return
@@ -281,8 +313,16 @@ public abstract class Expression
       }
 
       /**
-       * FIXME Comment this
-       * 
+       * Adds a variable name to the expression with a prefix modifier.
+       *
+       * <pre>
+       * builder.var("foo",2);
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo:2}
+       * </pre>
        * @param varName
        * @param prefix
        * @return
@@ -293,8 +333,8 @@ public abstract class Expression
       }
 
       /**
-       * FIXME Comment this
-       * 
+       *
+       *
        * @param varName
        * @param modifier
        * @param position
@@ -306,7 +346,7 @@ public abstract class Expression
          return this;
       }
 
-      public Expression build() 
+      public Expression build()
       {
          return new ExpressionImpl(null, operator, varSpecs);
       }
