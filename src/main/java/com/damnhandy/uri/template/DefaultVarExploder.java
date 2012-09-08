@@ -1,5 +1,17 @@
 /*
- * 
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.damnhandy.uri.template;
 
@@ -19,7 +31,7 @@ import com.damnhandy.uri.template.impl.VariableExpansionException;
 /**
  * <p>
  * The {@link DefaultVarExploder} is a {@link VarExploder} implementation that takes in a Java object and
- * extracts the properties for use in a URI Template. Given the following URI expression: 
+ * extracts the properties for use in a URI Template. Given the following URI expression:
  * </p>
  * <pre>
  * /mapper{?address*}
@@ -39,17 +51,17 @@ import com.damnhandy.uri.template.impl.VariableExpansionException;
  * <pre>
  * /mapper?city=Newport%20Beach&state=CA
  * </pre>
- * 
+ *
  * <p>
  * The {@link DefaultVarExploder} breaks down the object properties as follows:
  * <ul>
  *  <li>All properties that contain a non-null return value will be included</li>
  *  <li>Getters or fields annotated with {@link UriTransient} will <b>NOT</b> included in the list</li>
- *  <li>By default, the property name is used as the label in the URI. This can be overridden by 
+ *  <li>By default, the property name is used as the label in the URI. This can be overridden by
  *      placing the {@link VarName} annotation on the field or getter method and specifying a name.</li>
  *  <li>Field level annotation take priority of getter annotations</li>
  * </ul>
- * 
+ *
  * @see VarName
  * @see UriTransient
  * @see VarExploder
@@ -70,9 +82,9 @@ public class DefaultVarExploder implements VarExploder
    private Map<String, Object> pairs = new LinkedHashMap<String, Object>();
 
    /**
-    * 
-    * 
-    * 
+    *
+    *
+    *
     * @param source the Object to explode
     */
    public DefaultVarExploder(Object source)
@@ -81,8 +93,8 @@ public class DefaultVarExploder implements VarExploder
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    @Override
@@ -99,7 +111,7 @@ public class DefaultVarExploder implements VarExploder
    }
 
    /**
-    * 
+    *
     *
     */
    private void initValues()
@@ -141,9 +153,9 @@ public class DefaultVarExploder implements VarExploder
    }
 
    /**
-    * Scans the fields on the class or super classes to look for 
+    * Scans the fields on the class or super classes to look for
     * annotations on the fields.
-    * 
+    *
     * @param c
     */
    private void scanFields(Class<?> c)

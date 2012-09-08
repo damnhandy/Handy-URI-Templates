@@ -1,5 +1,17 @@
 /*
- * 
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.damnhandy.uri.template.impl;
 
@@ -22,54 +34,54 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
  *  | allow |   U     U+R     U       U       U      U      U     U+R  |
  *  `------------------------------------------------------------------'
  *  </pre>
- * 
+ *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
 
 public enum Operator {
-   
-  
-   
-   
-   NUL         ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U), 
-   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "",  Encoding.UR), 
-   NAME_LABEL  (".", ".",                false, "",  Encoding.U), 
-   PATH        ("/", "/",                false, "",  Encoding.U), 
-   MATRIX      (";", ";",                true,  "",  Encoding.U), 
-   QUERY       ("?", "&",                true,  "=", Encoding.U), 
+
+
+
+
+   NUL         ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U),
+   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "",  Encoding.UR),
+   NAME_LABEL  (".", ".",                false, "",  Encoding.U),
+   PATH        ("/", "/",                false, "",  Encoding.U),
+   MATRIX      (";", ";",                true,  "",  Encoding.U),
+   QUERY       ("?", "&",                true,  "=", Encoding.U),
    CONTINUATION("&", "&",                true,  "=", Encoding.U),
    FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "",  Encoding.UR);
 
-   
+
    /**
-    * 
+    *
     */
    private String operator;
 
    /**
-    * 
+    *
     */
    private String separator;
 
    /**
-    * 
+    *
     */
    private boolean named;
 
    /**
-    * 
+    *
     */
    private Encoding encoding = Encoding.U;
-   
+
    /**
-    * 
+    *
     */
    private String empty = "";
    /**
-    * 
+    *
     * Create a new Operator.
-    * 
+    *
     * @param operator
     * @param separator
     */
@@ -93,16 +105,16 @@ public enum Operator {
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    public Encoding getEncoding() {
       return encoding;
    }
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    public boolean isNamed()
@@ -111,8 +123,8 @@ public enum Operator {
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    public String ifEmptyString()
@@ -127,13 +139,13 @@ public enum Operator {
    }
 
    /**
-    * When the variable is a Collection, this flag determines if we use 
+    * When the variable is a Collection, this flag determines if we use
     * the VarSpec name to prefix values. For example:
-    * 
+    *
     * {&list} return false
-    * 
-    * {&list*} will return true 
-    * 
+    *
+    * {&list*} will return true
+    *
     * @return
     */
    public boolean useVarNameWhenExploded()
@@ -142,8 +154,8 @@ public enum Operator {
    }
 
    /**
-    * 
-    * 
+    *
+    *
     * @return
     */
    public String getPrefix()
@@ -153,7 +165,7 @@ public enum Operator {
 
    /**
     * FIXME Comment this
-    * 
+    *
     * @param opCode
     * @return
     */
