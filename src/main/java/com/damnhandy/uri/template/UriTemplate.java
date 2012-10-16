@@ -198,10 +198,6 @@ public abstract class UriTemplate
       return template;
    }
 
-
-
-
-
    /**
     * Returns the collection of name/value pairs contained in the instance.
     *
@@ -317,5 +313,11 @@ public abstract class UriTemplate
    {
       return OPERATOR_BITSET.get(op.toCharArray()[0]);
    }
+
+   public String getRegexString()
+   {
+      return null;
+   }
+
 
 }

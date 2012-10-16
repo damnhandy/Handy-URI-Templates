@@ -49,6 +49,11 @@ public final class VarSpec
     */
    private String variableName;
 
+   /**
+    *
+    */
+   private String regexMatchString;
+
 
    /**
     * Create a new VarSpec.
@@ -74,6 +79,7 @@ public final class VarSpec
       this.value = value;
       this.position = position;
       initVariableName();
+      initRegExMatchString();
    }
 
    /**
@@ -86,7 +92,7 @@ public final class VarSpec
       return modifier;
    }
 
-   public String getRegExString()
+   private void initRegExMatchString()
    {
       StringBuilder b = new StringBuilder(BASE_PATTERN);
       if (modifier == Modifier.PREFIX)
@@ -97,7 +103,17 @@ public final class VarSpec
       {
          b.append("+");
       }
-      return b.toString();
+      regexMatchString = b.toString();
+   }
+
+   public String getRegExMatchString()
+   {
+      if(regexMatchString == null)
+      {
+         initRegExMatchString();
+      }
+
+      return regexMatchString;
    }
    /**
     * Get the value.
