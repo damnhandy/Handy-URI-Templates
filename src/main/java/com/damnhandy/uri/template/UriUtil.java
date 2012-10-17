@@ -39,8 +39,10 @@ public final class UriUtil
       }
       RESERVED.set(' ');
       RESERVED.set('%');
+      RESERVED.set('|');
+      RESERVED.set('\\');
 
-      for (int i = 0; i < SUB_DELIMS_CHARS.length; i++)
+       for (int i = 0; i < SUB_DELIMS_CHARS.length; i++)
       {
          RESERVED.set(SUB_DELIMS_CHARS[i]);
       }

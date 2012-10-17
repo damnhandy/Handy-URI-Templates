@@ -27,7 +27,7 @@ public class TestCreateUriTemplate
       
       UriTemplate child = UriTemplate.fromTemplate(base)
                                      .append("/things/{thingId}")
-                                     .set("thingId","123öä");
+                                     .set("thingId","123öä|\\");
       
       
       Assert.assertEquals(3, child.getValues().size());
@@ -37,7 +37,7 @@ public class TestCreateUriTemplate
          Assert.assertTrue(childValues.containsKey(e.getKey()));
          Assert.assertEquals(e.getValue(), childValues.get(e.getKey()));
       }
-      Assert.assertEquals("http://myhost/v1/damnhandy/things/123%C3%B6%C3%A4", child.expand());
+      Assert.assertEquals("http://myhost/v1/damnhandy/things/123%C3%B6%C3%A4%7C%5C", child.expand());
    }
    
    
