@@ -118,7 +118,7 @@ While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-
 * Arrays of the above types
 * java.util.List<Object>
 * java.util.Map<String, Object>	
-* java.util.Date. Dates will be formted using the templates default formatter.
+* java.util.Date. Dates will be formatted using the templates default formatter.
 * Anything with a `toString()` method
 
 Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings. 
