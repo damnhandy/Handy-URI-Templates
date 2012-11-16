@@ -18,6 +18,7 @@ package com.damnhandy.uri.template.conformance;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
@@ -58,16 +59,17 @@ public class TestSingleExpression
       keys.put("dot", ".");
       keys.put("semi", ";");
       VALUES.put("keys", keys);
+      VALUES.put("empty_list", new String[]{});
    }
 
    @Test
    public void testExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.fromTemplate("/foo/{format}").set(VALUES);
+      UriTemplate template = UriTemplate.fromTemplate("{?empty_list}").set(VALUES);
 
-      String expected = "";//"/comma,%2C,dot,.,semi,%3B";
+      String expected = "?empty_list=";//"/comma,%2C,dot,.,semi,%3B";
       String result = template.expand();
       System.out.println(result);
-      //Assert.assertEquals(expected, result);
+      Assert.assertEquals(expected, result);
    }
 }
