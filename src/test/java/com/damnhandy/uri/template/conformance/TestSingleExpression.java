@@ -19,7 +19,7 @@ import com.damnhandy.uri.template.UriTemplate;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-@Ignore
+//@Ignore
 public class TestSingleExpression
 {
 
@@ -48,14 +48,15 @@ public class TestSingleExpression
       keys.put("dot", ".");
       keys.put("semi", ";");
       VALUES.put("keys", keys);
+      VALUES.put("empty_list", new String[]{});
    }
 
    @Test
    public void testExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.fromTemplate("{/keys}").set(VALUES);
+      UriTemplate template = UriTemplate.fromTemplate("{?empty_list}").set(VALUES);
 
-      String expected = "/comma,%2C,dot,.,semi,%3B";
+      String expected = "?empty_list=";
       String result = template.expand();
       Assert.assertEquals(expected, result);
    }
