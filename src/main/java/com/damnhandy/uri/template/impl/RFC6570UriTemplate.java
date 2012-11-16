@@ -3,6 +3,10 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import com.damnhandy.uri.template.UriTemplate;
+import com.damnhandy.uri.template.UriUtil;
+import com.damnhandy.uri.template.VarExploder;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +17,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.damnhandy.uri.template.UriTemplate;
-import com.damnhandy.uri.template.UriUtil;
-import com.damnhandy.uri.template.VarExploder;
 
 /**
  * A {@link UriTemplate} implementation that supports <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a>
@@ -397,14 +397,13 @@ public final class RFC6570UriTemplate extends UriTemplate
          }
       }
 
-      if (operator.getEncoding() == Encoding.UR)
-      {
-         expanded = UriUtil.encodeFragment(variable);
-      }
-      else
-      {
-         expanded = UriUtil.encode(variable);
-      }
+       if (operator.getEncoding() == Encoding.UR) {
+           expanded = UriUtil.encodeReserved(variable);
+       } else if (operator.getEncoding() == Encoding.UF) {
+           expanded = UriUtil.encodeFragment(variable);
+       } else {
+           expanded = UriUtil.encode(variable);
+       }
 
       if (operator.isNamed())
       {

@@ -3,14 +3,14 @@
  */
 package com.damnhandy.uri.template;
 
+import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.BitSet;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 public abstract class UriTemplate
 {
    public static enum Encoding {
-      U, UR;
+      U, UR,UF;
    }
    
    public static final String DEFAULT_SEPARATOR = ",";
