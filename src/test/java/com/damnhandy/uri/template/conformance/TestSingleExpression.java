@@ -18,9 +18,6 @@ package com.damnhandy.uri.template.conformance;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
