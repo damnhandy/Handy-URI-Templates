@@ -1,35 +1,25 @@
 /*
- * Copyright 2012, Ryan J. McDonough
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
  */
 package com.damnhandy.uri.template.conformance;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Assert;
+import junit.framework.Assert;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
 
 /**
- *
- *
+ * 
+ * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-
+//@Ignore
 public class TestSingleExpression
 {
 
@@ -51,7 +41,6 @@ public class TestSingleExpression
       VALUES.put("q", "URI Templates");
       VALUES.put("page", "5");
       VALUES.put("lang", "en");
-      VALUES.put("null", null);
       VALUES.put("geocode", new String[]{"37.76", "-122.427"});
       VALUES.put("list", new String[]{"red", "green", "blue"});
       Map<String, Object> keys = new LinkedHashMap<String, Object>();
@@ -67,9 +56,8 @@ public class TestSingleExpression
    {
       UriTemplate template = UriTemplate.fromTemplate("{?empty_list}").set(VALUES);
 
-      String expected = "?empty_list=";//"/comma,%2C,dot,.,semi,%3B";
+      String expected = "?empty_list=";
       String result = template.expand();
-      System.out.println(result);
       Assert.assertEquals(expected, result);
    }
 }

@@ -22,41 +22,41 @@ This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at
 To use the latest version of Handy URI Templates, you need to add the following dependency to your pom.xml:
 
 ```xml
-	<dependency>
-		<groupId>com.damnhandy</groupId>
-		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.4</version>
-	</dependency>
+<dependency>
+  <groupId>com.damnhandy</groupId>
+  <artifactId>handy-uri-templates</artifactId>
+  <version>1.1.6</version>
+</dependency>
 ```
 
 If you feel like using a development version, you can use a snapshot release:
 
 ```xml
-	<dependency>
-		<groupId>com.damnhandy</groupId>
-		<artifactId>handy-uri-templates</artifactId>
-		<version>1.1.5-SNAPSHOT</version>
-	</dependency>
+<dependency>
+  <groupId>com.damnhandy</groupId>
+  <artifactId>handy-uri-templates</artifactId>
+  <version>1.1.6-SNAPSHOT</version>
+</dependency>
 ```
 
 Or for the more bleeding edge features:
 
 ```xml
-    <dependency>
-		<groupId>com.damnhandy</groupId>
-		<artifactId>handy-uri-templates</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
-	</dependency>
+<dependency>
+  <groupId>com.damnhandy</groupId>
+  <artifactId>handy-uri-templates</artifactId>
+  <version>1.2.0-SNAPSHOT</version>
+</dependency>
 ```
 
 In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
 
 ```xml
-	<repository>
-        <id>sonatype-nexus-snapshots</id>   
-        <name>sonatype-nexus-snapshots</name>
-		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
+<repository>
+  <id>sonatype-nexus-snapshots</id>   
+  <name>sonatype-nexus-snapshots</name>
+  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+</repository>
 ```
 
 You can also download the artifact directly at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates)
@@ -67,13 +67,12 @@ You can also download the artifact directly at [http://search.maven.org](http://
 Using the library is simple:
 	
 ```java
-	String uri = 
-		UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?test1, test2}")
-				   .set("foo", "houses")
-				   .set("query", "Ask something")
-				   .set("other", "someting else")
-				   .set("thing", "A test")
-				   .expand();
+String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?test1, test2}")
+                         .set("foo", "houses")
+                         .set("query", "Ask something")
+                         .set("other", "someting else")
+                         .set("thing", "A test")
+                         .expand();
 ```
 
 This will result in the following URI:
@@ -87,13 +86,13 @@ You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templa
 The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
 
 ```java
-	  RequestBuilder builder = new RequestBuilder("GET");
-      Request request = builder.setUrl(
-             UriTemplate.fromTemplate("https://api.github.com/repos{/user,repo,function,id}")
-                        .set("user", "damnhandy")
-                        .set("repo", "Handy-URI-Templates")
-                        .set("function","commits")
-                        .expand()).build();
+RequestBuilder builder = new RequestBuilder("GET");
+Request request = builder.setUrl(
+    UriTemplate.fromTemplate("https://api.github.com/repos{/user,repo,function,id}")
+               .set("user", "damnhandy")
+               .set("repo", "Handy-URI-Templates")
+               .set("function","commits")
+               .expand()).build();
 ```
 
 When `Request.getUrl()` is called, it will return:
@@ -119,7 +118,7 @@ While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-
 * Arrays of the above types
 * java.util.List<Object>
 * java.util.Map<String, Object>	
-* java.util.Date. Dates will be formted using the templates default formatter.
+* java.util.Date. Dates will be formatted using the templates default formatter.
 * Anything with a `toString()` method
 
 Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings. 
@@ -149,12 +148,12 @@ For most use cases, the [DefaultVarExploder](http://damnhandy.github.com/Handy-U
 And this Java object for an address:
 
 ```java
-	Address address = new Address();
-	address.setState("CA");
-	address.setCity("Newport Beach");
-	String result = UriTemplate.fromTemplate("/mapper{?address*}")
-	                           .set("address", address)
-	                           .expand();
+Address address = new Address();
+address.setState("CA");
+address.setCity("Newport Beach");
+String result = UriTemplate.fromTemplate("/mapper{?address*}")
+                           .set("address", address)
+                           .expand();
 ```
 
 The expanded URI will be:
@@ -174,9 +173,9 @@ Please refer to the  JavaDoc for more details on how the `DefaultVarExploder` wo
 Should the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) not be suitable for your needs, custom [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
 
 ```java
-	UriTemplate.fromTemplate("/mapper{?address*}")
-	           .set("address", new MyCustomVarExploder(address))
-	           .expand();
+UriTemplate.fromTemplate("/mapper{?address*}")
+           .set("address", new MyCustomVarExploder(address))
+           .expand();
 ```
 
 Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
