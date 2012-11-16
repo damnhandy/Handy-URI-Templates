@@ -336,13 +336,18 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       if (varSpec.getModifier() != Modifier.EXPLODE && operator.useVarNameWhenExploded())
       {
-         return varSpec.getVariableName() + "=" + joinParts(separator, stringValues);
+    	  String values = joinParts(separator, stringValues);
+    	  if(operator == Operator.QUERY && values == null)
+    	  {
+    		  return varSpec.getVariableName() + "=";
+    	  }
+    	  return varSpec.getVariableName() + "=" + values;
       }
       return joinParts(separator, stringValues);
    }
 
-   /**
-    *
+   /** 
+    * Check to ensure that the values being passed down do not contain nested data structures.
     * @param obj
     */
    private void checkValue(Object obj)
@@ -388,7 +393,12 @@ public final class RFC6570UriTemplate extends UriTemplate
       if (varSpec.getModifier() != Modifier.EXPLODE
             && (operator == Operator.MATRIX || operator == Operator.QUERY || operator == Operator.CONTINUATION))
       {
-         return varSpec.getVariableName() + "=" + joinParts(joiner, stringValues);
+    	  String joinedValues = joinParts(joiner, stringValues);
+    	  if(operator == Operator.QUERY && joinedValues == null)
+    	  {
+    		  return varSpec.getVariableName() + "=";
+    	  }
+    	  return varSpec.getVariableName() + "=" + joinedValues;
       }
 
       return joinParts(joiner, stringValues);
