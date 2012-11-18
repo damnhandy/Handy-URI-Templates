@@ -39,7 +39,7 @@ public enum Operator {
    MATRIX      (";", ";",                true,  "",  Encoding.U), 
    QUERY       ("?", "&",                true,  "=", Encoding.U), 
    CONTINUATION("&", "&",                true,  "=", Encoding.U),
-   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "",  Encoding.UR);
+   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "",  Encoding.UF);
 
    
    /**
