@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -7,7 +8,7 @@
 	</parent>
 	<groupId>com.damnhandy</groupId>
 	<artifactId>handy-uri-templates</artifactId>
-	<version>1.1.8-SNAPSHOT</version>
+	<version>1.1.7-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
 	<prerequisites>
@@ -25,8 +26,7 @@
 		<url>git@github.com:damnhandy/Handy-URI-Templates.git</url>
 		<connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
 		<developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+	</scm>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
