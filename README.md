@@ -67,10 +67,10 @@ You can also download the artifact directly at [http://search.maven.org](http://
 Using the library is simple:
 	
 ```java
-String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?test1, test2}")
+String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query, thing}")
                          .set("foo", "houses")
                          .set("query", "Ask something")
-                         .set("other", "someting else")
+                         .set("other", "something else")
                          .set("thing", "A test")
                          .expand();
 ```
