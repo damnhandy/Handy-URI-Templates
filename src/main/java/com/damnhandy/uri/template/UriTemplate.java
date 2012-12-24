@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
+import com.damnhandy.uri.template.impl.UriTemplateParseException;
 
 /**
  * <p>
@@ -290,18 +291,20 @@ public abstract class UriTemplate
     *            The values that will be used in the expansion
     *
     * @return the expanded URI as a String
+    * @throw UriTemplateParseException
     * @since 1.0
     */
-   public abstract String expand(Map<String, Object> vars);
+   public abstract String expand(Map<String, Object> vars) throws UriTemplateParseException;
 
    /**
     * Applies variable substitution the URI Template and returns the expanded
     * URI.
     *
     * @return
+    * @throw UriTemplateParseException
     * @since 1.0
     */
-   public abstract String expand();
+   public abstract String expand() throws UriTemplateParseException;
 
    /**
     *

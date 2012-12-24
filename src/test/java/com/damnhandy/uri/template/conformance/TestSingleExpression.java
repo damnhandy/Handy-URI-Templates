@@ -3,12 +3,12 @@
  */
 package com.damnhandy.uri.template.conformance;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
@@ -60,4 +60,6 @@ public class TestSingleExpression
       String result = template.expand();
       Assert.assertEquals(expected, result);
    }
+   
+  
 }

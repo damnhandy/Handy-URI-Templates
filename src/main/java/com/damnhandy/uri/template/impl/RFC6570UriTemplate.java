@@ -95,15 +95,13 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    *
-    *
-    * @return
+    * 
     */
-   public String expand()
+   public String expand() throws UriTemplateParseException
    {
       if(expressions == null || expressions.length == 0)
       {
-         throw new ExpressionParseException("No were expressions found in the URI template.");
+         throw new UriTemplateParseException("No were expressions found in the URI template.");
       }
       String template = getTemplate();
       for(Expression expression : expressions)
