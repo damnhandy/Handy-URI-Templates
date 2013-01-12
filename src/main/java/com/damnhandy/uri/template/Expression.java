@@ -30,11 +30,11 @@ import com.damnhandy.uri.template.impl.VarSpec;
  * </p>
  * <pre>
  * http://www.example.com/foo{?query,number}
-                            \____________/
-                                  ^
-                                  |
-                                  |
-                            The expression
+                              \___________/
+                                    ^
+                                    |
+                                    |
+                              The expression
  * </pre>
  * <p>
  * This class models this representation and adds helper functions for replacement and reverse matching.
