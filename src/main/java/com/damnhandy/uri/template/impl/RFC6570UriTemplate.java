@@ -95,14 +95,12 @@ public final class RFC6570UriTemplate extends UriTemplate
    }
 
    /**
-    * 
+    *
+    *
+    * @return
     */
-   public String expand() throws UriTemplateParseException
+   public String expand()
    {
-      if(expressions == null || expressions.length == 0)
-      {
-         throw new UriTemplateParseException("No were expressions found in the URI template.");
-      }
       String template = getTemplate();
       for(Expression expression : expressions)
       {
@@ -344,7 +342,7 @@ public final class RFC6570UriTemplate extends UriTemplate
       return joinParts(separator, stringValues);
    }
 
-   /** 
+   /**
     * Check to ensure that the values being passed down do not contain nested data structures.
     * @param obj
     */
