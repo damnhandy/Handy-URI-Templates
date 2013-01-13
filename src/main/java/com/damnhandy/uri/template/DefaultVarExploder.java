@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.damnhandy.uri.template.impl.VariableExpansionException;
 
 /**
  * <p>
@@ -87,7 +86,7 @@ public class DefaultVarExploder implements VarExploder
     *
     * @param source the Object to explode
     */
-   public DefaultVarExploder(Object source)
+   public DefaultVarExploder(Object source) throws VarExploderException
    {
       this.setSource(source);
    }
@@ -104,7 +103,7 @@ public class DefaultVarExploder implements VarExploder
    }
 
 
-   public void setSource(Object source)
+   public void setSource(Object source) throws VarExploderException
    {
       this.source = source;
       this.initValues();
@@ -114,7 +113,7 @@ public class DefaultVarExploder implements VarExploder
     *
     *
     */
-   private void initValues()
+   private void initValues() throws VarExploderException
    {
 
       Class<?> c = source.getClass();
@@ -129,7 +128,7 @@ public class DefaultVarExploder implements VarExploder
       }
       catch (IntrospectionException e)
       {
-         throw new VariableExpansionException(e);
+         throw new RuntimeException(e);
       }
       for (PropertyDescriptor p : beanInfo.getPropertyDescriptors())
       {
@@ -193,7 +192,7 @@ public class DefaultVarExploder implements VarExploder
       }
    }
 
-   private Object getValue(Method method)
+   private Object getValue(Method method) throws VarExploderException
    {
       try
       {
@@ -205,20 +204,20 @@ public class DefaultVarExploder implements VarExploder
       }
       catch (IllegalArgumentException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
       catch (IllegalAccessException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
       catch (InvocationTargetException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
    }
 
    @Override
-   public Collection<Object> getValues()
+   public Collection<Object> getValues() throws VarExploderException
    {
       Collection<Object> c = pairs.values();
       return c;

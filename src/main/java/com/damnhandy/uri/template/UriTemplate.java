@@ -20,10 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.BitSet;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
-import com.damnhandy.uri.template.impl.UriTemplateParseException;
 
 /**
  * <p>
@@ -61,8 +61,13 @@ import com.damnhandy.uri.template.impl.UriTemplateParseException;
  * @version $Revision: 1.1 $
  * @since 1.0
  */
-public abstract class UriTemplate
+public abstract class UriTemplate implements java.io.Serializable
 {
+
+
+   /** The serialVersionUID */
+   private static final long serialVersionUID = -1964234955599113321L;
+
    public static enum Encoding {
       U, UR;
    }
@@ -112,7 +117,7 @@ public abstract class UriTemplate
     * @return
     * @since 1.2
     */
-   public static final UriTemplate fromTemplate(final String templateString)
+   public static final UriTemplate fromTemplate(final String templateString) throws MalformedUriTemplateException
    {
       return new RFC6570UriTemplate(templateString);
    }
@@ -141,7 +146,7 @@ public abstract class UriTemplate
     *
     *
     */
-   protected abstract void initExpressions();
+   protected abstract void initExpressions() throws MalformedUriTemplateException;
 
 
    /**
@@ -151,10 +156,6 @@ public abstract class UriTemplate
     */
    public int expressionCount()
    {
-      if(expressions == null)
-      {
-         initExpressions();
-      }
       return expressions.length;
    }
 
@@ -165,10 +166,6 @@ public abstract class UriTemplate
     */
    public Expression[] getExpressions()
    {
-      if(expressions == null)
-      {
-         initExpressions();
-      }
       return expressions;
    }
 
@@ -179,9 +176,11 @@ public abstract class UriTemplate
     * @param templateString
     * @param values
     * @since 1.0
+    * @throws MalformedUriTemplateException
+    * @throws VariableExpansionException
     * @return
     */
-   public static String expand(final String templateString, Map<String, Object> values) {
+   public static String expand(final String templateString, Map<String, Object> values) throws MalformedUriTemplateException, VariableExpansionException{
        UriTemplate template = new RFC6570UriTemplate(templateString);
        template.set(values);
        return template.expand();
@@ -291,20 +290,20 @@ public abstract class UriTemplate
     *            The values that will be used in the expansion
     *
     * @return the expanded URI as a String
-    * @throw UriTemplateParseException
+    * @throw VariableExpansionException
     * @since 1.0
     */
-   public abstract String expand(Map<String, Object> vars) throws UriTemplateParseException;
+   public abstract String expand(Map<String, Object> vars) throws VariableExpansionException;
 
    /**
     * Applies variable substitution the URI Template and returns the expanded
     * URI.
     *
     * @return
-    * @throw UriTemplateParseException
+    * @throw VariableExpansionException
     * @since 1.0
     */
-   public abstract String expand() throws UriTemplateParseException;
+   public abstract String expand() throws VariableExpansionException;
 
    /**
     *

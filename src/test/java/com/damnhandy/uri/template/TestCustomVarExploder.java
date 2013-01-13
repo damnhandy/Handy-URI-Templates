@@ -56,7 +56,7 @@ public class TestCustomVarExploder
     *
     */
    @Test
-   public void testWrappedExploder()
+   public void testWrappedExploder() throws Exception
    {
       Map<String, Object> values = new HashMap<String, Object>();
       values.put("address", new JsonVarExploder(JSON));
@@ -70,7 +70,7 @@ public class TestCustomVarExploder
     *
     */
    @Test
-   public void testWrappedExploderWithInvalidTemplate()
+   public void testWrappedExploderWithInvalidTemplate() throws Exception
    {
       Map<String, Object> values = new HashMap<String, Object>();
       values.put("address", new JsonVarExploder(JSON));

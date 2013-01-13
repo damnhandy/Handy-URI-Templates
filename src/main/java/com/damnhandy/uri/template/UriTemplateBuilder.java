@@ -201,7 +201,7 @@ public final class UriTemplateBuilder
     * @return
     * @since 1.2
     */
-   public UriTemplate build()
+   public UriTemplate build() throws MalformedUriTemplateException
    {
       UriTemplate template = new RFC6570UriTemplate(templateBuffer.toString());
       template.set(values);

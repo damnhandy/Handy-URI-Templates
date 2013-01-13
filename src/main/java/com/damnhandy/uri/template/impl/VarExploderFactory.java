@@ -17,6 +17,7 @@ package com.damnhandy.uri.template.impl;
 
 import com.damnhandy.uri.template.DefaultVarExploder;
 import com.damnhandy.uri.template.VarExploder;
+import com.damnhandy.uri.template.VarExploderException;
 
 /**
  *
@@ -38,7 +39,7 @@ public final class VarExploderFactory
     * @param varValue
     * @return
     */
-   public static VarExploder getExploder(Object varValue, VarSpec varSpec)
+   public static VarExploder getExploder(Object varValue, VarSpec varSpec) throws VarExploderException
    {
       if (varValue instanceof VarExploder)
       {

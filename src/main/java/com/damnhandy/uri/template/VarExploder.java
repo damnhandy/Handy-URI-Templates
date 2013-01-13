@@ -18,7 +18,6 @@ package com.damnhandy.uri.template;
 import java.util.Collection;
 import java.util.Map;
 
-import com.damnhandy.uri.template.impl.VariableExpansionException;
 
 
 /**
@@ -64,7 +63,7 @@ public interface VarExploder
     *
     * @return the object properties as name/value pairs.
     */
-   Map<String, Object> getNameValuePairs();
+   Map<String, Object> getNameValuePairs() throws VariableExpansionException;
 
    /**
     * Returns the properties of the source object a {@link Collection} of
@@ -72,6 +71,6 @@ public interface VarExploder
     *
     * @return
     */
-   Collection<Object> getValues();
+   Collection<Object> getValues() throws VariableExpansionException;
 
 }

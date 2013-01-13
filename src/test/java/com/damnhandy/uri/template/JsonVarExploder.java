@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
-import com.damnhandy.uri.template.impl.VariableExpansionException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -50,12 +49,12 @@ public class JsonVarExploder implements VarExploder
     * @param file
     * @throws FileNotFoundException
     */
-   public JsonVarExploder(File file) throws FileNotFoundException
+   public JsonVarExploder(File file) throws FileNotFoundException, VarExploderException
    {
       this(new FileInputStream(file));
    }
 
-   public JsonVarExploder(String jsonText)
+   public JsonVarExploder(String jsonText) throws VarExploderException
    {
       this(new ByteArrayInputStream(jsonText.getBytes()));
    }
@@ -64,7 +63,7 @@ public class JsonVarExploder implements VarExploder
     *
     */
    @Override
-   public Collection<Object> getValues()
+   public Collection<Object> getValues() throws VarExploderException
    {
       return values.values();
    }
@@ -74,13 +73,13 @@ public class JsonVarExploder implements VarExploder
     *
     * @param in
     */
-   public JsonVarExploder(InputStream in)
+   public JsonVarExploder(InputStream in) throws VarExploderException
    {
       this.source = in;
       initValues();
    }
 
-   private void initValues()
+   private void initValues() throws VarExploderException
    {
       ObjectMapper mapper = new ObjectMapper();
       try
@@ -91,20 +90,20 @@ public class JsonVarExploder implements VarExploder
       }
       catch (JsonParseException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
       catch (JsonMappingException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
       catch (IOException e)
       {
-         throw new VariableExpansionException(e);
+         throw new VarExploderException(e);
       }
    }
 
    @Override
-   public Map<String, Object> getNameValuePairs()
+   public Map<String, Object> getNameValuePairs() throws VarExploderException
    {
       return values;
    }

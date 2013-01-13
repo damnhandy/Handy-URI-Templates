@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.damnhandy.uri.template.impl.VariableExpansionException;
 
 /**
  *

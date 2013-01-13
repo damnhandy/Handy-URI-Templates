@@ -24,8 +24,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.damnhandy.uri.template.MalformedUriTemplateException;
 import com.damnhandy.uri.template.UriTemplate;
-import com.damnhandy.uri.template.impl.UriTemplateParseException;
+import com.damnhandy.uri.template.VariableExpansionException;
 
 /**
  *
@@ -62,7 +63,11 @@ public class TestNegativeTests extends AbstractUriTemplateConformanceTest
          actual = t.expand(variables);
          System.out.println(actual);
       }
-      catch (UriTemplateParseException e)
+      catch (VariableExpansionException e)
+      {
+         pass = false;
+      }
+      catch (MalformedUriTemplateException e)
       {
          pass = false;
       }

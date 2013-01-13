@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.damnhandy.uri.template.impl;
+package com.damnhandy.uri.template;
+
 
 /**
  * <p>
- * This {@link UriTemplateParseException} is raised when the the template processor
+ * Raised when the the template processor
  * encounters an issue expanding the value into the variable at expansion time.
  * Typical scenarios are:
  * </p>
@@ -28,21 +29,12 @@ package com.damnhandy.uri.template.impl;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public class VariableExpansionException extends UriTemplateParseException
+public class VariableExpansionException extends Exception
 {
 
    /** The serialVersionUID */
    private static final long serialVersionUID = -1927979719672747848L;
 
-   /**
-    * Create a new VariableExpansionException.
-    *
-    */
-   public VariableExpansionException()
-   {
-
-
-   }
 
    /**
     * Create a new VariableExpansionException.

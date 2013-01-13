@@ -6,6 +6,7 @@ package com.damnhandy.uri.template.conformance;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -59,6 +60,8 @@ public class TestSingleExpression
       String expected = "?empty_list=";
       String result = template.expand();
       Assert.assertEquals(expected, result);
+
+      Pattern p = Pattern.compile("([?&](fields)(?:=([^&]*))?)([?&](first_name)(?:=([^&]*))?)([?&](last.name)(?:=([^&]*))?)([?&](token)(?:=([^&]*))?)");
    }
    
   

@@ -20,7 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.BitSet;
 
-import com.damnhandy.uri.template.impl.UriEncodingException;
 
 /**
  * <p>
@@ -85,7 +84,7 @@ public final class UriUtil
     * @param source
     * @return
     */
-   public static String encodeFragment(String sourceValue)
+   public static String encodeFragment(String sourceValue) throws UnsupportedEncodingException
    {
       return encode(sourceValue, ESCAPE_CHARS);
    }
@@ -96,7 +95,7 @@ public final class UriUtil
     * @param source
     * @return
     */
-   public static String encode(String sourceValue)
+   public static String encode(String sourceValue) throws UnsupportedEncodingException
    {
       return encode(sourceValue, RESERVED);
    }
@@ -109,35 +108,28 @@ public final class UriUtil
     * @return
     * @throws UriEncodingException
     */
-   private static String encode(String sourceValue, BitSet chars) throws UriEncodingException
+   private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException
    {
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      try
+      byte[] source = sourceValue.getBytes(Charset.forName("UTF-8"));
+      for (int i = 0; i < source.length; i++)
       {
-         byte[] source = sourceValue.getBytes(Charset.forName("UTF-8"));
-         for (int i = 0; i < source.length; i++)
+         byte c = source[i];
+         // fixed unsigned problem
+         if (chars.get(c & 0xff) || c <= 0x20)
          {
-            byte c = source[i];
-            // fixed unsigned problem
-            if (chars.get(c & 0xff) || c <= 0x20)
-            {
-               out.write('%');
-               char hex1 = Character.toUpperCase(Character.forDigit((c >> 4) & 0xF, 16));
-               char hex2 = Character.toUpperCase(Character.forDigit(c & 0xF, 16));
-               out.write(hex1);
-               out.write(hex2);
-            }
-            else
-            {
-               out.write(c);
-            }
+            out.write('%');
+            char hex1 = Character.toUpperCase(Character.forDigit((c >> 4) & 0xF, 16));
+            char hex2 = Character.toUpperCase(Character.forDigit(c & 0xF, 16));
+            out.write(hex1);
+            out.write(hex2);
          }
-         return new String(out.toByteArray(), "UTF-8");
+         else
+         {
+            out.write(c);
+         }
       }
-      catch (UnsupportedEncodingException e)
-      {
-         throw new UriEncodingException(e);
-      }
+      return new String(out.toByteArray(), "UTF-8");
    }
 
 }

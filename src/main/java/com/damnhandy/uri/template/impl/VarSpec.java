@@ -106,13 +106,16 @@ public final class VarSpec
       regexMatchString = b.toString();
    }
 
+    /**
+     * Returns a regex pattern that matches the variable.
+     * @return
+     */
    public String getRegExMatchString()
    {
       if(regexMatchString == null)
       {
          initRegExMatchString();
       }
-
       return regexMatchString;
    }
    /**

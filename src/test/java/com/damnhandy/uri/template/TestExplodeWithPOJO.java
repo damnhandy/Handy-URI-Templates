@@ -82,7 +82,7 @@ public class TestExplodeWithPOJO
    }
 
    @Test
-   public void testWrappedExploder()
+   public void testWrappedExploder() throws Exception
    {
       Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
       Map<String, Object> values = new HashMap<String, Object>();

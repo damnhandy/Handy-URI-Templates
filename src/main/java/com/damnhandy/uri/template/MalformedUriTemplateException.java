@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.damnhandy.uri.template.impl;
+package com.damnhandy.uri.template;
 
 /**
- * This {@link RuntimeException} is raised when the the template processor
- * encounters an issue parsing the URI template string. It indicates
- * the template contains either no expressions or that an expression is
- * malformed.
+ * Raised when the the template processor encounters an issue parsing the URI template string. It indicates
+ * the template contains an expression that is malformed.
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  * @since 1.2
  */
-public class UriTemplateParseException extends RuntimeException
+public class MalformedUriTemplateException extends Exception
 {
 
    /** The serialVersionUID */
    private static final long serialVersionUID = 5883174281977078450L;
 
-   /**
-    * Create a new UriTemplateParseException.
-    *
-    */
-   public UriTemplateParseException()
-   {
-      super();
-   }
 
    /**
     * Create a new UriTemplateParseException.
@@ -46,7 +36,7 @@ public class UriTemplateParseException extends RuntimeException
     * @param message
     * @param cause
     */
-   public UriTemplateParseException(String message, Throwable cause)
+   public MalformedUriTemplateException(String message, Throwable cause)
    {
       super(message, cause);
    }
@@ -56,19 +46,9 @@ public class UriTemplateParseException extends RuntimeException
     *
     * @param message
     */
-   public UriTemplateParseException(String message)
+   public MalformedUriTemplateException(String message)
    {
       super(message);
-   }
-
-   /**
-    * Create a new UriTemplateParseException.
-    *
-    * @param cause
-    */
-   public UriTemplateParseException(Throwable cause)
-   {
-      super(cause);
    }
 
 }

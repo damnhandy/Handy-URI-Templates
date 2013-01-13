@@ -46,7 +46,7 @@ public class TestMultipleOperators
    }
 
    @Test
-   public void testMultiplePathOperators()
+   public void testMultiplePathOperators() throws Exception
    {
       UriTemplate t = UriTemplate.fromTemplate("/base{/group_id,id}/pages{/page,lang}{?format,q}");
       String uri = t.expand(VALUES);
