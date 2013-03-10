@@ -28,6 +28,7 @@ package com.damnhandy.uri.template;
  * </ul>
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
 public class VariableExpansionException extends Exception
 {
@@ -41,7 +42,7 @@ public class VariableExpansionException extends Exception
     *
     * @param message
     */
-   public VariableExpansionException(String message)
+   public VariableExpansionException(final String message)
    {
       super(message);
    }
@@ -51,7 +52,7 @@ public class VariableExpansionException extends Exception
     *
     * @param cause
     */
-   public VariableExpansionException(Throwable cause)
+   public VariableExpansionException(final Throwable cause)
    {
       super(cause);
    }

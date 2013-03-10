@@ -21,10 +21,11 @@ import java.util.List;
 import com.damnhandy.uri.template.MalformedUriTemplateException;
 /**
  *
- * A ExpressionScanner.
+ * Utility class used to scan the URI Template string for expressions.
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 2.0
  */
 class ExpressionScanner
 {
@@ -110,7 +111,7 @@ class ExpressionScanner
       startedTemplate = false;
       if (expressionCaptureOn == true)
       {
-         throw new MalformedUriTemplateException("Template scanning complete, but the expression was not terminated.");
+         throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at " + expressionStartPos +" was never terminated");
       }
    }
 
@@ -120,11 +121,12 @@ class ExpressionScanner
     */
    private void startExpression(int position) throws MalformedUriTemplateException
    {
-      expressionStartPos = position;
+
       if (expressionCaptureOn)
       {
-         throw new MalformedUriTemplateException("Duplicate expression start brace found at " + position);
+         throw new MalformedUriTemplateException("A new expression start brace found at " + position + " but another unclosed exprression was found at " + expressionStartPos);
       }
+      expressionStartPos = position;
       expressionCaptureOn = true;
       expression = new StringBuilder();
    }
@@ -135,11 +137,13 @@ class ExpressionScanner
     */
    private void endExpression(int position) throws MalformedUriTemplateException
    {
-      expressionEndPos = position;
+
+      // an expression close brace is found without a start
       if (expressionCaptureOn == false)
       {
-         throw new MalformedUriTemplateException("Duplicate expression end brace found at " + position);
+         throw new MalformedUriTemplateException("Expression close brace was found at position " + position + " yet there was no start brace.");
       }
+      expressionEndPos = position;
       expressionCaptureOn = false;
       expressions.add(expression.toString());
       expression = null;

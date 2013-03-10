@@ -38,8 +38,8 @@ public class TestCreateUriTemplate
                                     .set("version","v1"); // URI versioning is silly, but this is just for examples
 
       Assert.assertEquals(2, base.getValues().size());
-      UriTemplate child = UriTemplateBuilder.fromTemplate(base)
-                                            .append("/things/{thingId}")
+      UriTemplate child = UriTemplate.buildFromTemplate(base)
+                                            .appendLiteral("/things/{thingId}")
                                             .build()
                                             .set("thingId","123öä");
 
@@ -58,11 +58,11 @@ public class TestCreateUriTemplate
    @Test
    public void testMultpleExpressions() throws Exception
    {
-      UriTemplate template = UriTemplateBuilder.fromTemplate("http://myhost")
-                                               .append("{/version}")
-                                               .append("{/myId}")
-                                               .append(" ")
-                                               .append("/things/{thingId}").build()
+      UriTemplate template = UriTemplate.buildFromTemplate("http://myhost")
+                                               .appendLiteral("{/version}")
+                                               .appendLiteral("{/myId}")
+                                               .appendLiteral(" ")
+                                               .appendLiteral("/things/{thingId}").build()
                                                .set("myId","damnhandy")
                                                .set("version","v1")
                                                .set("thingId","12345");

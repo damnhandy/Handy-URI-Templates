@@ -22,7 +22,7 @@ import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.damnhandy.uri.template.UriTemplateBuilder;
+import com.damnhandy.uri.template.UriTemplate;
 import com.ning.http.client.Request;
 import com.ning.http.client.RequestBuilder;
 
@@ -58,8 +58,8 @@ public class TestTwitterSearchApi extends AbstractExampleTest
    public void testSearch() throws Exception
    {
       RequestBuilder builder = new RequestBuilder("GET");
-      String uri = UriTemplateBuilder.fromTemplate(SEARCH_BASE)
-                                     .append(SEARCH_PARAMS)
+      String uri = UriTemplate.buildFromTemplate(SEARCH_BASE)
+                                     .appendLiteral(SEARCH_PARAMS)
                                      .build()
                                      .set("format", "json")
                                      .set("q", "URI Templates")

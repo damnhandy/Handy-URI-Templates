@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, Ryan J. McDonough
+ * Copyright 2013, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package com.damnhandy.uri.template;
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
- * @since 1.2
+ * @since 2.0
  */
 public class MalformedUriTemplateException extends Exception
 {

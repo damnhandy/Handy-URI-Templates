@@ -23,7 +23,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;
-import com.damnhandy.uri.template.UriTemplateBuilder;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Request;
 import com.ning.http.client.RequestBuilder;
@@ -82,9 +81,9 @@ public class TestGitHubApis extends AbstractExampleTest
 
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplateBuilder.fromTemplate(BASE)
-                               .append("/users/{user}/repos")
-                               .append(PAGINATION)
+            UriTemplate.buildFromTemplate(BASE)
+                               .appendLiteral("/users/{user}/repos")
+                               .appendLiteral(PAGINATION)
                                .build()
                                .set("user", "damnhandy")
                                .set("repo", "repos")
@@ -108,8 +107,8 @@ public class TestGitHubApis extends AbstractExampleTest
 
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-             UriTemplateBuilder.fromTemplate(BASE)
-                               .append(PATH_EXPRESSION)
+            UriTemplate.buildFromTemplate(BASE)
+                               .appendLiteral(PATH_EXPRESSION)
                                .build()
                                .set("user", "damnhandy")
                                .set("repo", "Handy-URI-Templates")
@@ -132,8 +131,8 @@ public class TestGitHubApis extends AbstractExampleTest
 
       RequestBuilder builder = new RequestBuilder("GET");
       Request request = builder.setUrl(
-            UriTemplateBuilder.fromTemplate(BASE)
-                              .append(PATH_EXPRESSION)
+            UriTemplate.buildFromTemplate(BASE)
+                              .appendLiteral(PATH_EXPRESSION)
                               .build()
                               .set("user", "damnhandy")
                               .set("repo", "Handy-URI-Templates")

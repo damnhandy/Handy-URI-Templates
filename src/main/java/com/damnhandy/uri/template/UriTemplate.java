@@ -27,10 +27,10 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
 
 /**
  * <p>
- * This is the main class for creating and manipulating URI templates. This project implements
+ * This is the primary class for creating and manipulating URI templates. This project implements
  * <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a> and produces output
  * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-1.2">levels
- * 1 through 4</a> as well as supports composite types. In addition to supporting {@link Map}
+ * 1 through 4</a>. In addition to supporting {@link Map}
  * and {@link List} values as composite types, the library also supports the use of Java objects
  * as well. Please see the {@link VarExploder} and {@link DefaultVarExploder} for more info.
  * </p>
@@ -109,7 +109,36 @@ public abstract class UriTemplate implements java.io.Serializable
     */
    protected Expression[] expressions;
 
+   /**
+    * Creates a new {@link Builder} from the template string.
+    *
+    * @param templateString
+    * @return
+    * @since 1.2
+    */
+   public static Builder buildFromTemplate(String template)
+   {
+      return new Builder(template);
+   }
 
+   /**
+    * <p>
+    * Creates a new {@link Builder} from a root {@link UriTemplate}. This
+    * method will create a new {@link UriTemplate} from the base and copy the variables
+    * from the base template to the new {@link UriTemplate}.
+    * </p>
+    * <p>
+    * This method is useful when the base template is less volatile than the child
+    * expression and you want to merge the two.
+    * </p>
+    * @param base
+    * @return
+    * @since 1.2
+    */
+   public static Builder buildFromTemplate(UriTemplate template)
+   {
+      return new Builder(template);
+   }
    /**
     * Creates a new {@link UriTemplate} from the template.
     *
@@ -136,17 +165,17 @@ public abstract class UriTemplate implements java.io.Serializable
     * @return
     * @since 1.0
     */
-   public static UriTemplateBuilder fromTemplate(UriTemplate base)
+   public static Builder fromTemplate(UriTemplate base)
    {
-      return new UriTemplateBuilder(base.getTemplate());
+      return new Builder(base.getTemplate());
    }
 
    /**
-    * Initializes the internal URI template model.
+    * Parses the URI Template string into an internal template model.
     *
     *
     */
-   protected abstract void initExpressions() throws MalformedUriTemplateException;
+   protected abstract void parseTemplateString() throws MalformedUriTemplateException;
 
 
    /**
@@ -247,6 +276,26 @@ public abstract class UriTemplate implements java.io.Serializable
    }
 
    /**
+    * FIXME Comment this
+    *
+    * @param variableName
+    * @return
+    */
+   public boolean hasVariable(String variableName)
+   {
+      return values.containsKey(variableName);
+   }
+   /**
+    * FIXME Comment this
+    *
+    * @param variableName
+    * @return
+    */
+   public Object get(String variableName)
+   {
+      return values.get(variableName);
+   }
+   /**
     * Sets a Date value into the list of variable substitutions using the
     * default {@link DateFormat}.
     *
@@ -321,5 +370,156 @@ public abstract class UriTemplate implements java.io.Serializable
       return null;
    }
 
+   public static final class Builder
+   {
 
+      /**
+       * The URI expression
+       */
+      private final StringBuilder templateBuffer;
+
+      /**
+       *
+       */
+      private DateFormat defaultDateFormat = null;
+
+      /**
+       *
+       */
+      private Map<String, Object> values = null;
+
+      /**
+       *
+       * Create a new UriTemplateBuilder.
+       *
+       * @param templateString
+       */
+      Builder(String templateString)
+      {
+         this.templateBuffer = new StringBuilder(templateString);
+      }
+
+      /**
+       *
+       * Create a new UriTemplateBuilder.
+       *
+       * @param template
+       */
+      Builder(UriTemplate template)
+      {
+         this(template.getTemplate());
+         this.values = template.getValues();
+         this.defaultDateFormat = template.defaultDateFormat;
+      }
+
+
+
+      /**
+      *
+      * @param dateFormatString
+      * @return
+      * @since 1.2
+      */
+      public Builder withDefaultDateFormat(String dateFormatString)
+      {
+         return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));
+      }
+
+      /**
+       *
+       * @param dateFormat
+       * @return
+       * @since 1.2
+       */
+      public Builder withDefaultDateFormat(DateFormat dateFormat)
+      {
+         defaultDateFormat = dateFormat;
+         return this;
+      }
+
+      /**
+       * <p>
+       * Appends the expression from a base URI template expression, such as:
+       * </p>
+       * <pre>
+       * UriTemplate template = UriTemplate.fromExpression("http://api.github.com");
+       * </pre>
+       *
+       * <p>
+       * A child expression can be appended by:
+       * </p>
+       * <pre>
+       * UriTemplate template = UriTemplate.fromExpression("http://api.github.com")
+       *                                   .expression("/repos/{user}/{repo}/commits");
+       *
+       * </pre>
+       * <p>The resulting expression would result in:</p>
+       * <pre>
+       * http://api.github.com/repos/{user}/{repo}/commits
+       * </pre>
+       * <p>
+       * Multiple expressions can be appended to the template as follows:
+       * </p>
+       * <pre>
+       *  UriTemplate template = UriTemplateBuilder.fromTemplate("http://myhost")
+       *                                           .append("{/version}")
+       *                                           .append("{/myId}")
+       *                                           .append("/things/{thingId}")
+       *                                           .build()
+       *                                           .set("myId","damnhandy")
+       *                                           .set("version","v1")
+       *                                           .set("thingId","12345");
+       * </pre>
+       * <p>This will result in the following template and URI:</p>
+       * <pre>
+       * Template: http://myhost{/version}{/myId}/things/{thingId}
+       * URI:      http://myhost/v1/damnhandy/things/12345
+       * </pre>
+       *
+       * @param template
+       * @return
+       * @since 1.2
+       *
+       */
+      public Builder appendLiteral(String template)
+      {
+         if (template == null)
+         {
+            return this;
+         }
+         this.templateBuffer.append(template.trim());
+         return this;
+      }
+
+      /**
+       * FIXME Comment this
+       *
+       * @param expression
+       * @return
+       * @since 1.2
+       */
+      public Builder append(Expression expression)
+      {
+         this.templateBuffer.append(expression.toString());
+         return this;
+      }
+
+      /**
+       * FIXME Comment this
+       *
+       * @return
+       * @since 1.2
+       */
+      public UriTemplate build() throws MalformedUriTemplateException
+      {
+         UriTemplate template = new RFC6570UriTemplate(templateBuffer.toString());
+         template.set(values);
+         if (defaultDateFormat != null)
+         {
+            template.defaultDateFormat = defaultDateFormat;
+         }
+         return template;
+      }
+
+   }
 }

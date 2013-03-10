@@ -21,8 +21,10 @@ package com.damnhandy.uri.template.impl;
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
+ * @since 1.0
  */
-public enum Modifier {
+public enum Modifier
+{
 
    NONE         (""),
    PREFIX       (":"),

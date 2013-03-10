@@ -34,6 +34,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RUNTIME)
 @Target({FIELD, METHOD})
-public @interface UriTransient {
+public @interface UriTransient
+{
 
 }

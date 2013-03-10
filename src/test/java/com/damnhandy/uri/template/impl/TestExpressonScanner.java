@@ -42,10 +42,30 @@ public class TestExpressonScanner
 
 
    @Test
-   public void testGoodTemplate2() throws Exception
+   public void testGoodTemplateWithOperators() throws Exception
    {
       ExpressionScanner e = new ExpressionScanner();
       List<String> rawExpr = e.scan("http://example.com/{expr}/thing/{?other, thing}");
+      Assert.assertEquals(rawExpr.size(), 2);
+      System.out.println(rawExpr);
+   }
+
+
+   @Test(expected = MalformedUriTemplateException.class)
+   public void testStartExpressionWithNoTermination() throws Exception
+   {
+      ExpressionScanner e = new ExpressionScanner();
+      List<String> rawExpr = e.scan("http://example.com/{expr/thing");
+      Assert.assertEquals(rawExpr.size(), 2);
+      System.out.println(rawExpr);
+   }
+
+
+   @Test(expected = MalformedUriTemplateException.class)
+   public void testStartExpressionWithTerminationButNoStartBrace() throws Exception
+   {
+      ExpressionScanner e = new ExpressionScanner();
+      List<String> rawExpr = e.scan("http://example.com/expr}/thing");
       Assert.assertEquals(rawExpr.size(), 2);
       System.out.println(rawExpr);
    }

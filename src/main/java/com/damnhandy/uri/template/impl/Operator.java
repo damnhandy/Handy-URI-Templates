@@ -45,14 +45,14 @@ public enum Operator {
 
 
 
-   NUL         ("",  DEFAULT_SEPARATOR,  false, "",  Encoding.U),
-   RESERVED    ("+", DEFAULT_SEPARATOR,  false, "",  Encoding.UR),
-   NAME_LABEL  (".", ".",                false, "",  Encoding.U),
-   PATH        ("/", "/",                false, "",  Encoding.U),
-   MATRIX      (";", ";",                true,  "",  Encoding.U),
-   QUERY       ("?", "&",                true,  "=", Encoding.U),
-   CONTINUATION("&", "&",                true,  "=", Encoding.U),
-   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false, "",  Encoding.UR);
+   NUL         ("",  DEFAULT_SEPARATOR,  false,  Encoding.U),
+   RESERVED    ("+", DEFAULT_SEPARATOR,  false,  Encoding.UR),
+   NAME_LABEL  (".", ".",                false,  Encoding.U),
+   PATH        ("/", "/",                false,  Encoding.U),
+   MATRIX      (";", ";",                true,   Encoding.U),
+   QUERY       ("?", "&",                true,   Encoding.U),
+   CONTINUATION("&", "&",                true,   Encoding.U),
+   FRAGMENT    ("#", DEFAULT_SEPARATOR,  false,  Encoding.UR);
 
 
    /**
@@ -77,22 +77,17 @@ public enum Operator {
 
    /**
     *
-    */
-   private String empty = "";
-   /**
-    *
     * Create a new Operator.
     *
     * @param operator
     * @param separator
     */
-   private Operator(String operator, String separator, boolean named, String empty, Encoding encoding)
+   private Operator(String operator, String separator, boolean named, Encoding encoding)
    {
       this.operator = operator;
       this.separator = separator;
       this.named = named;
       this.encoding = encoding;
-      this.empty = empty;
    }
 
    public String getOperator()
@@ -123,15 +118,7 @@ public enum Operator {
       return named;
    }
 
-   /**
-    *
-    *
-    * @return
-    */
-   public String ifEmptyString()
-   {
-      return empty;
-   }
+
    /**
     */
    public String getListSeparator()
