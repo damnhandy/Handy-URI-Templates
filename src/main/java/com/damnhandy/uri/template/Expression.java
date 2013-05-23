@@ -66,6 +66,7 @@ public class Expression
     * That {@link Operator} value that is associated with this Expression
     */
    private Operator op;
+   
 
    /**
     * The the parsed {@link VarSpec} instances found in the expression.

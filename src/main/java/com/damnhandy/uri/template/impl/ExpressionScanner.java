@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;
+
 /**
  *
  * Utility class used to scan the URI Template string for expressions.
@@ -44,11 +45,7 @@ class ExpressionScanner
 
    private char[] template;
 
-   private int currentPosition = 0;
-
    private int expressionStartPos;
-
-   private int expressionEndPos;
 
    /**
     *
@@ -60,7 +57,6 @@ class ExpressionScanner
       startTemplate();
       for (int i = 0; i < template.length; i++)
       {
-         currentPosition = i;
          char current = template[i];
 
          if (current == EXPR_START)
@@ -111,7 +107,8 @@ class ExpressionScanner
       startedTemplate = false;
       if (expressionCaptureOn == true)
       {
-         throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at " + expressionStartPos +" was never terminated");
+         throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at "
+               + expressionStartPos + " was never terminated");
       }
    }
 
@@ -122,13 +119,22 @@ class ExpressionScanner
    private void startExpression(int position) throws MalformedUriTemplateException
    {
 
-      if (expressionCaptureOn)
+      if (startedTemplate)
       {
-         throw new MalformedUriTemplateException("A new expression start brace found at " + position + " but another unclosed exprression was found at " + expressionStartPos);
+         if (expressionCaptureOn)
+
+         {
+            throw new MalformedUriTemplateException("A new expression start brace found at " + position
+                  + " but another unclosed expression was found at " + expressionStartPos);
+         }
+         expressionStartPos = position;
+         expressionCaptureOn = true;
+         expression = new StringBuilder();
       }
-      expressionStartPos = position;
-      expressionCaptureOn = true;
-      expression = new StringBuilder();
+      else
+      {
+         throw new IllegalStateException("Cannot start an expression without beginning the template");
+      }
    }
 
    /**
@@ -139,13 +145,21 @@ class ExpressionScanner
    {
 
       // an expression close brace is found without a start
-      if (expressionCaptureOn == false)
+      if (startedTemplate)
       {
-         throw new MalformedUriTemplateException("Expression close brace was found at position " + position + " yet there was no start brace.");
+         if (expressionCaptureOn == false)
+
+         {
+            throw new MalformedUriTemplateException("Expression close brace was found at position " + position
+                  + " yet there was no start brace.");
+         }
+         expressionCaptureOn = false;
+         expressions.add(expression.toString());
+         expression = null;
       }
-      expressionEndPos = position;
-      expressionCaptureOn = false;
-      expressions.add(expression.toString());
-      expression = null;
+      else
+      {
+         throw new IllegalStateException("Cannot end an expression without beginning the template");
+      }
    }
 }
