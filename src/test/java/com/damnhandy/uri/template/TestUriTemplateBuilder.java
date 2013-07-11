@@ -17,7 +17,7 @@ package com.damnhandy.uri.template;
 
 import static com.damnhandy.uri.template.Expression.*;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

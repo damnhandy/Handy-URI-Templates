@@ -4,14 +4,12 @@
  */
 package com.damnhandy.uri.template.impl;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;

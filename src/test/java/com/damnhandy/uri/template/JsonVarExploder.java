@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -54,9 +55,9 @@ public class JsonVarExploder implements VarExploder
       this(new FileInputStream(file));
    }
 
-   public JsonVarExploder(String jsonText) throws VarExploderException
+   public JsonVarExploder(String jsonText) throws VarExploderException, UnsupportedEncodingException
    {
-      this(new ByteArrayInputStream(jsonText.getBytes()));
+      this(new ByteArrayInputStream(jsonText.getBytes("UTF-8")));
    }
 
    /**

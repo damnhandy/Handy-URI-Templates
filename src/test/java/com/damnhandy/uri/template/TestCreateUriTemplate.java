@@ -15,11 +15,12 @@
  */
 package com.damnhandy.uri.template;
 
-import junit.framework.Assert;
-import org.junit.Test;
 
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Simple tests to validate the UriTemplate API.

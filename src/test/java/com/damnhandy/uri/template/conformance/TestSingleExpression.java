@@ -3,13 +3,11 @@
  */
 package com.damnhandy.uri.template.conformance;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.UriTemplate;

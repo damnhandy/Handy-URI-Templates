@@ -18,8 +18,7 @@ package com.damnhandy.uri.template;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
