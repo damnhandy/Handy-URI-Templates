@@ -17,7 +17,6 @@ package com.damnhandy.uri.template;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +49,9 @@ import com.damnhandy.uri.template.impl.VarSpec;
 public class Expression extends UriTemplateComponent
 {
 
+   /** The serialVersionUID */
+   private static final long serialVersionUID = -5305648325957481840L;
+   
    /**
     * Regex to validate the variable name.
     */
@@ -72,12 +74,14 @@ public class Expression extends UriTemplateComponent
     * The the parsed {@link VarSpec} instances found in the expression.
     */
    private List<VarSpec> varSpecs;
+   
+   
    /**
     * Creates a new {@link Builder} to create a simple expression according
     * to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.2">3.2.2</a>.
     * Calling:
     * <pre>
-    * String exp = Expression.simple().var("var").build().toString();
+    * String exp = Expression.simple(var("var")).build().toString();
     * </pre>
     * <p>
     * Will return the following expression:
@@ -88,10 +92,12 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder simple()
+   public static Builder simple(VarSpec...varSpec)
    {
-      return Builder.create(Operator.NUL);
+      return Builder.create(Operator.NUL, varSpec);
    }
+   
+
 
    /**
     * Creates a new {@link Builder} to create an expression that will use reserved expansion
@@ -109,9 +115,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder reserved()
+   public static Builder reserved(VarSpec...varSpec)
    {
-      return Builder.create(Operator.RESERVED);
+      return Builder.create(Operator.RESERVED, varSpec);
    }
 
    /**
@@ -130,9 +136,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder fragment()
+   public static Builder fragment(VarSpec...varSpec)
    {
-      return Builder.create(Operator.FRAGMENT);
+      return Builder.create(Operator.FRAGMENT, varSpec);
    }
 
    /**
@@ -140,7 +146,7 @@ public class Expression extends UriTemplateComponent
     * according to section <a href="http://tools.ietf.org/html/rfc6570#section-3.2.5">3.2.5</a>.
     * Calling:
     * <pre>
-    * String exp = Expression.label().var("var").build().toString();
+    * String exp = Expression.label(var("var")).build().toString();
     * </pre>
     * <p>
     * Will return the following expression:
@@ -151,9 +157,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder label()
+   public static Builder label(VarSpec...varSpec)
    {
-      return Builder.create(Operator.NAME_LABEL);
+      return Builder.create(Operator.NAME_LABEL, varSpec);
    }
 
    /**
@@ -172,9 +178,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder path()
+   public static Builder path(VarSpec...varSpec)
    {
-      return Builder.create(Operator.PATH);
+      return Builder.create(Operator.PATH, varSpec);
    }
 
    /**
@@ -194,9 +200,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder matrix()
+   public static Builder matrix(VarSpec...varSpec)
    {
-      return Builder.create(Operator.MATRIX);
+      return Builder.create(Operator.MATRIX, varSpec);
    }
 
    /**
@@ -215,9 +221,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder query()
+   public static Builder query(VarSpec...varSpec)
    {
-      return Builder.create(Operator.QUERY);
+      return Builder.create(Operator.QUERY, varSpec);
    }
 
    /**
@@ -236,9 +242,9 @@ public class Expression extends UriTemplateComponent
     *
     * @return
     */
-   public static Builder continuation()
+   public static Builder continuation(VarSpec...varSpec)
    {
-      return Builder.create(Operator.CONTINUATION);
+      return Builder.create(Operator.CONTINUATION, varSpec);
    }
 
 
@@ -263,11 +269,12 @@ public class Expression extends UriTemplateComponent
     * @param varSpecs
     * @throws MalformedUriTemplateException
     */
-   public Expression(final Operator op, final List<VarSpec> varSpecs) throws MalformedUriTemplateException
+   public Expression(final Operator op, final List<VarSpec> varSpecs) 
    {
       super(0);
       this.op = op;
       this.varSpecs = varSpecs;
+      this.replacementPattern = Pattern.quote(toString());
    }
 
    /**
@@ -493,7 +500,7 @@ public class Expression extends UriTemplateComponent
       /**
        *
        */
-      private List<VarSpec> varSpecs = new LinkedList<VarSpec>();
+      private List<VarSpec> varSpecs;
 
       /**
        *
@@ -501,9 +508,14 @@ public class Expression extends UriTemplateComponent
        *
        * @param operator
        */
-      private Builder(Operator operator)
+      private Builder(Operator operator, VarSpec...varSpec)
       {
          this.operator = operator;
+         this.varSpecs = new ArrayList<VarSpec>();
+         for(VarSpec v : varSpec)
+         {
+            varSpecs.add(v);
+         }
       }
 
       /**
@@ -512,91 +524,14 @@ public class Expression extends UriTemplateComponent
        * @param operator
        * @return
        */
-      static Builder create(Operator operator)
+      static Builder create(Operator operator, VarSpec...varSpec)
       {
-         return new Builder(operator);
+         return new Builder(operator, varSpec);
       }
 
-      /**
-       * Adds a variable name to the expression.
-       *
-       * <pre>
-       * builder.var("foo");
-       * </pre>
-       *
-       * Will yield the following expression:
-       * <pre>
-       * {foo}
-       * </pre>
-       *
-       * @param varName
-       * @return
-       */
-      public Builder var(String varName)
-      {
-         return var(varName, Modifier.NONE, null);
-      }
+      
 
-      /**
-       * Adds a variable name to the expression with an explode modifier.
-       *
-       * <pre>
-       * builder.var("foo",true);
-       * </pre>
-       *
-       * Will yield the following expression:
-       * <pre>
-       * {foo*}
-       * </pre>
-       *
-       * @param varName
-       * @param explode
-       * @return
-       */
-      public Builder var(String varName, boolean explode)
-      {
-         if (explode)
-         {
-            return var(varName, Modifier.EXPLODE, null);
-         }
-         return var(varName, Modifier.NONE, null);
-      }
-
-      /**
-       * Adds a variable name to the expression with a prefix modifier.
-       *
-       * <pre>
-       * builder.var("foo",2);
-       * </pre>
-       *
-       * Will yield the following expression:
-       * <pre>
-       * {foo:2}
-       * </pre>
-       * @param varName
-       * @param prefix
-       * @return
-       */
-      public Builder var(String varName, int prefix)
-      {
-         return var(varName, Modifier.PREFIX, prefix);
-      }
-
-      /**
-       *
-       *
-       * @param varName
-       * @param modifier
-       * @param position
-       * @return
-       */
-      private Builder var(String varName, Modifier modifier, Integer position)
-      {
-         varSpecs.add(new VarSpec(varName, modifier, position));
-         return this;
-      }
-
-      public Expression build() throws MalformedUriTemplateException
+      public Expression build() 
       {
          return new Expression(operator, varSpecs);
       }

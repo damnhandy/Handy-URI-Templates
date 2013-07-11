@@ -15,6 +15,8 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import java.io.Serializable;
+
 
 /**
  * Represents a variable in a URI template expression.
@@ -22,8 +24,11 @@ package com.damnhandy.uri.template.impl;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public final class VarSpec
+public final class VarSpec implements Serializable
 {
+   /** The serialVersionUID */
+   private static final long serialVersionUID = 5850478145190940514L;
+
    public static enum VarFormat {
       SINGLE, ARRAY, PAIRS;
    }
@@ -172,14 +177,93 @@ public final class VarSpec
       return variableName;
    }
 
-
-
-
    @Override
    public String toString()
    {
       return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName="
             + variableName + "]";
+   }
+   
+   public static class Builder
+   {
+      
+      /**
+       * Adds a variable name to the expression.
+       *
+       * <pre>
+       * builder.var("foo");
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo}
+       * </pre>
+       *
+       * @param varName
+       * @return
+       */
+      public static VarSpec var(String varName)
+      {
+         return var(varName, Modifier.NONE, null);
+      }
+
+      /**
+       * Adds a variable name to the expression with an explode modifier.
+       *
+       * <pre>
+       * builder.var("foo",true);
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo*}
+       * </pre>
+       *
+       * @param varName
+       * @param explode
+       * @return
+       */
+      public static VarSpec var(String varName, boolean explode)
+      {
+         if (explode)
+         {
+            return var(varName, Modifier.EXPLODE, null);
+         }
+         return var(varName, Modifier.NONE, null);
+      }
+
+      /**
+       * Adds a variable name to the expression with a prefix modifier.
+       *
+       * <pre>
+       * builder.var("foo",2);
+       * </pre>
+       *
+       * Will yield the following expression:
+       * <pre>
+       * {foo:2}
+       * </pre>
+       * @param varName
+       * @param prefix
+       * @return
+       */
+      public static VarSpec var(String varName, int prefix)
+      {
+         return var(varName, Modifier.PREFIX, prefix);
+      }
+
+      /**
+       *
+       *
+       * @param varName
+       * @param modifier
+       * @param position
+       * @return
+       */
+      private static VarSpec var(String varName, Modifier modifier, Integer position)
+      {
+         return new VarSpec(varName, modifier, position);
+      }
    }
 
 }

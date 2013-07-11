@@ -15,7 +15,6 @@
  */
 package com.damnhandy.uri.template;
 
-
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -40,7 +39,8 @@ public class TestCreateUriTemplate
 
       Assert.assertEquals(2, base.getValues().size());
       UriTemplate child = UriTemplate.buildFromTemplate(base)
-                                            .appendLiteral("/things/{thingId}")
+                                            .literal("/things")
+                                            .path("thingId")
                                             .build()
                                             .set("thingId","123öä");
 
@@ -60,15 +60,17 @@ public class TestCreateUriTemplate
    public void testMultpleExpressions() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate("http://myhost")
-                                               .appendLiteral("{/version}")
-                                               .appendLiteral("{/myId}")
-                                               .appendLiteral(" ")
-                                               .appendLiteral("/things/{thingId}").build()
+                                               .path("version")
+                                               .path("myId")
+                                               .literal("/things/")
+                                               .simple("thingId")
+                                               .build()
                                                .set("myId","damnhandy")
                                                .set("version","v1")
                                                .set("thingId","12345");
 
       Assert.assertEquals(3, template.getValues().size());
+      System.out.println(template.getTemplate());
       Assert.assertEquals("http://myhost{/version}{/myId}/things/{thingId}", template.getTemplate());
       Assert.assertEquals("http://myhost/v1/damnhandy/things/12345", template.expand());
    }

@@ -25,13 +25,13 @@ import com.damnhandy.uri.template.UriTemplateComponent;
 
 /**
  *
- * Utility class used to scan the URI Template string for expressions.
+ * Utility class used to parse the URI template string into a series of components
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  * @since 2.0
  */
-class ExpressionScanner
+public final class UriTemplateParser
 {
 
    private static final char EXPR_START = '{';
@@ -53,18 +53,23 @@ class ExpressionScanner
    private char[] template;
 
    /**
-    *
+    * Scans the URI template looking for literal string components and expressions.
+    * 
+    * @param templateString the URI template string to scan
+    * 
+    * @since 2.0
     *
     */
-   public List<UriTemplateComponent> scan(String templateString) throws MalformedUriTemplateException
+   public LinkedList<UriTemplateComponent> scan(String templateString) throws MalformedUriTemplateException
    {
       this.template = templateString.toCharArray();
       startTemplate();
-      for (int i = 0; i < template.length; i++)
+      int i;
+      for (i = 0; i < template.length; i++)
       {
-         char current = template[i];
+         char c = template[i];
 
-         if (current == EXPR_START)
+         if (c == EXPR_START)
          {
             if(literalCaptureOn)
             {
@@ -72,7 +77,8 @@ class ExpressionScanner
             }
             startExpression(i);
          } 
-         else
+         
+         if(c != EXPR_START || c != EXPR_END)
          {
             startLiteral(i);
          }
@@ -80,16 +86,20 @@ class ExpressionScanner
 
          if (expressionCaptureOn || literalCaptureOn)
          {
-            capture(current);
+            capture(c);
          } 
          
-         if (current == EXPR_END)
+         if (c == EXPR_END)
          {
             endExpression(i);
             startLiteral(i);
          }
       }
-      endTemplate();
+      if (literalCaptureOn)
+      {
+         endLiteral(i);
+      }
+      endTemplate(i);
       return components;
    }
 
@@ -121,14 +131,15 @@ class ExpressionScanner
     * not been closed, an exception will be raised.
     *
     */
-   private void endTemplate() throws MalformedUriTemplateException
+   private void endTemplate(int position) throws MalformedUriTemplateException
    {
       startedTemplate = false;
-      if (expressionCaptureOn == true)
+      if (expressionCaptureOn)
       {
          throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at "
                + startPosition + " was never terminated");
       }
+      
    }
 
    /**

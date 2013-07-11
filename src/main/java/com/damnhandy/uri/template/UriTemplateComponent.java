@@ -4,15 +4,23 @@
  */
 package com.damnhandy.uri.template;
 
+import java.io.Serializable;
+
 /**
  * A Component.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public abstract class UriTemplateComponent
+public abstract class UriTemplateComponent implements Serializable
 {
 
+   /** The serialVersionUID */
+   private static final long serialVersionUID = -3653287624355221784L;
+   
+   /**
+    * 
+    */
    private final int startPosition;
    
    public UriTemplateComponent(final int startPoistion)

@@ -59,7 +59,7 @@ public class TestTwitterSearchApi extends AbstractExampleTest
    {
       RequestBuilder builder = new RequestBuilder("GET");
       String uri = UriTemplate.buildFromTemplate(SEARCH_BASE)
-                                     .appendLiteral(SEARCH_PARAMS)
+                                     .literal(SEARCH_PARAMS)
                                      .build()
                                      .set("format", "json")
                                      .set("q", "URI Templates")
