@@ -313,6 +313,12 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    private String expandCollection(Operator operator, VarSpec varSpec, Collection<?> variable) throws VariableExpansionException
    {
+      
+      if(variable == null || variable.isEmpty())
+      {
+         return null;
+      }
+      
       final List<String> stringValues = new ArrayList<String>();
       final Iterator<?> i = variable.iterator();
       String separator = operator.getSeparator();
@@ -330,12 +336,12 @@ public final class RFC6570UriTemplate extends UriTemplate
 
       if (varSpec.getModifier() != Modifier.EXPLODE && operator.useVarNameWhenExploded())
       {
-    	  final String values = joinParts(separator, stringValues);
-    	  if(operator == Operator.QUERY && values == null)
+    	  final String parts = joinParts(separator, stringValues);
+    	  if(operator == Operator.QUERY && parts == null)
     	  {
     		  return varSpec.getVariableName() + "=";
     	  }
-    	  return varSpec.getVariableName() + "=" + values;
+    	  return varSpec.getVariableName() + "=" + parts;
       }
       return joinParts(separator, stringValues);
    }
@@ -362,6 +368,11 @@ public final class RFC6570UriTemplate extends UriTemplate
     */
    private String expandMap(Operator operator, VarSpec varSpec, Map<String, Object> variable) throws VariableExpansionException
    {
+      if(variable == null || variable.isEmpty())
+      {
+         return null;
+      }
+      
       List<String> stringValues = new ArrayList<String>();
       String pairJoiner = "=";
       if (varSpec.getModifier() != Modifier.EXPLODE)
