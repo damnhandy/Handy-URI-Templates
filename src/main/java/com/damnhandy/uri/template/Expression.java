@@ -45,9 +45,9 @@ import com.damnhandy.uri.template.impl.VarSpec;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  * @see ExpressionImpl
- * @since 1.2
+ * @since 2.0
  */
-public class Expression
+public class Expression extends UriTemplateComponent
 {
 
    /**
@@ -249,8 +249,9 @@ public class Expression
     * @param op
     * @param varSpecs
     */
-   public Expression(final String rawExpression) throws MalformedUriTemplateException
+   public Expression(final String rawExpression, int startPosition) throws MalformedUriTemplateException
    {
+      super(startPosition);
       this.parseRawExpression(rawExpression);
    }
 
@@ -264,6 +265,7 @@ public class Expression
     */
    public Expression(final Operator op, final List<VarSpec> varSpecs) throws MalformedUriTemplateException
    {
+      super(0);
       this.op = op;
       this.varSpecs = varSpecs;
    }
@@ -418,6 +420,17 @@ public class Expression
       return b.append("}").toString();
    }
 
+   /**
+    * Returns the value of this component
+    * 
+    * @return
+    */
+   @Override
+   public String getValue()
+   {
+      return toString();
+   }
+   
    @Override
    public int hashCode()
    {

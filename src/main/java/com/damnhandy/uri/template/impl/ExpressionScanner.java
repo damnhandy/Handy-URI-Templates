@@ -15,10 +15,13 @@
  */
 package com.damnhandy.uri.template.impl;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.damnhandy.uri.template.Expression;
+import com.damnhandy.uri.template.Literal;
 import com.damnhandy.uri.template.MalformedUriTemplateException;
+import com.damnhandy.uri.template.UriTemplateComponent;
 
 /**
  *
@@ -36,22 +39,24 @@ class ExpressionScanner
    private static final char EXPR_END = '}';
 
    private boolean startedTemplate = false;
-
+   
    private boolean expressionCaptureOn = false;
+   
+   private boolean literalCaptureOn = false;
 
-   private List<String> expressions = new ArrayList<String>();
+   private LinkedList<UriTemplateComponent> components = new LinkedList<UriTemplateComponent>();
 
-   private StringBuilder expression;
+   private StringBuilder buffer;
 
+   private int startPosition;
+   
    private char[] template;
-
-   private int expressionStartPos;
 
    /**
     *
     *
     */
-   public List<String> scan(String templateString) throws MalformedUriTemplateException
+   public List<UriTemplateComponent> scan(String templateString) throws MalformedUriTemplateException
    {
       this.template = templateString.toCharArray();
       startTemplate();
@@ -61,31 +66,45 @@ class ExpressionScanner
 
          if (current == EXPR_START)
          {
+            if(literalCaptureOn)
+            {
+               endLiteral(i);
+            }
             startExpression(i);
-         }
-
-         if (expressionCaptureOn)
+         } 
+         else
          {
-            expression(current);
+            startLiteral(i);
          }
+         
 
+         if (expressionCaptureOn || literalCaptureOn)
+         {
+            capture(current);
+         } 
+         
          if (current == EXPR_END)
          {
             endExpression(i);
+            startLiteral(i);
          }
       }
       endTemplate();
-      return expressions;
+      return components;
    }
 
    /**
-    * If expression capture is active, collect the characters into t
+    * If capture is active, collect the characters into the buffer
     *
     * @param currentChar
     */
-   private void expression(char currentChar)
+   private void capture(char currentChar)
    {
-      expression.append(currentChar);
+      if(buffer == null)
+      {
+         buffer = new StringBuilder();
+      }
+      buffer.append(currentChar);
    }
 
    /**
@@ -108,10 +127,58 @@ class ExpressionScanner
       if (expressionCaptureOn == true)
       {
          throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at "
-               + expressionStartPos + " was never terminated");
+               + startPosition + " was never terminated");
       }
    }
 
+   /**
+    * Marks the start of 
+    * 
+    * @param position
+    */
+   private void startLiteral(int position) throws MalformedUriTemplateException
+   {
+      
+      if(startedTemplate)
+      {
+         if(!literalCaptureOn)
+         {
+            //throw new IllegalStateException("Literal capture already started at character "+template[position]);
+            literalCaptureOn = true;
+            startPosition = position;
+         }
+      }
+      else
+      {
+         throw new IllegalStateException("Cannot start a literal without beginning the template");
+      }
+   }
+   
+   private void endLiteral(int position) throws MalformedUriTemplateException
+   {
+      if(startedTemplate)
+      {
+         if(!literalCaptureOn)
+         {
+            throw new IllegalStateException("Can't end a literal without starting it first");
+         }
+         // in the case that we have back to back expressions ({foo}{?bar}), we can get into a state
+         // we started capturing a literal but never actually collected anything yet. 
+         if(buffer != null)
+         {
+            components.add(new Literal(buffer.toString(), startPosition));
+            literalCaptureOn = false;
+            buffer = null;
+         }
+         
+      }
+      else
+      {
+         throw new IllegalStateException("Cannot end a literal without beginning the template");
+      }
+   }
+   
+   
    /**
     * Called when the start of an expression has been encountered.
     *
@@ -125,11 +192,11 @@ class ExpressionScanner
 
          {
             throw new MalformedUriTemplateException("A new expression start brace found at " + position
-                  + " but another unclosed expression was found at " + expressionStartPos);
+                  + " but another unclosed expression was found at " + startPosition);
          }
-         expressionStartPos = position;
+         literalCaptureOn = false;
          expressionCaptureOn = true;
-         expression = new StringBuilder();
+         startPosition = position;
       }
       else
       {
@@ -147,15 +214,15 @@ class ExpressionScanner
       // an expression close brace is found without a start
       if (startedTemplate)
       {
-         if (expressionCaptureOn == false)
+         if (!expressionCaptureOn)
 
          {
             throw new MalformedUriTemplateException("Expression close brace was found at position " + position
                   + " yet there was no start brace.");
          }
          expressionCaptureOn = false;
-         expressions.add(expression.toString());
-         expression = null;
+         components.add(new Expression(buffer.toString(), startPosition));
+         buffer = null;
       }
       else
       {

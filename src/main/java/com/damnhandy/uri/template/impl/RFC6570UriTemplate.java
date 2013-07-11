@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import com.damnhandy.uri.template.Expression;
 import com.damnhandy.uri.template.MalformedUriTemplateException;
 import com.damnhandy.uri.template.UriTemplate;
+import com.damnhandy.uri.template.UriTemplateComponent;
 import com.damnhandy.uri.template.UriUtil;
 import com.damnhandy.uri.template.VarExploder;
 import com.damnhandy.uri.template.VariableExpansionException;
@@ -79,11 +80,15 @@ public final class RFC6570UriTemplate extends UriTemplate
    {
       final String templateString = getTemplate();
       final ExpressionScanner scanner = new ExpressionScanner();
-      final List<String> rawExpressions = scanner.scan(templateString);
+      final List<UriTemplateComponent> components = scanner.scan(templateString);
       final List<Expression> expressionList = new LinkedList<Expression>();
-      for(String expr : rawExpressions)
+      for(UriTemplateComponent c : components)
       {
-         expressionList.add(new Expression(expr));
+         if(c instanceof Expression)
+         {
+            expressionList.add((Expression) c);
+         }
+         
       }
       expressions = expressionList.toArray(new Expression[expressionList.size()]);
    }

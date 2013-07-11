@@ -29,7 +29,6 @@ public class MalformedUriTemplateException extends Exception
    /** The serialVersionUID */
    private static final long serialVersionUID = 5883174281977078450L;
 
-
    /**
     * Create a new UriTemplateParseException.
     *

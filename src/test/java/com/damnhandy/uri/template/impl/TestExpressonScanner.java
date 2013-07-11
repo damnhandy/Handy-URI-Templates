@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;
+import com.damnhandy.uri.template.UriTemplateComponent;
 
 /**
  * A TestCharacterScanner.
@@ -32,10 +33,13 @@ public class TestExpressonScanner
    {
       String template = "http://example.com/{expr}/thing/{other}";
       ExpressionScanner e = new ExpressionScanner();
-      List<String> rawExpr = e.scan(template);
+      List<UriTemplateComponent> expressions = e.scan(template);
       List<String> regExExpr = scanWithRegEx(template);
-      Assert.assertEquals(rawExpr.size(), 2);
-      Assert.assertEquals(regExExpr, rawExpr);
+      Assert.assertEquals(4, expressions.size());
+      Assert.assertEquals("http://example.com/", expressions.get(0).getValue());
+      Assert.assertEquals(regExExpr.get(0), expressions.get(1).getValue());
+      Assert.assertEquals("/thing/", expressions.get(2).getValue());
+      Assert.assertEquals(regExExpr.get(1), expressions.get(3).getValue());
    }
 
 
@@ -43,40 +47,56 @@ public class TestExpressonScanner
    public void testGoodTemplateWithOperators() throws Exception
    {
       ExpressionScanner e = new ExpressionScanner();
-      List<String> rawExpr = e.scan("http://example.com/{expr}/thing/{?other, thing}");
-      Assert.assertEquals(rawExpr.size(), 2);
-      System.out.println(rawExpr);
+      List<UriTemplateComponent> expressions = e.scan("http://example.com/{expr}/thing/{?other,thing}");
+      Assert.assertEquals(4, expressions.size());
+      Assert.assertEquals("http://example.com/", expressions.get(0).getValue());
+      Assert.assertEquals("{expr}", expressions.get(1).getValue());
+      Assert.assertEquals("/thing/", expressions.get(2).getValue());
+      Assert.assertEquals("{?other,thing}", expressions.get(3).getValue());
    }
 
-
+   /**
+    * Checking that we correctly catch an unbalanced expression
+    * 
+    * @throws Exception
+    */
    @Test(expected = MalformedUriTemplateException.class)
    public void testStartExpressionWithNoTermination() throws Exception
    {
       ExpressionScanner e = new ExpressionScanner();
-      List<String> rawExpr = e.scan("http://example.com/{expr/thing");
-      Assert.assertEquals(rawExpr.size(), 2);
-      System.out.println(rawExpr);
+      List<UriTemplateComponent> expressions = e.scan("http://example.com/{expr/thing");
+      Assert.assertEquals(expressions.size(), 2);
+      System.out.println(expressions);
    }
 
-
+   /**
+    * Since the expression is never opened, we should not find any expressions.
+    * 
+    * @throws Exception
+    */
    @Test(expected = MalformedUriTemplateException.class)
    public void testStartExpressionWithTerminationButNoStartBrace() throws Exception
    {
       ExpressionScanner e = new ExpressionScanner();
-      List<String> rawExpr = e.scan("http://example.com/expr}/thing");
-      Assert.assertEquals(rawExpr.size(), 2);
-      System.out.println(rawExpr);
+      List<UriTemplateComponent> expressions = e.scan("http://example.com/expr}/thing");
+      Assert.assertEquals(expressions.size(), 2);
+      System.out.println(expressions);
    }
 
-
+   /**
+    * Checking that we correctly catch an unbalanced expression
+    * 
+    * @throws Exception
+    */
    @Test(expected = MalformedUriTemplateException.class)
    public void testUnbalanceExpression() throws Exception
    {
       ExpressionScanner e = new ExpressionScanner();
-      List<String> rawExpr = e.scan("http://example.com/{expr/thing/{other}");
-      Assert.assertNotNull(rawExpr);
+      List<UriTemplateComponent> expressions = e.scan("http://example.com/{expr/thing/{other}");
+      Assert.assertNotNull(expressions);
    }
 
+   
    private List<String> scanWithRegEx(String templateString)
    {
       Matcher matcher = URI_TEMPLATE_REGEX.matcher(templateString);

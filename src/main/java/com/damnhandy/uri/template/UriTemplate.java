@@ -29,7 +29,7 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
  * <p>
  * This is the primary class for creating and manipulating URI templates. This project implements
  * <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a> and produces output
- * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-1.2">levels
+ * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-2.0">levels
  * 1 through 4</a>. In addition to supporting {@link Map}
  * and {@link List} values as composite types, the library also supports the use of Java objects
  * as well. Please see the {@link VarExploder} and {@link DefaultVarExploder} for more info.
@@ -63,6 +63,7 @@ import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
  */
 public abstract class UriTemplate implements java.io.Serializable
 {
+
 
 
    /** The serialVersionUID */
@@ -114,7 +115,7 @@ public abstract class UriTemplate implements java.io.Serializable
     *
     * @param templateString
     * @return
-    * @since 1.2
+    * @since 2.0
     */
    public static Builder buildFromTemplate(String template)
    {
@@ -133,7 +134,7 @@ public abstract class UriTemplate implements java.io.Serializable
     * </p>
     * @param base
     * @return
-    * @since 1.2
+    * @since 2.0
     */
    public static Builder buildFromTemplate(UriTemplate template)
    {
@@ -144,7 +145,7 @@ public abstract class UriTemplate implements java.io.Serializable
     *
     * @param templateString
     * @return
-    * @since 1.2
+    * @since 2.0
     */
    public static final UriTemplate fromTemplate(final String templateString) throws MalformedUriTemplateException
    {
@@ -209,10 +210,11 @@ public abstract class UriTemplate implements java.io.Serializable
     * @throws VariableExpansionException
     * @return
     */
-   public static String expand(final String templateString, Map<String, Object> values) throws MalformedUriTemplateException, VariableExpansionException{
-       UriTemplate template = new RFC6570UriTemplate(templateString);
-       template.set(values);
-       return template.expand();
+   public static String expand(final String templateString, Map<String, Object> values) 
+         throws MalformedUriTemplateException, VariableExpansionException {
+       UriTemplate t = new RFC6570UriTemplate(templateString);
+       t.set(values);
+       return t.expand();
    }
 
 
@@ -418,7 +420,7 @@ public abstract class UriTemplate implements java.io.Serializable
       *
       * @param dateFormatString
       * @return
-      * @since 1.2
+      * @since 2.0
       */
       public Builder withDefaultDateFormat(String dateFormatString)
       {
@@ -429,7 +431,7 @@ public abstract class UriTemplate implements java.io.Serializable
        *
        * @param dateFormat
        * @return
-       * @since 1.2
+       * @since 2.0
        */
       public Builder withDefaultDateFormat(DateFormat dateFormat)
       {
@@ -478,7 +480,7 @@ public abstract class UriTemplate implements java.io.Serializable
        *
        * @param template
        * @return
-       * @since 1.2
+       * @since 2.0
        *
        */
       public Builder appendLiteral(String template)
@@ -496,7 +498,7 @@ public abstract class UriTemplate implements java.io.Serializable
        *
        * @param expression
        * @return
-       * @since 1.2
+       * @since 2.0
        */
       public Builder append(Expression expression)
       {
@@ -508,7 +510,7 @@ public abstract class UriTemplate implements java.io.Serializable
        * FIXME Comment this
        *
        * @return
-       * @since 1.2
+       * @since 2.0
        */
       public UriTemplate build() throws MalformedUriTemplateException
       {

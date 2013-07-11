@@ -37,6 +37,7 @@ public class TestUriTemplateBuilder
              .appendLiteral("/foo")
              .append(path().var("thing1").var("explodedThing", true).build())
              .append(fragment().var("prefix", 2).build()).build();
+             
 
       Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());
    }

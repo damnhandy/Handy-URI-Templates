@@ -87,7 +87,15 @@ public class TestExpressionBuilder
    }
 
    @Test
-   public void testSimple2() throws Exception
+   public void testMultipleExpressions() throws Exception
+   {
+      Expression e = Expression.simple().var("foo", 1).var("foo").var("thing", true).build();
+      Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
+   }
+   
+   
+   @Test
+   public void testMultipleExpressionsAndLiteralValues() throws Exception
    {
       Expression e = Expression.simple().var("foo", 1).var("foo").var("thing", true).build();
       Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
