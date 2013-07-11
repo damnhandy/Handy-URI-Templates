@@ -13,9 +13,6 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 As of version `1.1.1`, Handy URI Templates is passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
-## Continuous Integration 
-
-This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) since you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail sometimes even when they shouldn't. With that said, put more stock in the Jenkins build results.
 
 ## Maven
 
@@ -35,19 +32,11 @@ If you feel like using a development version, you can use a snapshot release:
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>1.1.8-SNAPSHOT</version>
-</dependency>
-```
-
-Or for the more bleeding edge features:
-
-```xml
-<dependency>
-  <groupId>com.damnhandy</groupId>
-  <artifactId>handy-uri-templates</artifactId>
   <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
+
+
 
 In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
 
