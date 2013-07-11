@@ -19,6 +19,14 @@
 		<http.client>4.1.1</http.client>
 		<jackson.version>2.2.2</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<classpath></classpath>
+		<import-package>*</import-package>
+		<export-package>{local-packages}</export-package>
+		<bundle-directives></bundle-directives>
+		<bundle-activator></bundle-activator>
+		<bundle-activationpolicy></bundle-activationpolicy>
+		<require-bundle></require-bundle>
+		<service-component></service-component>
 	</properties>
 
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -36,7 +44,7 @@
 	</licenses>
 	<inceptionYear>April 30, 2012</inceptionYear>
 	<organization>
-		<url>http://damnhandy.com</url>
+		<url>https://github.com/damnhandy/Handy-URI-Templates</url>
 		<name>Ryan J. McDonough</name>
 	</organization>
 	<ciManagement>
@@ -100,7 +108,7 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.7</version>
 			</plugin>
-			<!-- This is a workaround to get submodules working with the maven release
+			<!-- This is a workaround to get submodules working with the maven release 
 				plugin -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -121,6 +129,40 @@
 						<argument>buildtools/bin/submodule.sh</argument>
 					</arguments>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.4</version>
+				<extensions>true</extensions>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<archive>
+						<forced>true</forced>
+					</archive>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}${bundle-directives}</Bundle-SymbolicName>
+						<Bundle-Name>${project.artifactId}</Bundle-Name>
+						<_nouses>true</_nouses>
+						<Class-Path>${classpath}</Class-Path>
+						<Export-Package>${export-package}</Export-Package>
+						<Import-Package>${import-package}</Import-Package>
+						<Bundle-Activator>${bundle-activator}</Bundle-Activator>
+						<Bundle-ActivationPolicy>${bundle-activationpolicy}</Bundle-ActivationPolicy>
+						<url>https://github.com/damnhandy/Handy-URI-Templates</url>
+						<Require-Bundle>${require-bundle}</Require-Bundle>
+						<Service-Component>${service-component}</Service-Component>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -262,7 +304,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
