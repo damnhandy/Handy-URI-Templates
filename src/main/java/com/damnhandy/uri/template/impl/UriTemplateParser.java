@@ -16,7 +16,6 @@
 package com.damnhandy.uri.template.impl;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import com.damnhandy.uri.template.Expression;
 import com.damnhandy.uri.template.Literal;
