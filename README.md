@@ -26,7 +26,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 </dependency>
 ```
 
-If you feel like using a development version, you can use a snapshot release:
+The next version of Handy URI Templates includes some big changes to the API. If you want to be daring, you can use the `SNAPSHOT` release:
 
 ```xml
 <dependency>
@@ -56,19 +56,38 @@ You can also download the artifact directly at [http://search.maven.org](http://
 Using the library is simple:
 	
 ```java
-String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query, thing}")
+String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query,test2}")
                          .set("foo", "houses")
                          .set("query", "Ask something")
-                         .set("other", "something else")
+                         .set("test2", "someting else")
                          .set("thing", "A test")
                          .expand();
 ```
 
 This will result in the following URI:
 
-	"/h/houses/A%20test?query=Ask%20something&other=something%20else"
+	"/h/houses/A%20test?query=Ask%20something&test2=someting%20else"
 	
 You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html).
+
+## URI Template Builder API
+
+Starting in version 2.x, the `UriTemplateBuilder` was added to make it easier to dyamically construct URI templates. It's used like this:
+
+```java
+UriTemplate template = 
+      UriTemplate.buildFromTemplate("http://example.com")
+                 .literal("/foo")
+                 .path(var("thing1"),var("explodedThing", true))
+                 .fragment(var("prefix", 2))
+                 .build();
+```
+
+This will yeild the following URL template string:
+
+	"http://example.com/foo{/thing1,explodedThing*}{#prefix:2}"
+
+This API is still a work in progress an feedback is appreciated. 
 
 ## Using with HTTP Clients
 
