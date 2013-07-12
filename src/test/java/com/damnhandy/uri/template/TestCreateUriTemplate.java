@@ -31,6 +31,18 @@ public class TestCreateUriTemplate
 {
 
    @Test
+   public void testBasicExample() throws Exception {
+      String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query,test2}")
+                               .set("foo", "houses")
+                               .set("query", "Ask something")
+                               .set("test2", "someting else")
+                               .set("thing", "A test")
+                               .expand();
+
+      Assert.assertEquals("/h/houses/A%20test?query=Ask%20something&test2=someting%20else", uri);
+   }
+   
+   @Test
    public void testFromTemplate() throws Exception
    {
       UriTemplate base = UriTemplate.fromTemplate("http://myhost{/version,myId}")
@@ -70,7 +82,6 @@ public class TestCreateUriTemplate
                                                .set("thingId","12345");
 
       Assert.assertEquals(3, template.getValues().size());
-      System.out.println(template.getTemplate());
       Assert.assertEquals("http://myhost{/version}{/myId}/things/{thingId}", template.getTemplate());
       Assert.assertEquals("http://myhost/v1/damnhandy/things/12345", template.expand());
    }

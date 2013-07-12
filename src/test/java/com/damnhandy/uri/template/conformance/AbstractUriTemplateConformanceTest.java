@@ -53,30 +53,36 @@ public abstract class AbstractUriTemplateConformanceTest
    protected static Collection<Object[]> loadTestData(File file) throws Exception
    {
       InputStream in = new FileInputStream(file);
-      ObjectMapper mapper = new ObjectMapper();
-      Map<String, Object> testsuites = mapper.readValue(in, new TypeReference<Map<String, Object>>()
-      {
-      });
+      try {
+         ObjectMapper mapper = new ObjectMapper();
+         Map<String, Object> testsuites = mapper.readValue(in, new TypeReference<Map<String, Object>>(){});
 
-      List<Object[]> params = new ArrayList<Object[]>();
-      for (Map.Entry<String, Object> entry : testsuites.entrySet())
-      {
-         String name = entry.getKey();
-         Map<String, Object> testsuite = (Map<String, Object>) entry.getValue();
-         Map<String, Object> variables = (Map<String, Object>) testsuite.get("variables");
-         List<List<Object>> testcases = (List<List<Object>>) testsuite.get("testcases");
-
-         for (List<Object> test : testcases)
+         List<Object[]> params = new ArrayList<Object[]>();
+         for (Map.Entry<String, Object> entry : testsuites.entrySet())
          {
-            Object[] p = new Object[4];
-            p[0] = variables;
-            p[1] = test.get(0); // expression
-            p[2] = test.get(1); // expected result
-            p[3] = name;        // test suite label
-            params.add(p);
+            String name = entry.getKey();
+            Map<String, Object> testsuite = (Map<String, Object>) entry.getValue();
+            Map<String, Object> variables = (Map<String, Object>) testsuite.get("variables");
+            List<List<Object>> testcases = (List<List<Object>>) testsuite.get("testcases");
+
+            for (List<Object> test : testcases)
+            {
+               Object[] p = new Object[4];
+               p[0] = variables;
+               p[1] = test.get(0); // expression
+               p[2] = test.get(1); // expected result
+               p[3] = name;        // test suite label
+               params.add(p);
+            }
          }
+         return params;
       }
-      return params;
+      finally
+      {
+         in.close();
+      }
+      
+      
    }
 
    /**

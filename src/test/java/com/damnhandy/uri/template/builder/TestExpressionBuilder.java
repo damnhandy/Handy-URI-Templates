@@ -35,9 +35,9 @@ public class TestExpressionBuilder
    public void testExpressionFromString() throws Exception
    {
       Expression e = new Expression("{test:1}", 0);
-      System.out.println(e.getReplacementPattern());
+      Assert.assertEquals("\\Q{test:1}\\E", e.getReplacementPattern());
    }
-   
+
    @Test
    public void testSimple() throws Exception
    {
@@ -100,12 +100,11 @@ public class TestExpressionBuilder
       Expression e = Expression.simple(var("foo", 1), var("foo"), var("thing", true)).build();
       Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
    }
-   
-   
+
    @Test
    public void testMultipleExpressionsAndLiteralValues() throws Exception
    {
-      Expression e = Expression.simple(var("foo", 1),var("foo"),var("thing", true)).build();
+      Expression e = Expression.simple(var("foo", 1), var("foo"), var("thing", true)).build();
       Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
    }
 }

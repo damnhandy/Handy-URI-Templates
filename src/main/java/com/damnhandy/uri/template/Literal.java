@@ -14,6 +14,9 @@ package com.damnhandy.uri.template;
 public class Literal extends UriTemplateComponent
 {
 
+   /** The serialVersionUID */
+   private static final long serialVersionUID = 6011009312823496878L;
+   
    private final String value;
 
    /**
