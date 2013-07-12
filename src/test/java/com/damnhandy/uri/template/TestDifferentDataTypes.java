@@ -37,7 +37,7 @@ public class TestDifferentDataTypes
 {
    private static final int[] INT_COUNT = {1, 2, 3};
 
-   private static final Integer[] INTEGER_COUNT = {new Integer(1), new Integer(2), new Integer(3)};
+   private static final Integer[] INTEGER_COUNT = {Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(3)};
 
    private static final long[] LONG_COUNT = {1l, 2l, 3l};
 
