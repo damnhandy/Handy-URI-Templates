@@ -6,8 +6,7 @@ package com.damnhandy.uri.template.conformance;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ import com.damnhandy.uri.template.UriTemplate;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-//@Ignore
+@Ignore
 public class TestSingleExpression
 {
 
@@ -56,8 +55,12 @@ public class TestSingleExpression
    {
       UriTemplate template = UriTemplate.fromTemplate("{?empty_list}").set(VALUES);
 
-      String expected = "?empty_list=";
+      String expected = "";
       String result = template.expand();
       Assert.assertEquals(expected, result);
+
+      //Pattern p = Pattern.compile("([?&](fields)(?:=([^&]*))?)([?&](first_name)(?:=([^&]*))?)([?&](last.name)(?:=([^&]*))?)([?&](token)(?:=([^&]*))?)");
    }
+   
+  
 }

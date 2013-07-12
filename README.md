@@ -13,9 +13,6 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 As of version `1.1.1`, Handy URI Templates is passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
-## Continuous Integration 
-
-This project is running continuous on builds [Jenkins](http://jenkins-ci.org) at [CloudBees](https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/). I am also trying out [Travis-CI]((http://travis-ci.org/damnhandy/Handy-URI-Templates) since you get the fancy badge for the README.md file. However the service is still very alpha, especially for Java projects, and builds fail sometimes even when they shouldn't. With that said, put more stock in the Jenkins build results.
 
 ## Maven
 
@@ -35,19 +32,11 @@ If you feel like using a development version, you can use a snapshot release:
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>1.1.8-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
-Or for the more bleeding edge features:
 
-```xml
-<dependency>
-  <groupId>com.damnhandy</groupId>
-  <artifactId>handy-uri-templates</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
-</dependency>
-```
 
 In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
 
@@ -67,10 +56,10 @@ You can also download the artifact directly at [http://search.maven.org](http://
 Using the library is simple:
 	
 ```java
-String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?test1, test2}")
+String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query, thing}")
                          .set("foo", "houses")
                          .set("query", "Ask something")
-                         .set("other", "someting else")
+                         .set("other", "something else")
                          .set("thing", "A test")
                          .expand();
 ```
@@ -183,7 +172,7 @@ Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/
 License
 -------
 
-   Copyright 2011-2012 
+   Copyright 2011-2013 Ryan J. McDonough 
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

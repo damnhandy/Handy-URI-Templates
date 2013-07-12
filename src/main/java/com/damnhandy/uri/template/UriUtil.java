@@ -1,11 +1,25 @@
 /*
- * 
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.damnhandy.uri.template;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.BitSet;
+
 
 /**
  * <p>
@@ -16,140 +30,106 @@ import java.util.BitSet;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public final class UriUtil {
-    private static final BitSet GENERAL_ALLOWED_CHARS = new BitSet();
+public final class UriUtil
+{
+   static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};
 
-    private static final BitSet FRAGMENT_ALLOWED_CHARS = new BitSet();
+   static final char[] SUB_DELIMS_CHARS = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '=', '<', '>', '{','}'};
 
-    private static final BitSet RESERVED_ALLOWED_CHARS = new BitSet();
+   private static final BitSet RESERVED;
 
-    static {
-        String alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        String digit = "0123456789";
+   private static final BitSet ESCAPE_CHARS;
 
-        /**
-         * The unreserved chars.
-         *
-         * unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-         */
-        String unreserved = alpha + digit + "-._~";
+   static
+   {
 
-        /**
-         * The general delimiters.
-         *
-         * gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-         */
-        String gendelims = ":/?#[]@";
+      RESERVED = new BitSet();
+      for (int i = 0; i < GENERAL_DELIM_CHARS.length; i++)
+      {
+         RESERVED.set(GENERAL_DELIM_CHARS[i]);
+      }
+      RESERVED.set(' ');
+      RESERVED.set('%');
+      RESERVED.set('|');
+      RESERVED.set('\\');
 
-        /**
-         * The sub delimiters.
-         *
-         * sub-delims     = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-         */
-        String subdelims = "!$&'()*+,;=";
+       for (int i = 0; i < SUB_DELIMS_CHARS.length; i++)
+      {
+         RESERVED.set(SUB_DELIMS_CHARS[i]);
+      }
 
-        /**
-         * The reserved chars in URI spec.
-         *
-         * reserved      = gen-delims / sub-delims
-         */
-        String reserved = subdelims + gendelims;
+      ESCAPE_CHARS = new BitSet();
+      ESCAPE_CHARS.set('<');
+      ESCAPE_CHARS.set('>');
+      ESCAPE_CHARS.set('%');
+      ESCAPE_CHARS.set('\"');
+      ESCAPE_CHARS.set('{');
+      ESCAPE_CHARS.set('}');
+      ESCAPE_CHARS.set('|');
+      ESCAPE_CHARS.set('\\');
+      ESCAPE_CHARS.set('^');
+      ESCAPE_CHARS.set('[');
+      ESCAPE_CHARS.set(']');
+      ESCAPE_CHARS.set('`');
+   }
 
+   private UriUtil()
+   {
 
-        /**
-         * Allowed chars in Fragments (#).
-         * See: http://tools.ietf.org/html/rfc3986#appendix-A
-         *
-         * The definition in http://tools.ietf.org/html/rfc6570#section-3.2.1 (URI-Template-RFC) is not correct!
-         * Not all characters(#[]) in GEN_DELIM are allowed here!
-         *
-         * fragment    = *( pchar / "/" / "?" )
-         * pchar       = unreserved / sub-delims / ":" / "@"
-         */
-         String fragment = unreserved+subdelims+":@/?";
+   }
 
-        add(GENERAL_ALLOWED_CHARS, unreserved);
-        add(FRAGMENT_ALLOWED_CHARS, fragment);
+   /**
+    *
+    *
+    * @param source
+    * @return
+    */
+   public static String encodeFragment(String sourceValue) throws UnsupportedEncodingException
+   {
+      return encode(sourceValue, ESCAPE_CHARS);
+   }
 
-        /**
-         * This is a special uri encoding for Uri-Templates, allowing Reserved and Unreserved chars.
-         */
-        add(RESERVED_ALLOWED_CHARS, unreserved);
-        add(RESERVED_ALLOWED_CHARS, reserved);
-    }
+   /**
+    *
+    *
+    * @param source
+    * @return
+    */
+   public static String encode(String sourceValue) throws UnsupportedEncodingException
+   {
+      return encode(sourceValue, RESERVED);
+   }
 
-    private static void add(BitSet destination, String toAdd) {
-
-        for (char character : toAdd.toCharArray()) {
-            if (character >= 127) {
-                throw new IllegalArgumentException("Bitset only works correct with one "
-                        + "byte");
-            }
-            destination.set(character);
-        }
-    }
-
-    private UriUtil() {
-
-    }
-
-    /**
-     * Encodes fragments, allowing only the characters defined in uri fragments(http://tools.ietf
-     * .org/html/rfc3986#appendix-A). This are a few less then in the reserved expression.
-     *
-     * @param sourceValue should not contain a PCT encoded string.
-     * @return the encoded value
-     */
-    public static String encodeFragment(String sourceValue) {
-
-        return encode(sourceValue, FRAGMENT_ALLOWED_CHARS);
-    }
-
-    /**
-     * Encodes the reserved expression, allowing all reserved and unreserved characters.
-     *
-     * @param sourceValue should not contain a PCT encoded string.
-     * @return the encoded value
-     */
-    public static String encodeReserved(String sourceValue) {
-
-        return encode(sourceValue, RESERVED_ALLOWED_CHARS);
-    }
-
-    /**
-     * Encodes general uri expressions, allowing only unreserved characters.
-     *
-     * @param sourceValue should not contain a PCT encoded string.
-     * @return the encoded value
-     */
-    public static String encode(String sourceValue) {
-
-        return encode(sourceValue, GENERAL_ALLOWED_CHARS);
-    }
-
-    /**
-     * Uses a white list to encode all characters that are not contained in this list.
-     */
-    private static String encode(String sourceValue, BitSet allowedCharacters) {
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream(sourceValue.length());
-        Charset utf8 = Charset.forName("UTF-8");
-        byte[] source = sourceValue.getBytes(utf8);
-        for (int i = 0; i < source.length; i++) {
-            byte c = source[i];
-            // fixed unsigned problem
-            if (allowedCharacters.get(c & 0xff)) {
-                out.write(c);
-
-            } else {
-                out.write('%');
-                char hex1 = Character.toUpperCase(Character.forDigit((c >> 4) & 0xF, 16));
-                char hex2 = Character.toUpperCase(Character.forDigit(c & 0xF, 16));
-                out.write(hex1);
-                out.write(hex2);
-            }
-        }
-        return new String(out.toByteArray(), utf8);
-    }
+   /**
+    *
+    *
+    * @param soureValue
+    * @param chars
+    * @return
+    * @throws UriEncodingException
+    */
+   private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException
+   {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      byte[] source = sourceValue.getBytes(Charset.forName("UTF-8"));
+      for (int i = 0; i < source.length; i++)
+      {
+         byte c = source[i];
+         // fixed unsigned problem
+         if (chars.get(c & 0xff) || c <= 0x20)
+         {
+            out.write('%');
+            char hex1 = Character.toUpperCase(Character.forDigit((c >> 4) & 0xF, 16));
+            char hex2 = Character.toUpperCase(Character.forDigit(c & 0xF, 16));
+            out.write(hex1);
+            out.write(hex2);
+         }
+         else
+         {
+            out.write(c);
+         }
+      }
+      return new String(out.toByteArray(), "UTF-8");
+   }
 
 }

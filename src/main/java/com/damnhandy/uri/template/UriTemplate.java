@@ -1,25 +1,50 @@
 /*
- * 
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.damnhandy.uri.template;
 
-import com.damnhandy.uri.template.impl.RFC6570UriTemplate;
-
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.damnhandy.uri.template.impl.Modifier;
+import com.damnhandy.uri.template.impl.Operator;
+import com.damnhandy.uri.template.impl.UriTemplateParser;
+import com.damnhandy.uri.template.impl.VarExploderFactory;
+import com.damnhandy.uri.template.impl.VarSpec;
 
 /**
  * <p>
- * This is the main class for creating and manipulating URI templates. This project implements
- * <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a> and produces output 
- * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-1.2">levels
- * 1 through 4</a> as well as supports composite types. In addition to supporting {@link Map} 
+ * This is the primary class for creating and manipulating URI templates. This project implements
+ * <a href="http://tools.ietf.org/html/rfc6570">RFC6570 URI Templates</a> and produces output
+ * that is compliant with the spec. The template processor supports <a href="http://tools.ietf.org/html/rfc6570#section-2.0">levels
+ * 1 through 4</a>. In addition to supporting {@link Map}
  * and {@link List} values as composite types, the library also supports the use of Java objects
- * as well. Please see the {@link VarExploder} and {@link DefaultVarExploder} for more info. 
+ * as well. Please see the {@link VarExploder} and {@link DefaultVarExploder} for more info.
  * </p>
  * <h3>Basic Usage:</h3>
  * <p>
@@ -34,7 +59,7 @@ import java.util.Map;
  * </p>
  * <pre>
  * template.set("q","cat")
- *         .set("lang","en");                               
+ *         .set("lang","en");
  * String uri = template.expand();
  * </pre>
  * <p>The {@link #expand()} method will replace the variable names with the supplied values
@@ -42,31 +67,39 @@ import java.util.Map;
  * <pre>
  * http://example.com/search?q=cat&lang=en
  * </pre>
- * 
- * 
+ *
+ *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  * @since 1.0
  */
-public abstract class UriTemplate
+public class UriTemplate implements Serializable
 {
+
+
+
+   /** The serialVersionUID */
+   private static final long serialVersionUID = -5245084430838445979L;
+
    public static enum Encoding {
-      U, UR,UF;
+      U, UR;
    }
-   
+
    public static final String DEFAULT_SEPARATOR = ",";
+
    /**
-    * 
+    *
     */
    protected DateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
    /**
-    * 
+    *
     */
-   static final char[] OPERATORS = {'+', '#', '.', '/', ';', '?', '&'};
+   static final char[] OPERATORS =
+   {'+', '#', '.', '/', ';', '?', '&'};
 
    /**
-    * 
+    *
     */
    private static final BitSet OPERATOR_BITSET = new BitSet();
 
@@ -77,11 +110,8 @@ public abstract class UriTemplate
          OPERATOR_BITSET.set(OPERATORS[i]);
       }
    }
-   
-   /**
-    * The URI expression
-    */
-   private StringBuilder templateBuffer;
+
+   protected String template;
 
    /**
     * The collection of values that will be applied to the URI expression in the
@@ -89,38 +119,90 @@ public abstract class UriTemplate
     */
    protected Map<String, Object> values = new HashMap<String, Object>();
 
-   
    /**
-    * Creates a new {@link UriTemplate} from the expression.
     * 
-    * @param expression
-    * @return
-    * @since 1.0
-    * @deprecated use {@link #fromTemplate(String)} instead
     */
-   @Deprecated
-   public static final UriTemplate fromExpression(String expression)
+   protected LinkedList<UriTemplateComponent> components;
+
+   /**
+    *
+    */
+   protected Expression[] expressions;
+
+   /**
+    * 
+    * Create a new UriTemplate.
+    * 
+    * @param template
+    * @throws MalformedUriTemplateException
+    */
+   private UriTemplate(final String template) throws MalformedUriTemplateException
    {
-      return new RFC6570UriTemplate(expression);
+      this.template = template;
+      this.parseTemplateString();
    }
-   
+
+   /**
+    * 
+    * Create a new UriTemplate.
+    * 
+    * @param components
+    */
+   protected UriTemplate(LinkedList<UriTemplateComponent> components)
+   {
+      this.components = components;
+      initExpressions();
+      buildTemplateStringFromComponents();
+   }
+   /**
+    * Creates a new {@link UriTemplateBuilder} from the template string.
+    *
+    * @param templateString
+    * @throws MalformedUriTemplateException
+    * @return
+    * @since 2.0
+    */
+   public static UriTemplateBuilder buildFromTemplate(String template) throws MalformedUriTemplateException
+   {
+      return new UriTemplateBuilder(template);
+   }
+
+   /**
+    * <p>
+    * Creates a new {@link UriTemplateBuilder} from a root {@link UriTemplate}. This
+    * method will create a new {@link UriTemplate} from the base and copy the variables
+    * from the base template to the new {@link UriTemplate}.
+    * </p>
+    * <p>
+    * This method is useful when the base template is less volatile than the child
+    * expression and you want to merge the two.
+    * </p>
+    * @param base
+    * @return
+    * @since 2.0
+    */
+   public static UriTemplateBuilder buildFromTemplate(UriTemplate template) throws MalformedUriTemplateException
+   {
+      return new UriTemplateBuilder(template);
+   }
+
    /**
     * Creates a new {@link UriTemplate} from the template.
-    * 
-    * @param expression
+    *
+    * @param templateString
     * @return
-    * @since 1.2
+    * @since 2.0
     */
-   public static final UriTemplate fromTemplate(String template)
+   public static final UriTemplate fromTemplate(final String templateString) throws MalformedUriTemplateException
    {
-      return new RFC6570UriTemplate(template);
+      return new UriTemplate(templateString);
    }
-   
+
    /**
     * <p>
     * Creates a new {@link UriTemplate} from a root {@link UriTemplate}. This
-    * method will create a new {@link UriTemplate} from the base and copy the variables  
-    * from the base template to the new {@link UriTemplate}. 
+    * method will create a new {@link UriTemplate} from the base and copy the variables
+    * from the base template to the new {@link UriTemplate}.
     * </p>
     * <p>
     * This method is useful when the base template is less volatile than the child
@@ -130,137 +212,141 @@ public abstract class UriTemplate
     * @return
     * @since 1.0
     */
-   public static UriTemplate fromTemplate(UriTemplate base)
+   public static UriTemplateBuilder fromTemplate(UriTemplate base) throws MalformedUriTemplateException
    {
-      UriTemplate template = fromTemplate(base.getTemplate());
-      template.set(base.getValues());
+      return new UriTemplateBuilder(base.getTemplate());
+   }
+
+   
+   /**
+    * Parse the URI template string into the template model.
+    *
+    */
+   protected void parseTemplateString() throws MalformedUriTemplateException
+   {
+      final String templateString = getTemplate();
+      final UriTemplateParser scanner = new UriTemplateParser();
+      this.components = scanner.scan(templateString);
+      initExpressions();
+   }
+
+   /** 
+    * 
+    */
+   private void initExpressions()
+   {
+      final List<Expression> expressionList = new LinkedList<Expression>();
+      for (UriTemplateComponent c : components)
+      {
+         if (c instanceof Expression)
+         {
+            expressionList.add((Expression) c);
+         }
+
+      }
+      expressions = expressionList.toArray(new Expression[expressionList.size()]);
+   }
+   
+   
+   private void buildTemplateStringFromComponents()
+   {
+      StringBuilder b = new StringBuilder();
+      for(UriTemplateComponent c : components)
+      {
+         b.append(c.getValue());
+      }
+      this.template = b.toString();
+   }
+   /**
+    * Returns the number of expressions found in this template
+    *
+    * @return
+    */
+   public int expressionCount()
+   {
+      return expressions.length;
+   }
+
+   /**
+    * FIXME Comment this
+    *
+    * @return
+    */
+   public Expression[] getExpressions()
+   {
+      return expressions;
+   }
+
+   /**
+    * Expands the given template string using the variable replacements
+    * in the supplied {@link Map}.
+    *
+    * @param templateString
+    * @param values
+    * @since 1.0
+    * @throws MalformedUriTemplateException
+    * @throws VariableExpansionException
+    * @return
+    */
+   public static String expand(final String templateString, Map<String, Object> values)
+         throws MalformedUriTemplateException, VariableExpansionException
+   {
+      UriTemplate t = new UriTemplate(templateString);
+      t.set(values);
+      return t.expand();
+   }
+
+   
+   /**
+    * Expand the URI template using the supplied values
+    *
+    * @param vars
+    *            The values that will be used in the expansion
+    *
+    * @return the expanded URI as a String
+    * @throw VariableExpansionException
+    * @since 1.0
+    */
+   public String expand(Map<String, Object> vars) throws VariableExpansionException
+   {
+      this.values = vars;
+      return expand();
+   }
+
+
+
+   /**
+    * Applies variable substitution the URI Template and returns the expanded
+    * URI.
+    *
+    * @return
+    * @throw VariableExpansionException
+    * @since 1.0
+    */
+   public String expand() throws VariableExpansionException
+   {
+      String template = getTemplate();
+      for (Expression expression : expressions)
+      {
+         final String replacement = expressionReplacementString(expression);
+         template = template.replaceAll(expression.getReplacementPattern(), replacement);
+      }
+      return template;
+   }
+   /**
+    * Returns the original URI template expression.
+    *
+    * @return
+    * @since 1.1.4
+    */
+   public String getTemplate()
+   {
       return template;
    }
 
-   
-
-   /**
-    * Expands the given expression string using the variable replacements
-    * in the supplied {@link Map}.
-    * 
-    * @param expression
-    * @param values
-    * @since 1.0
-    * @return
-    */
-   public static String expand(String expression, Map<String, Object> values) {
-       UriTemplate template = fromTemplate(expression);
-       template.set(values);
-       return template.expand();
-   }
-   
-   /**
-    * Returns the original URI template expression.
-    * 
-    * @return
-    * @since 1.0
-    * @deprecated use {@link #getTemplate()} instead.
-    */
-   @Deprecated
-   public String getExpression()
-   {
-      return getTemplate();
-   }
-   
-   /**
-    * Returns the original URI template expression.
-    * 
-    * @return
-    * @since 1.1.4
-    */
-   public String getTemplate() 
-   {
-      return templateBuffer.toString();
-   }
-   
-   /**
-    * <p>
-    * Appends the expression from a base URI template expression, such as:
-    * </p>
-    * <pre>
-    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com");
-    * </pre>
-    * 
-    * <p>
-    * A child expression can be appended by:
-    * </p>
-    * <pre>
-    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com")
-    *                                   .expression("/repos/{user}/{repo}/commits");
-    * 
-    * </pre>
-    * <p>The resulting expression would result in:</p>
-    * <pre>
-    * http://api.github.com/repos/{user}/{repo}/commits
-    * </pre>
-    * <p>
-    * Multiple expressions can be appended to the template as follows:
-    * </p>
-    * <pre>
-    *  UriTemplate template = UriTemplate.fromTemplate("http://myhost")
-    *                                    .append("{/version}")
-    *                                    .append("{/myId}")
-    *                                    .append("/things/{thingId}")
-    *                                    .set("myId","damnhandy")
-    *                                    .set("version","v1")
-    *                                    .set("thingId","12345");
-    * </pre>
-    * <p>This will result in the following template and URI:</p>
-    * <pre>
-    * Template: http://myhost{/version}{/myId}/things/{thingId}
-    * URI:      http://myhost/v1/damnhandy/things/12345
-    * </pre>
-    * <p>
-    * Since a URI template is not a URI, there no way to accurately determine 
-    * how the variable expression should be delimited. Therefore, it is up to 
-    * the expression author to include the necessary delimiters in each sub 
-    * expression.
-    * </p>
-    * @param template
-    * @return
-    * @since 1.1.4
-    * 
-    */
-   public UriTemplate append(String template)
-   {
-      if(template == null)
-      {
-         return this;
-      }
-      this.templateBuffer.append(template.trim());
-      return this;
-   }
-
-   /**
-    * FIXME Comment this
-    * 
-    * @param expression
-    * @return
-    * @deprecated use {@link #template(String)} instead
-    */
-   @Deprecated
-   public UriTemplate expression(String expression)
-   {
-      return this.append(expression);
-   }
-   
-   /**
-    * FIXME Comment this
-    * 
-    * @param template
-    */
-   protected void setTemplate(String template)
-   {
-      this.templateBuffer = new StringBuilder(template);
-   }
    /**
     * Returns the collection of name/value pairs contained in the instance.
-    * 
+    *
     * @return
     * @since 1.0
     */
@@ -270,7 +356,7 @@ public abstract class UriTemplate
    }
 
    /**
-    * 
+    *
     * @param dateFormatString
     * @return
     * @since 1.0
@@ -281,7 +367,7 @@ public abstract class UriTemplate
    }
 
    /**
-    * 
+    *
     * @param dateFormat
     * @return
     * @since 1.0
@@ -294,7 +380,7 @@ public abstract class UriTemplate
 
    /**
     * Sets a value on the URI template expression variable.
-    * 
+    *
     * @param variableName
     * @param value
     * @return
@@ -307,14 +393,36 @@ public abstract class UriTemplate
    }
 
    /**
+    * FIXME Comment this
+    *
+    * @param variableName
+    * @return
+    */
+   public boolean hasVariable(String variableName)
+   {
+      return values.containsKey(variableName);
+   }
+
+   /**
+    * FIXME Comment this
+    *
+    * @param variableName
+    * @return
+    */
+   public Object get(String variableName)
+   {
+      return values.get(variableName);
+   }
+
+   /**
     * Sets a Date value into the list of variable substitutions using the
     * default {@link DateFormat}.
-    * 
+    *
     * @param variableName
     * @param value
     * @return
     * @since 1.0
-    * 
+    *
     */
    public UriTemplate set(String variableName, Date value)
    {
@@ -322,44 +430,29 @@ public abstract class UriTemplate
       return this;
    }
 
-
    /**
     * Adds the name/value pairs in the supplied {@link Map} to the collection
     * of values within this URI template instance.
-    * 
+    *
     * @param values
     * @return
     * @since 1.0
     */
    public UriTemplate set(Map<String, Object> values)
    {
-      this.values.putAll(values);
+      if (values != null)
+      {
+         if (!values.isEmpty())
+         {
+            this.values.putAll(values);
+         }
+      }
       return this;
    }
 
    /**
-    * Expand the URI template using the supplied values
-    * 
-    * @param vars
-    *            The values that will be used in the expansion
-    * 
-    * @return the expanded URI as a String
-    * @since 1.0
-    */
-   public abstract String expand(Map<String, Object> vars);
-
-   /**
-    * Applies variable substitution the URI Template and returns the expanded
-    * URI.
-    * 
-    * @return
-    * @since 1.0
-    */
-   public abstract String expand();
-
-   /**
-    * 
-    * 
+    *
+    *
     * @param op
     * @return
     */
@@ -368,4 +461,436 @@ public abstract class UriTemplate
       return OPERATOR_BITSET.get(op.toCharArray()[0]);
    }
 
+
+
+   /**
+    *
+    *
+    * @param operator
+    * @param varSpecs
+    * @throws VariableExpansionException
+    * @return
+    */
+   private String expressionReplacementString(Expression expression) throws VariableExpansionException
+   {
+      final Operator operator = expression.getOperator();
+      final List<String> replacements = expandVariables(expression);
+      String result = joinParts(operator.getSeparator(), replacements);
+      if (result != null)
+      {
+         if (operator != Operator.RESERVED)
+         {
+            result = operator.getPrefix() + result;
+         }
+      }
+      else
+      {
+         result = "";
+      }
+      return result;
+   }
+
+   /**
+    *
+    *
+    * @param operator
+    * @param varSpecs
+    * @throws VariableExpansionException
+    * @return
+    */
+   @SuppressWarnings(
+   {"rawtypes", "unchecked"})
+   private List<String> expandVariables(Expression expression) throws VariableExpansionException
+   {
+      final List<String> replacements = new ArrayList<String>();
+      final Operator operator = expression.getOperator();
+      for (VarSpec varSpec : expression.getVarSpecs())
+      {
+         if (values.containsKey(varSpec.getVariableName()))
+         {
+            Object value = values.get(varSpec.getVariableName());
+            String expanded = null;
+
+            if (value != null)
+            {
+               if (value.getClass().isArray())
+               {
+                  if (value instanceof char[][])
+                  {
+                     final char[][] chars = (char[][]) value;
+                     final List<String> strings = new ArrayList<String>();
+                     for (char[] c : chars)
+                     {
+                        strings.add(String.valueOf(c));
+                     }
+                     value = strings;
+                  }
+                  else if (value instanceof char[])
+                  {
+                     value = String.valueOf((char[]) value);
+                  }
+                  else
+                  {
+                     value = arrayToList(value);
+                  }
+
+               }
+            }
+            final boolean explodable = isExplodable(value);
+            if (explodable && varSpec.getModifier() == Modifier.PREFIX)
+            {
+               throw new VariableExpansionException(
+                     "Prefix modifiers are not applicable to variables that have composite values.");
+            }
+
+            if (explodable)
+            {
+               final VarExploder exploder;
+               if (value instanceof VarExploder)
+               {
+                  exploder = (VarExploder) value;
+               }
+               else
+               {
+                  exploder = VarExploderFactory.getExploder(value, varSpec);
+               }
+               if (varSpec.getModifier() == Modifier.EXPLODE)
+               {
+                  expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
+               }
+               else if (varSpec.getModifier() != Modifier.EXPLODE)
+               {
+                  expanded = expandCollection(operator, varSpec, exploder.getValues());
+               }
+            }
+
+            /*
+             * Format the date if we have a java.util.Date
+             */
+            if (value instanceof Date)
+            {
+               value = defaultDateFormat.format((Date) value);
+            }
+            /*
+             * The variable value contains a list of values
+             */
+            if (value instanceof Collection)
+            {
+               expanded = this.expandCollection(operator, varSpec, (Collection) value);
+            }
+            /*
+             * The variable value contains a list of key-value pairs
+             */
+            else if (value instanceof Map)
+            {
+               expanded = expandMap(operator, varSpec, (Map) value);
+            }
+            /*
+             * The variable value is null or has o value.
+             */
+            else if (value == null)
+            {
+               expanded = null;
+            }
+            else if (expanded == null)
+            {
+               expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
+            }
+            if (expanded != null)
+            {
+               replacements.add(expanded);
+            }
+
+         }
+      }
+      return replacements;
+   }
+
+   /**
+    *
+    *
+    * @param value
+    * @return
+    */
+   private boolean isExplodable(Object value)
+   {
+      if (value == null)
+      {
+         return false;
+      }
+      if (value instanceof Collection || value instanceof Map || value.getClass().isArray())
+      {
+         return true;
+      }
+      if (!isSimpleType(value))
+      {
+         return true;
+      }
+      return false;
+   }
+
+   /**
+    * Returns true of the object is:
+    *
+    * <ul>
+    * <li>a primitive type</li>
+    * <li>an instance of {@link CharSequence}</li>
+    * <li>an instance of {@link Number} <li>
+    * <li>an instance of {@link Date} <li>
+    * </ul>
+    *
+    * @param value
+    * @return
+    */
+   private boolean isSimpleType(Object value)
+   {
+
+      if (value.getClass().isPrimitive() || value instanceof Number || value instanceof CharSequence
+            || value instanceof Date || value instanceof Boolean)
+      {
+         return true;
+      }
+
+      return false;
+   }
+
+   /**
+    *
+    *
+    * @param operator
+    * @param varSpec
+    * @param variable
+    * @return
+    */
+   private String expandCollection(Operator operator, VarSpec varSpec, Collection<?> variable)
+         throws VariableExpansionException
+   {
+
+      if (variable == null || variable.isEmpty())
+      {
+         return null;
+      }
+
+      final List<String> stringValues = new ArrayList<String>();
+      final Iterator<?> i = variable.iterator();
+      String separator = operator.getSeparator();
+      if (varSpec.getModifier() != Modifier.EXPLODE)
+      {
+         separator = operator.getListSeparator();
+      }
+      while (i.hasNext())
+      {
+         final Object obj = i.next();
+         checkValue(obj);
+         final String value = obj.toString();
+         stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));
+      }
+
+      if (varSpec.getModifier() != Modifier.EXPLODE && operator.useVarNameWhenExploded())
+      {
+         final String parts = joinParts(separator, stringValues);
+         if (operator == Operator.QUERY && parts == null)
+         {
+            return varSpec.getVariableName() + "=";
+         }
+         return varSpec.getVariableName() + "=" + parts;
+      }
+      return joinParts(separator, stringValues);
+   }
+
+   /**
+    * Check to ensure that the values being passed down do not contain nested data structures.
+    * @param obj
+    */
+   private void checkValue(Object obj) throws VariableExpansionException
+   {
+      if (obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())
+      {
+         throw new VariableExpansionException("Nested data structures are not supported.");
+      }
+   }
+
+   /**
+    *
+    *
+    * @param operator
+    * @param varSpec
+    * @param variable
+    * @return
+    */
+   private String expandMap(Operator operator, VarSpec varSpec, Map<String, Object> variable)
+         throws VariableExpansionException
+   {
+      if (variable == null || variable.isEmpty())
+      {
+         return null;
+      }
+
+      List<String> stringValues = new ArrayList<String>();
+      String pairJoiner = "=";
+      if (varSpec.getModifier() != Modifier.EXPLODE)
+      {
+         pairJoiner = ",";
+      }
+      String joiner = operator.getSeparator();
+      if (varSpec.getModifier() != Modifier.EXPLODE)
+      {
+         joiner = operator.getListSeparator();
+      }
+      for (Entry<String, Object> entry : variable.entrySet())
+      {
+
+         String key = entry.getKey();
+         checkValue(entry.getValue());
+         String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
+               + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
+
+         stringValues.add(pair);
+      }
+
+      if (varSpec.getModifier() != Modifier.EXPLODE
+            && (operator == Operator.MATRIX || operator == Operator.QUERY || operator == Operator.CONTINUATION))
+      {
+         String joinedValues = joinParts(joiner, stringValues);
+         if (operator == Operator.QUERY && joinedValues == null)
+         {
+            return varSpec.getVariableName() + "=";
+         }
+         return varSpec.getVariableName() + "=" + joinedValues;
+      }
+
+      return joinParts(joiner, stringValues);
+   }
+
+   /**
+    *
+    *
+    * @param operator
+    * @param varSpec
+    * @param variable
+    * @param format
+    * @return
+    */
+   private String expandStringValue(Operator operator, VarSpec varSpec, String variable, VarSpec.VarFormat format)
+         throws VariableExpansionException
+   {
+      String expanded = "";
+
+      if (varSpec.getModifier() == Modifier.PREFIX)
+      {
+         int position = varSpec.getPosition();
+         if (position < variable.length())
+         {
+            variable = variable.substring(0, position);
+         }
+      }
+
+      try
+      {
+         if (operator.getEncoding() == Encoding.UR)
+         {
+            expanded = UriUtil.encodeFragment(variable);
+         }
+         else
+         {
+            expanded = UriUtil.encode(variable);
+         }
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         throw new VariableExpansionException("Could not expand variable due to a problem URI encoding the value.", e);
+      }
+
+      if (operator.isNamed())
+      {
+         if (expanded.isEmpty() && !operator.getSeparator().equals("&"))
+         {
+            expanded = varSpec.getValue();
+         }
+         else if (format == VarSpec.VarFormat.SINGLE)
+         {
+            expanded = varSpec.getVariableName() + "=" + expanded;
+         }
+
+         else
+         {
+            if (varSpec.getModifier() == Modifier.EXPLODE)
+            {
+               if (operator.useVarNameWhenExploded() && format != VarSpec.VarFormat.PAIRS)
+               {
+                  expanded = varSpec.getVariableName() + "=" + expanded;
+               }
+            }
+         }
+      }
+      return expanded;
+   }
+
+   /**
+    * FIXME Comment this
+    *
+    * @param joiner
+    * @param parts
+    * @return
+    */
+   private String joinParts(final String joiner, List<String> parts)
+   {
+      if (parts.size() == 0)
+      {
+         return null;
+      }
+
+      if (parts.size() == 1)
+      {
+         return parts.get(0);
+      }
+
+      final StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < parts.size(); i++)
+      {
+         final String part = parts.get(i);
+         if (!part.isEmpty())
+         {
+            builder.append(part);
+            if (parts.size() > 0 && i != (parts.size() - 1))
+            {
+               builder.append(joiner);
+            }
+         }
+
+      }
+      return builder.toString();
+   }
+
+   /**
+    * Takes an array of objects and converts them to a {@link List}.
+    *
+    * @param array
+    * @return
+    */
+   private List<Object> arrayToList(Object array) throws VariableExpansionException
+   {
+      List<Object> list = new ArrayList<Object>();
+      int length = Array.getLength(array);
+      for (int i = 0; i < length; i++)
+      {
+         final Object element = Array.get(array, i);
+         if (element.getClass().isArray())
+         {
+            throw new VariableExpansionException("Multi-dimenesional arrays are not supported.");
+         }
+         list.add(element);
+      }
+      return list;
+   }
+
+   /**
+    * FIXME Comment this
+    * 
+    * @return
+    */
+   public String getRegexString()
+   {
+      return null;
+   }
 }

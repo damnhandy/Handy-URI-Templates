@@ -13,46 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.damnhandy.uri.template.impl;
-
+package com.damnhandy.uri.template;
 /**
  *
- *
+ * A UriTemplateResolver.
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
- * @since 1.0
+ * @since 2.0
  */
-public enum Modifier
+public class UriTemplateResolver
 {
 
-   NONE         (""),
-   PREFIX       (":"),
-   EXPLODE      ("*");
-
-   /**
-    *
-    */
-   private String value;
-
-   /**
-    *
-    * Create a new Modifier.
-    *
-    * @param value
-    */
-   private Modifier(String value)
-   {
-      this.value = value;
-   }
-
-   /**
-    *
-    *
-    * @return
-    */
-   public String getValue()
-   {
-      return value;
-   }
 }

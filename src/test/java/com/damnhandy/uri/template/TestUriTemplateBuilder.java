@@ -13,46 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.damnhandy.uri.template.impl;
+package com.damnhandy.uri.template;
+
+import static com.damnhandy.uri.template.impl.VarSpec.Builder.var;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
- *
- *
+ * A TestUriTemplateBuilder.
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
- * @since 1.0
  */
-public enum Modifier
+public class TestUriTemplateBuilder
 {
 
-   NONE         (""),
-   PREFIX       (":"),
-   EXPLODE      ("*");
-
-   /**
-    *
-    */
-   private String value;
-
-   /**
-    *
-    * Create a new Modifier.
-    *
-    * @param value
-    */
-   private Modifier(String value)
+   @Test
+   public void testCreateBasicTemplate() throws Exception
    {
-      this.value = value;
-   }
+      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+             .literal("/foo")
+             .path(var("thing1"),var("explodedThing", true))
+             .fragment(var("prefix", 2)).build();
+             
 
-   /**
-    *
-    *
-    * @return
-    */
-   public String getValue()
-   {
-      return value;
+      Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());
    }
 }

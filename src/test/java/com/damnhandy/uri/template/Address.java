@@ -1,10 +1,22 @@
 /*
- * 
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.damnhandy.uri.template;
 
 /**
- * 
+ *
  * A Address POJO.
  */
 public class Address
@@ -26,7 +38,7 @@ public class Address
 
    /**
     * Get the ignored.
-    * 
+    *
     * @return the ignored.
     */
    public String getIgnored()
@@ -36,7 +48,7 @@ public class Address
 
    /**
     * Set the ignored.
-    * 
+    *
     * @param ignored The ignored to set.
     */
    public void setIgnored(String ignored)
@@ -45,7 +57,7 @@ public class Address
    }
 
    /**
-    * 
+    *
     * Create a new Address.
     *
     */
@@ -76,7 +88,7 @@ public class Address
 
    /**
     * Get the street.
-    * 
+    *
     * @return the street.
     */
    public String getStreet()
@@ -86,7 +98,7 @@ public class Address
 
    /**
     * Set the street.
-    * 
+    *
     * @param street The street to set.
     */
    public void setStreet(String street)
@@ -96,7 +108,7 @@ public class Address
 
    /**
     * Get the city.
-    * 
+    *
     * @return the city.
     */
    public String getCity()
@@ -106,7 +118,7 @@ public class Address
 
    /**
     * Set the city.
-    * 
+    *
     * @param city The city to set.
     */
    public void setCity(String city)
@@ -116,7 +128,7 @@ public class Address
 
    /**
     * Get the postalCode.
-    * 
+    *
     * @return the postalCode.
     */
    public String getPostalCode()
@@ -126,7 +138,7 @@ public class Address
 
    /**
     * Set the postalCode.
-    * 
+    *
     * @param postalCode The postalCode to set.
     */
    public void setPostalCode(String postalCode)
@@ -136,7 +148,7 @@ public class Address
 
    /**
     * Get the country.
-    * 
+    *
     * @return the country.
     */
    public String getCountry()
@@ -146,7 +158,7 @@ public class Address
 
    /**
     * Set the country.
-    * 
+    *
     * @param country The country to set.
     */
    public void setCountry(String country)
