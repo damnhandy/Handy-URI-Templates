@@ -15,7 +15,7 @@
  */
 package com.damnhandy.uri.template;
 
-import static com.damnhandy.uri.template.impl.VarSpec.Builder.var;
+import static com.damnhandy.uri.template.UriTemplateBuilder.*;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,10 +32,12 @@ public class TestUriTemplateBuilder
    @Test
    public void testCreateBasicTemplate() throws Exception
    {
-      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
-             .literal("/foo")
-             .path(var("thing1"),var("explodedThing", true))
-             .fragment(var("prefix", 2)).build();
+      UriTemplate template = 
+            UriTemplate.buildFromTemplate("http://example.com")
+                       .literal("/foo")
+                       .path(var("thing1"),var("explodedThing", true))
+                       .fragment(var("prefix", 2))
+                       .build();
              
 
       Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());

@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
 import com.damnhandy.uri.template.impl.VarSpec;
 
@@ -153,7 +154,7 @@ public final class UriTemplateBuilder
       VarSpec[] vars = new VarSpec[varSpec.length];
       for(int i = 0; i < varSpec.length; i++)
       {
-         vars[i] = VarSpec.Builder.var(varSpec[i]);
+         vars[i] = var(varSpec[i]);
       }
       return vars;
    }
@@ -283,6 +284,7 @@ public final class UriTemplateBuilder
       return this;
    }
    
+   
 
    /**
     * FIXME Comment this
@@ -303,6 +305,84 @@ public final class UriTemplateBuilder
          template.defaultDateFormat = defaultDateFormat;
       }
       return template;
+   }
+   
+   /**
+    * Adds a variable name to the expression.
+    *
+    * <pre>
+    * var("foo");
+    * </pre>
+    *
+    * Will yield the following expression:
+    * <pre>
+    * {foo}
+    * </pre>
+    *
+    * @param varName
+    * @return
+    */
+   public static VarSpec var(String varName)
+   {
+      return var(varName, Modifier.NONE, null);
+   }
+
+   /**
+    * Adds a variable name to the expression with an explode modifier.
+    *
+    * <pre>
+    * var("foo",true);
+    * </pre>
+    *
+    * Will yield the following expression:
+    * <pre>
+    * {foo*}
+    * </pre>
+    *
+    * @param varName
+    * @param explode
+    * @return
+    */
+   public static VarSpec var(String varName, boolean explode)
+   {
+      if (explode)
+      {
+         return var(varName, Modifier.EXPLODE, null);
+      }
+      return var(varName, Modifier.NONE, null);
+   }
+
+   /**
+    * Adds a variable name to the expression with a prefix modifier.
+    *
+    * <pre>
+    * var("foo",2);
+    * </pre>
+    *
+    * Will yield the following expression:
+    * <pre>
+    * {foo:2}
+    * </pre>
+    * @param varName
+    * @param prefix
+    * @return
+    */
+   public static VarSpec var(String varName, int prefix)
+   {
+      return var(varName, Modifier.PREFIX, prefix);
+   }
+
+   /**
+    *
+    *
+    * @param varName
+    * @param modifier
+    * @param position
+    * @return
+    */
+   private static VarSpec var(String varName, Modifier modifier, Integer position)
+   {
+      return new VarSpec(varName, modifier, position);
    }
 
 }

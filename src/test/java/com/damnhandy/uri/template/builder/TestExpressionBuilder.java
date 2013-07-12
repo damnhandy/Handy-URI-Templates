@@ -15,7 +15,7 @@
  */
 package com.damnhandy.uri.template.builder;
 
-import static com.damnhandy.uri.template.impl.VarSpec.Builder.*;
+import static com.damnhandy.uri.template.UriTemplateBuilder.*;
 
 import org.junit.Assert;
 import org.junit.Test;
