@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -7,7 +8,7 @@
 	</parent>
 	<groupId>com.damnhandy</groupId>
 	<artifactId>handy-uri-templates</artifactId>
-	<version>2.0.0.ALPHA-2</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
 	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
 	<prerequisites>
@@ -18,19 +19,11 @@
 		<http.client>4.1.1</http.client>
 		<jackson.version>2.2.2</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<classpath />
-		<import-package>*</import-package>
-		<export-package>{local-packages}</export-package>
-		<bundle-directives />
-		<bundle-activator />
-		<bundle-activationpolicy />
-		<require-bundle />
-		<service-component />
 	</properties>
 
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
 	<scm>
-		<url>git@github.com:damnhandy/Handy-URI-Templates.git</url>
+		<url>https://github.com/damnhandy/Handy-URI-Templates.git</url>
 		<connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
 		<developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
 	</scm>
@@ -41,7 +34,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<inceptionYear>April 30, 2012</inceptionYear>
+	<inceptionYear>2012-04-30</inceptionYear>
 	<organization>
 		<url>https://github.com/damnhandy/Handy-URI-Templates</url>
 		<name>Ryan J. McDonough</name>
@@ -104,6 +97,29 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-doap-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<doapOptions>
+						<!-- Default values -->
+						<bugDatabase>${project.issueManagement.url}</bugDatabase>
+						<category>library</category>
+						<created>${project.inceptionYear}-01-01</created>
+						<description>${project.description}</description>
+						<downloadPage>${project.distributionManagement.downloadUrl}</downloadPage>
+						<homepage>${project.url}</homepage>
+						<license>${project.licenses[0].url}</license>
+						<mailingList>${project.url}/mail-lists.html</mailingList>
+						<name>${project.name}</name>
+						<programmingLanguage>Java</programmingLanguage>
+
+						<shortdesc>${project.description}</shortdesc>
+						<vendor>${project.organization.name}</vendor>
+					</doapOptions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.7</version>
 			</plugin>
@@ -140,17 +156,8 @@
 						<forced>true</forced>
 					</archive>
 					<instructions>
-						<Bundle-SymbolicName>${project.artifactId}${bundle-directives}</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${project.artifactId}</Bundle-Name>
-						<_nouses>true</_nouses>
-						<Class-Path>${classpath}</Class-Path>
-						<Export-Package>${export-package}</Export-Package>
-						<Import-Package>${import-package}</Import-Package>
-						<Bundle-Activator>${bundle-activator}</Bundle-Activator>
-						<Bundle-ActivationPolicy>${bundle-activationpolicy}</Bundle-ActivationPolicy>
-						<url>https://github.com/damnhandy/Handy-URI-Templates</url>
-						<Require-Bundle>${require-bundle}</Require-Bundle>
-						<Service-Component>${service-component}</Service-Component>
 					</instructions>
 				</configuration>
 				<executions>
@@ -178,7 +185,6 @@
 								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
 								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
 							</configuration>
-
 							<reports>
 								<report>summary</report>
 								<report>modules</report>
