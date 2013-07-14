@@ -177,8 +177,18 @@ public final class UriTemplateBuilder
       return this;
    }
    /**
-    * FIXME Comment this
-    * 
+    * Appends a template expression using the reserved operator (+). The following 
+    * code:
+    * <pre>
+    * UriTemplate template = 
+    *        UriTemplate.buildFromTemplate("http://example.com/")
+    *                   .reserved("foo")
+    *                   .build();
+    * </pre>
+    * Will generate the following URI Template string:
+    * <pre>
+    * http://example.com/{+foo}
+    * </pre>
     * @param var
     * @return
     */
@@ -188,6 +198,22 @@ public final class UriTemplateBuilder
       return this;
    }
 
+   /**
+    * Appends a template expression using the reserved operator (+). The 
+    * following code:
+    * <pre>
+    * UriTemplate template = 
+    *        UriTemplate.buildFromTemplate("http://example.com/")
+    *                   .reserved("foo")
+    *                   .build();
+    * </pre>
+    * Will generate the following URI Template string:
+    * <pre>
+    * http://example.com/{+foo}
+    * </pre>
+    * @param var
+    * @return
+    */
    public UriTemplateBuilder reserved(VarSpec...var)
    {
       addComponent(Expression.reserved(var).build());
@@ -195,7 +221,18 @@ public final class UriTemplateBuilder
    }
    
    /**
-    * FIXME Comment this
+    * Appends a template expression using the fragment operator (#). The 
+    * following code:
+    * <pre>
+    * UriTemplate template = 
+    *        UriTemplate.buildFromTemplate("http://example.com/")
+    *                   .fragement("foo")
+    *                   .build();
+    * </pre>
+    * Will generate the following URI Template string:
+    * <pre>
+    * http://example.com/{#foo}
+    * </pre>
     * 
     * @param var
     * @return

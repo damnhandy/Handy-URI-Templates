@@ -15,9 +15,12 @@
  */
 package com.damnhandy.uri.template;
 
-import static com.damnhandy.uri.template.UriTemplateBuilder.*;
+import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+
+import java.net.URI;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -29,17 +32,68 @@ import org.junit.Test;
 public class TestUriTemplateBuilder
 {
 
+   private static final String BASE_URI = "http://example.com/";
+
    @Test
    public void testCreateBasicTemplate() throws Exception
    {
-      UriTemplate template = 
-            UriTemplate.buildFromTemplate("http://example.com")
-                       .literal("/foo")
-                       .path(var("thing1"),var("explodedThing", true))
-                       .fragment(var("prefix", 2))
-                       .build();
-             
+      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+                                        .literal("/foo")
+                                        .path(var("thing1"), var("explodedThing", true))
+                                        .fragment(var("prefix", 2))
+                                        .build();
 
       Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());
+   }
+
+   private void print(UriTemplate template) throws Exception
+   {
+      System.out.println(template.getTemplate());
+      System.out.println(template.set("foo", "boo").expand());
+      System.out.println(" ");
+   }
+   
+   
+   @Test
+   @Ignore
+   public void testMessedUpUri() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
+                                        .reserved("foo")
+                                        .path("foo")
+                                        .query("foo")
+                                        .fragment("foo")
+                                        .matrix("foo")
+                                        .path("foo")
+                                        .path("foo")
+                                        .path("foo")
+                                        .fragment("foo").build();
+      print(template);
+      
+      String uri = template.set("foo", "boo").expand();
+      URI u = new URI(uri);
+   }
+   
+   
+   
+   @Test
+   public void testReservedExpression() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved("foo").build();
+      print(template);
+   }
+
+   @Test
+   public void testReservedExpressionWithExplode() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var("foo",true)).build();
+      print(template);
+   }
+   
+   @Test
+   public void testReservedExpressionWithExplodeAndPre() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var("foo",2)).build();
+      print(template);
    }
 }
