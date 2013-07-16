@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.damnhandy.uri.template.impl.Modifier;
+import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
 import com.damnhandy.uri.template.impl.VarSpec;
 
@@ -235,20 +236,59 @@ public final class UriTemplateBuilder
     * </pre>
     * 
     * @param var
+    * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
     * @return
     */
-   public UriTemplateBuilder fragment(String...var)
+   public UriTemplateBuilder fragment(String...var) throws UriTemplateBuilderException
    {
       fragment(toVarSpec(var));
       return this;
    }
 
-   public UriTemplateBuilder fragment(VarSpec...var)
+   /**
+    * Appends a template expression using the fragment operator (#). The 
+    * following code:
+    * <pre>
+    * UriTemplate template = 
+    *        UriTemplate.buildFromTemplate("http://example.com/")
+    *                   .fragement(var("foo", 1))
+    *                   .build();
+    * </pre>
+    * Will generate the following URI Template string:
+    * <pre>
+    * http://example.com/{#foo:1}
+    * </pre>
+    * 
+    * @param var
+    * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
+    * @return
+    */
+   public UriTemplateBuilder fragment(VarSpec...var) throws UriTemplateBuilderException
    {
+      if(hasExpressionWithOperator(Operator.FRAGMENT))
+      {
+         throw new UriTemplateBuilderException("The template already has a fragment expression and this would not result in a valid URI");
+      }
       addComponent(Expression.fragment(var).build());
       return this;
    }
 
+   
+   private boolean hasExpressionWithOperator(Operator op)
+   {
+      for(UriTemplateComponent c : components)
+      {
+         if(Expression.class.isInstance(c))
+         {
+            Expression e = (Expression) c;
+            if(e.getOperator() == op)
+            {
+               return true;
+            }
+         }
+      }
+      return false;
+   }
    /**
     * FIXME Comment this
     * 

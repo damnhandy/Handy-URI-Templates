@@ -54,8 +54,7 @@ public class TestUriTemplateBuilder
    }
    
    
-   @Test
-   @Ignore
+   @Test(expected = UriTemplateBuilderException.class)
    public void testMessedUpUri() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
