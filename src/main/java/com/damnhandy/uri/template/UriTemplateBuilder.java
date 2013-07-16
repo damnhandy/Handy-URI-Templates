@@ -96,49 +96,26 @@ public final class UriTemplateBuilder
    {
       this.components.add(component);
    }
+
    /**
-    * <p>
-    * Appends the expression from a base URI template expression, such as:
-    * </p>
+    * Appends a {@link Literal} value to the {@link UriTemplate}. The following 
+    * code:
+    * 
     * <pre>
-    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com");
+    * UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+    *                                   .literal("/foo")
+    *                                   .build();
     * </pre>
-    *
-    * <p>
-    * A child expression can be appended by:
-    * </p>
+    * 
+    * Will generate the following template:
+    * 
     * <pre>
-    * UriTemplate template = UriTemplate.fromExpression("http://api.github.com")
-    *                                   .expression("/repos/{user}/{repo}/commits");
-    *
+    * http://example.com/foo
     * </pre>
-    * <p>The resulting expression would result in:</p>
-    * <pre>
-    * http://api.github.com/repos/{user}/{repo}/commits
-    * </pre>
-    * <p>
-    * Multiple expressions can be appended to the template as follows:
-    * </p>
-    * <pre>
-    *  UriTemplate template = UriTemplateBuilder.fromTemplate("http://myhost")
-    *                                           .append("{/version}")
-    *                                           .append("{/myId}")
-    *                                           .append("/things/{thingId}")
-    *                                           .build()
-    *                                           .set("myId","damnhandy")
-    *                                           .set("version","v1")
-    *                                           .set("thingId","12345");
-    * </pre>
-    * <p>This will result in the following template and URI:</p>
-    * <pre>
-    * Template: http://myhost{/version}{/myId}/things/{thingId}
-    * URI:      http://myhost/v1/damnhandy/things/12345
-    * </pre>
-    *
-    * @param template
+    * 
+    * Note that this particular example has no expressions, so it's not a valid URI template.
+    * @param string
     * @return
-    * @since 2.0
-    *
     */
    public UriTemplateBuilder literal(String string)
    {

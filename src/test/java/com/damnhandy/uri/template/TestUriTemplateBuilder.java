@@ -17,10 +17,12 @@ package com.damnhandy.uri.template;
 
 import static com.damnhandy.uri.template.UriTemplateBuilder.var;
 
-import java.net.URI;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -32,6 +34,7 @@ import org.junit.Test;
 public class TestUriTemplateBuilder
 {
 
+   private static final String VAR_NAME = "foo";
    private static final String BASE_URI = "http://example.com/";
 
    @Test
@@ -45,11 +48,52 @@ public class TestUriTemplateBuilder
 
       Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());
    }
+   
+   
+   @Test
+   public void testLiteral() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+                                        .literal("/foo")
+                                        .literal(null)
+                                        .build();
+      
+      print(template);
+      Assert.assertEquals("http://example.com/foo", template.getTemplate());
+   }
+   
+   
+   @Test
+   public void testWithDateFormat() throws Exception
+   {
+      Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT-04:00"));
+      cal.set(Calendar.YEAR, 2012);
+      cal.set(Calendar.MONTH, Calendar.APRIL);
+      cal.set(Calendar.DAY_OF_MONTH, 20);
+      cal.set(Calendar.HOUR_OF_DAY, 16);
+      cal.set(Calendar.MINUTE, 20);
+      cal.set(Calendar.SECOND, 0);
+      cal.set(Calendar.MILLISECOND, 0);
+      Date date = cal.getTime();
+      
+   
+      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+                                        .withDefaultDateFormat("yyyy-MM-dd")
+                                        .literal("/foo")
+                                        .path("date")
+                                        .build();
+      
+      print(template);
+      template.set("date", date);
+      
+      Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());
+      Assert.assertEquals("http://example.com/foo/2012-04-20", template.expand());
+   }
 
    private void print(UriTemplate template) throws Exception
    {
       System.out.println(template.getTemplate());
-      System.out.println(template.set("foo", "boo").expand());
+      System.out.println(template.set(VAR_NAME, "boo").expand());
       System.out.println(" ");
    }
    
@@ -58,19 +102,16 @@ public class TestUriTemplateBuilder
    public void testMessedUpUri() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
-                                        .reserved("foo")
-                                        .path("foo")
-                                        .query("foo")
-                                        .fragment("foo")
-                                        .matrix("foo")
-                                        .path("foo")
-                                        .path("foo")
-                                        .path("foo")
-                                        .fragment("foo").build();
-      print(template);
-      
-      String uri = template.set("foo", "boo").expand();
-      URI u = new URI(uri);
+                                        .reserved(VAR_NAME)
+                                        .path(VAR_NAME)
+                                        .query(VAR_NAME)
+                                        .fragment(VAR_NAME)
+                                        .matrix(VAR_NAME)
+                                        .path(VAR_NAME)
+                                        .path(VAR_NAME)
+                                        .path(VAR_NAME)
+                                        .fragment(VAR_NAME)
+                                        .build();
    }
    
    
@@ -78,21 +119,85 @@ public class TestUriTemplateBuilder
    @Test
    public void testReservedExpression() throws Exception
    {
-      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved("foo").build();
-      print(template);
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(VAR_NAME).build();
+      Assert.assertEquals("http://example.com/{+foo}", template.getTemplate());
    }
 
    @Test
    public void testReservedExpressionWithExplode() throws Exception
    {
-      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var("foo",true)).build();
-      print(template);
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var(VAR_NAME,true)).build();
+      Assert.assertEquals("http://example.com/{+foo*}", template.getTemplate());
    }
    
    @Test
    public void testReservedExpressionWithExplodeAndPre() throws Exception
    {
-      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var("foo",2)).build();
-      print(template);
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var(VAR_NAME,2)).build();
+      Assert.assertEquals("http://example.com/{+foo:2}", template.getTemplate());
+   }
+   
+   @Test
+   public void testLabelExpression() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).label(VAR_NAME).build();
+      Assert.assertEquals("http://example.com/{.foo}", template.getTemplate());
+   }
+
+   @Test
+   public void testLabelExpressionWithExplode() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).label(var(VAR_NAME,true)).build();
+      Assert.assertEquals("http://example.com/{.foo*}", template.getTemplate());
+   }
+   
+   @Test
+   public void testLabelExpressionWithExplodeAndPre() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).label(var(VAR_NAME,2)).build();
+      Assert.assertEquals("http://example.com/{.foo:2}", template.getTemplate());
+   }
+   
+   
+   @Test
+   public void testFragmentExpression() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).fragment("foo").build();
+      Assert.assertEquals("http://example.com/{#foo}", template.getTemplate());
+   }
+
+   @Test
+   public void testFragmentExpressionWithExplode() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).fragment(var("foo",true)).build();
+      Assert.assertEquals("http://example.com/{#foo*}", template.getTemplate());
+   }
+   
+   @Test
+   public void testFragmentExpressionWithExplodeAndPre() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).fragment(var("foo",2)).build();
+      Assert.assertEquals("http://example.com/{#foo:2}", template.getTemplate());
+   }
+   
+   @Test
+   public void testQueryExpression() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).query("foo").build();
+      Assert.assertEquals("http://example.com/{?foo}", template.getTemplate());
+   }
+
+   @Test
+   public void testQueryExpressionWithExplode() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).query(var("foo",true)).build();
+      Assert.assertEquals("http://example.com/{?foo*}", template.getTemplate());
+   }
+   
+   @Test
+   public void testQueryExpressionWithExplodeAndPre() throws Exception
+   {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).query(var("foo",2)).build();
+      Assert.assertEquals("http://example.com/{?foo:2}", template.getTemplate());
    }
 }
