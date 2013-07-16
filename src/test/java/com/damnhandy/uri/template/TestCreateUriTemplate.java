@@ -21,6 +21,8 @@ import java.util.Map.Entry;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * Simple tests to validate the UriTemplate API.
  *
@@ -41,7 +43,20 @@ public class TestCreateUriTemplate
 
       Assert.assertEquals("/h/houses/A%20test?query=Ask%20something&test2=someting%20else", uri);
    }
-   
+
+   /**
+    * Test that validates issue #12
+    * 
+    * https://github.com/damnhandy/Handy-URI-Templates/issues/12
+    * 
+    * @throws Exception
+    */
+   @Test
+   public void testNoExpressionAndNoVars() throws Exception {
+       String result = UriTemplate.expand("https://foo.com:8080", ImmutableMap.<String, Object>of());
+       Assert.assertEquals("https://foo.com:8080", result);
+   }
+
    @Test
    public void testFromTemplate() throws Exception
    {
