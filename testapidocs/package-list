@@ -3,3 +3,4 @@ com.damnhandy.uri.template.builder
 com.damnhandy.uri.template.conformance
 com.damnhandy.uri.template.examples
 com.damnhandy.uri.template.impl
+com.damnhandy.uri.template.jackson.datatype
