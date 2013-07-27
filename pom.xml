@@ -16,7 +16,7 @@
 
 	<properties>
 		<http.client>4.1.1</http.client>
-		<jackson.version>2.2.2</jackson.version>
+		<jackson.version>[2.2.0,)</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -383,21 +383,28 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-
-
+	
+	
 		<!-- JSON -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>${jackson.version}</version>
-			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
-
+	
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
-			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+			<optional>true</optional>
 		</dependency>
 
         <dependency>
