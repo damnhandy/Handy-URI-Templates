@@ -5,6 +5,7 @@
 package com.damnhandy.uri.template;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 /**
  * A Component.
@@ -40,6 +41,13 @@ public abstract class UriTemplateComponent implements Serializable
       return startPosition;
    }
 
+   /**
+    * Returns a string that contains a regular expression that matches the
+    * URI template expression.
+    * 
+    * @return
+    */
+   public abstract Pattern getMatchPattern();
    /**
     * Get the endPosition.
     * 

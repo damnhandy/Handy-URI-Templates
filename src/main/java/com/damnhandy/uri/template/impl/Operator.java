@@ -17,7 +17,7 @@ package com.damnhandy.uri.template.impl;
 
 import static com.damnhandy.uri.template.UriTemplate.DEFAULT_SEPARATOR;
 
-import com.damnhandy.uri.template.MalformedUriTemplateException;
+import com.damnhandy.uri.template.IllegalOperatorException;
 import com.damnhandy.uri.template.UriTemplate.Encoding;
 
 /**
@@ -157,7 +157,7 @@ public enum Operator {
     * @param opCode
     * @return
     */
-   public static Operator fromOpCode(String opCode) throws MalformedUriTemplateException
+   public static Operator fromOpCode(String opCode) throws IllegalOperatorException
    {
       for (Operator op : Operator.values())
       {
@@ -167,7 +167,7 @@ public enum Operator {
          }
          else if (opCode.equalsIgnoreCase("!") || opCode.equalsIgnoreCase("="))
          {
-            throw new MalformedUriTemplateException(opCode + " is not a valid operator.");
+            throw new IllegalOperatorException(opCode + " is not a valid operator.");
          }
       }
       return null;

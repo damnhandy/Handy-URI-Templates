@@ -4,6 +4,8 @@
  */
 package com.damnhandy.uri.template;
 
+import java.util.regex.Pattern;
+
 /**
  * Represents the non-expression parts of a URI Template
  * 
@@ -16,8 +18,10 @@ public class Literal extends UriTemplateComponent
 
    /** The serialVersionUID */
    private static final long serialVersionUID = 6011009312823496878L;
-   
+
    private final String value;
+
+   private final Pattern matchPattern;
 
    /**
     * Create a new Literal.
@@ -27,6 +31,7 @@ public class Literal extends UriTemplateComponent
    {
       super(startPosition);
       this.value = value;
+      this.matchPattern = Pattern.compile(Pattern.quote(getValue()));
    }
 
    @Override
@@ -39,6 +44,12 @@ public class Literal extends UriTemplateComponent
    public String toString()
    {
       return value;
+   }
+
+   @Override
+   public Pattern getMatchPattern()
+   {
+      return this.matchPattern;
    }
 
 }

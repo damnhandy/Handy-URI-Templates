@@ -135,8 +135,7 @@ public final class UriTemplateParser
       startedTemplate = false;
       if (expressionCaptureOn)
       {
-         throw new MalformedUriTemplateException("Template scanning complete, but the start of an expression at "
-               + startPosition + " was never terminated");
+         throw new MalformedUriTemplateException("The expression at position " + startPosition + " was never terminated", startPosition);
       }
       
    }
@@ -176,7 +175,7 @@ public final class UriTemplateParser
          // we started capturing a literal but never actually collected anything yet. 
          if(buffer != null)
          {
-            components.add(new Literal(buffer.toString(), startPosition));
+            components.add(new Literal(buffer.toString(), this.startPosition));
             literalCaptureOn = false;
             buffer = null;
          }
@@ -202,7 +201,7 @@ public final class UriTemplateParser
 
          {
             throw new MalformedUriTemplateException("A new expression start brace found at " + position
-                  + " but another unclosed expression was found at " + startPosition);
+                  + " but another unclosed expression was found at " + startPosition, position);
          }
          literalCaptureOn = false;
          expressionCaptureOn = true;
@@ -228,10 +227,10 @@ public final class UriTemplateParser
 
          {
             throw new MalformedUriTemplateException("Expression close brace was found at position " + position
-                  + " yet there was no start brace.");
+                  + " yet there was no start brace.", position);
          }
          expressionCaptureOn = false;
-         components.add(new Expression(buffer.toString(), startPosition));
+         components.add(new Expression(buffer.toString(), this.startPosition));
          buffer = null;
       }
       else

@@ -17,7 +17,7 @@ package com.damnhandy.uri.template;
 
 /**
  * Raised when the the template processor encounters an issue parsing the URI template string. It indicates
- * the template contains an expression that is malformed.
+ * the either the template itself is malformed, or an expression within the template is malformed.
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -29,15 +29,17 @@ public class MalformedUriTemplateException extends Exception
    /** The serialVersionUID */
    private static final long serialVersionUID = 5883174281977078450L;
 
+   private int location;
    /**
     * Create a new UriTemplateParseException.
     *
     * @param message
     * @param cause
     */
-   public MalformedUriTemplateException(String message, Throwable cause)
+   public MalformedUriTemplateException(String message, int location, Throwable cause)
    {
       super(message, cause);
+      this.location = location;
    }
 
    /**
@@ -45,9 +47,14 @@ public class MalformedUriTemplateException extends Exception
     *
     * @param message
     */
-   public MalformedUriTemplateException(String message)
+   public MalformedUriTemplateException(String message, int location)
    {
       super(message);
+      this.location = location;
    }
 
+   public int getLocation() 
+   {
+      return this.location;
+   }
 }

@@ -57,7 +57,8 @@ public class Expression extends UriTemplateComponent
     */
    private static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
    /**
-    * A regex quoted string that matches the expression. For example:
+    * A regex quoted string that matches the expression for replacement in the
+    * expansion process. For example:
     * <pre>
     *          \Q{?query,number}\E
     * </pre>
@@ -69,11 +70,19 @@ public class Expression extends UriTemplateComponent
     */
    private Operator op;
    
-
+   /**
+    * The character position where this expression occurs in the URI template
+    */
+   private final int location;
    /**
     * The the parsed {@link VarSpec} instances found in the expression.
     */
    private List<VarSpec> varSpecs;
+   
+   /**
+    * The Patter that would be used to reverse match this expression 
+    */
+   private Pattern matchPattern;
    
    
    /**
@@ -255,10 +264,11 @@ public class Expression extends UriTemplateComponent
     * @param op
     * @param varSpecs
     */
-   public Expression(final String rawExpression, int startPosition) throws MalformedUriTemplateException
+   public Expression(final String rawExpression, final int startPosition) throws MalformedUriTemplateException
    {
       super(startPosition);
-      this.parseRawExpression(rawExpression);
+      this.location = startPosition;
+      this.parseRawExpression(rawExpression);  
    }
 
    /**
@@ -275,6 +285,8 @@ public class Expression extends UriTemplateComponent
       this.op = op;
       this.varSpecs = varSpecs;
       this.replacementPattern = Pattern.quote(toString());
+      this.matchPattern = buildMatchingPattern();
+      this.location = 0;
    }
 
    /**
@@ -292,7 +304,14 @@ public class Expression extends UriTemplateComponent
       String firstChar = token.substring(0, 1);
       if (UriTemplate.containsOperator(firstChar))
       {
-         operator = Operator.fromOpCode(firstChar);
+         try
+         {
+            operator = Operator.fromOpCode(firstChar);
+         }
+         catch (IllegalOperatorException e)
+         {
+            throw new MalformedUriTemplateException("Invalid operator" , this.location, e);
+         }
          token = token.substring(1, token.length());
       }
       String[] varspecStrings = token.split(",");
@@ -315,7 +334,7 @@ public class Expression extends UriTemplateComponent
             }
             catch (NumberFormatException e)
             {
-               throw new MalformedUriTemplateException("The prefix value for "+ pair[0]+ " was not a number", e);
+               throw new MalformedUriTemplateException("The prefix value for "+ pair[0]+ " was not a number", this.location, e);
             }
          }
 
@@ -350,26 +369,45 @@ public class Expression extends UriTemplateComponent
       Matcher matcher = VARNAME_REGEX.matcher(varname);
       if(!matcher.matches())
       {
-         throw new MalformedUriTemplateException("The variable name "+varname+" contains invalid characters");
+         throw new MalformedUriTemplateException("The variable name "+varname+" contains invalid characters", this.location);
       }
 
       if(varname.contains(" "))
       {
-         throw new MalformedUriTemplateException("The variable name "+varname+" cannot contain spaces (leading or trailing)");
+         throw new MalformedUriTemplateException("The variable name "+varname+" cannot contain spaces (leading or trailing)", this.location);
       }
    }
 
 
    /**
-    * Returns a string that contains a regular expression that matches the
-    * URI template expression.
+    * 
     *
     * @return
     */
-   public String buildMatchingPattern()
+   private Pattern buildMatchingPattern()
    {
-      StringBuilder builder = new StringBuilder();
-      return builder.toString();
+      StringBuilder b = new StringBuilder();
+      for(VarSpec v : getVarSpecs())
+      {
+         b.append("(?<").append(v.getVariableName()).append(">[^\\/]+)");
+      }
+      return Pattern.compile(b.toString());
+   }
+   
+   /**
+    * Returns a string that contains a regular expression that matches the
+    * URI template expression.
+    * 
+    * @return
+    */
+   @Override
+   public Pattern getMatchPattern()
+   {
+      if(this.matchPattern == null)
+      {
+         this.matchPattern = buildMatchingPattern();
+      }
+      return this.matchPattern;
    }
    /**
     * Get the replacementToken.

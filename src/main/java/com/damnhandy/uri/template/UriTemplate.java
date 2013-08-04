@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
@@ -96,7 +97,7 @@ public class UriTemplate implements Serializable
     *
     */
    static final char[] OPERATORS =
-   {'+', '#', '.', '/', ';', '?', '&'};
+   {'+', '#', '.', '/', ';', '?', '&', '!', '='};
 
    /**
     *
@@ -111,23 +112,36 @@ public class UriTemplate implements Serializable
       }
    }
 
-   protected String template;
+   /**
+    * The URI template String
+    */
+   private String template;
+   
+   /**
+    * A regex string that matches the a URI to the template pattern
+    */
+   private Pattern reverseMatchPattern;
 
    /**
     * The collection of values that will be applied to the URI expression in the
     * expansion process.
     */
-   protected Map<String, Object> values = new HashMap<String, Object>();
+   private Map<String, Object> values = new HashMap<String, Object>();
 
    /**
     * 
     */
-   protected LinkedList<UriTemplateComponent> components;
+   private LinkedList<UriTemplateComponent> components;
 
    /**
     *
     */
-   protected Expression[] expressions;
+   private Expression[] expressions;
+   
+   /**
+    * 
+    */
+   private String[] variables;
 
    /**
     * 
@@ -219,6 +233,47 @@ public class UriTemplate implements Serializable
 
    
    /**
+    * Returns the number of expressions found in this template
+    *
+    * @return
+    */
+   public int expressionCount()
+   {
+      return expressions.length;
+   }
+
+   /**
+    * FIXME Comment this
+    *
+    * @return
+    */
+   public Expression[] getExpressions()
+   {
+      return expressions;
+   }
+
+   /**
+    * Returns the list of variable names in this template.
+    * 
+    * @return
+    */
+   public String[] getVariables()
+   {
+      if(variables == null)
+      {
+         List<String> vars = new ArrayList<>();
+         for(Expression e : getExpressions())
+         {
+            for(VarSpec v : e.getVarSpecs())
+            {
+               vars.add(v.getVariableName());
+            }
+         }
+         variables = vars.toArray(new String[vars.size()]);
+      }
+      return variables;
+   }
+   /**
     * Parse the URI template string into the template model.
     *
     */
@@ -257,26 +312,30 @@ public class UriTemplate implements Serializable
       }
       this.template = b.toString();
    }
-   /**
-    * Returns the number of expressions found in this template
-    *
-    * @return
-    */
-   public int expressionCount()
+   
+   private void buildReverssMatchRegexFromComponents() 
    {
-      return expressions.length;
+      StringBuilder b = new StringBuilder();
+      for(UriTemplateComponent c : components)
+      {
+         b.append("(").append(c.getMatchPattern()).append(")");
+      }
+      this.reverseMatchPattern = Pattern.compile(b.toString());
    }
-
+   
    /**
     * FIXME Comment this
-    *
+    * 
     * @return
     */
-   public Expression[] getExpressions()
+   protected Pattern getReverseMatchPattern() 
    {
-      return expressions;
+      if(this.reverseMatchPattern == null)
+      {
+         buildReverssMatchRegexFromComponents();
+      }
+      return this.reverseMatchPattern;
    }
-
    /**
     * Expands the given template string using the variable replacements
     * in the supplied {@link Map}.

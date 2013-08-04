@@ -97,14 +97,14 @@ public class TestExpressionBuilder
    @Test
    public void testMultipleExpressions() throws Exception
    {
-      Expression e = Expression.simple(var("foo", 1), var("foo"), var("thing", true)).build();
-      Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
+      Expression e = Expression.simple(var("foo", 1), var("bar"), var("thing", true)).build();
+      Assert.assertEquals("{foo:1,bar,thing*}", e.toString());
    }
 
    @Test
    public void testMultipleExpressionsAndLiteralValues() throws Exception
    {
-      Expression e = Expression.simple(var("foo", 1), var("foo"), var("thing", true)).build();
-      Assert.assertEquals("{foo:1,foo,thing*}", e.toString());
+      Expression e = Expression.simple(var("foo", 1), var("bar"), var("thing", true)).build();
+      Assert.assertEquals("{foo:1,bar,thing*}", e.toString());
    }
 }

@@ -18,9 +18,14 @@
  * @JsonDeserialize(using = UriTemplateDeserializer.class)
  * @JsonSerialize(using = UriTemplateSerializer.class)
  * private UriTemplate template;
+ * ...
  * </pre>
  * 
- * <p>Both option will yeild the same results</p>
+ * <p
+ * >Both option will yeild the same results
+ * </p>
+ * 
+ * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */

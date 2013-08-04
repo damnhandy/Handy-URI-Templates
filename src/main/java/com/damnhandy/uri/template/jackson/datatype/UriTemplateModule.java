@@ -6,10 +6,20 @@ package com.damnhandy.uri.template.jackson.datatype;
 
 import com.damnhandy.uri.template.UriTemplate;
 import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
- * A UriTemplateModule.
+ * Uri Template module for Jackson. To use it, simpley register it 
+ * with an {@link ObjectMapper} like so:
+ * 
+ * <pre>
+ * ObjectMapper mapper = new ObjectMapper();
+ * mapper.registerModule(new UriTemplateModule());
+ * </pre>
+ * 
+ * Any mapped JSON property that is a {@link UriTemplate} will be
+ * serialized or deserialized properly. 
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
