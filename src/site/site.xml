@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Reflow Maven Skin" xmlns="http://maven.apache.org/DECORATION/1.3.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
+
+	<bannerLeft>
+		<!-- Reflow Maven Skin, but with "Reflow" highlighted -->
+		<name><![CDATA[<br/>
+          		<span class="color-highlight">Handy URI Templates</span> 
+          ]]></name>
+		<href>http://damnhandy.github.io/Handy-URI-Templates/</href>
+	</bannerLeft>
+
+	<publishDate position="bottom" format="yyyy-MM-dd" />
+	<version position="bottom" />
+	<googleAnalyticsAccountId>UA-1402675-6</googleAnalyticsAccountId>
+
+	<skin>
+		<groupId>lt.velykis.maven.skins</groupId>
+		<artifactId>reflow-maven-skin</artifactId>
+		<version>1.0.0</version>
+	</skin>
+	<custom>
+		<reflowSkin>
+			<!-- Make this to 'false' for local development, i.e. file:// URLs -->
+			<protocolRelativeURLs>false</protocolRelativeURLs>
+			<smoothScroll>true</smoothScroll>
+			<theme>bootswatch-slate</theme>
+			<highlightJs>true</highlightJs>
+			<highlightJsTheme>github</highlightJsTheme>
+			<absoluteResourceURL>http://damnhandy.github.io/Handy-URI-Templates/</absoluteResourceURL>
+			<brand>
+				<!-- Brand text in top-left part of the site -->
+				<name> <![CDATA[
+          		<span class="color-highlight">Handy URI Templates</span> 
+          ]]></name>
+				<href>http://damnhandy.github.io/Handy-URI-Templates/</href>
+			</brand>
+			<slogan>Handy URI Templates is a RFC6570 compliant URI template
+				processor.
+			</slogan>
+			<titleTemplate>%2$s | %1$s</titleTemplate>
+			<!-- Use Table of Contents at the top of the page (max 6 elements) -->
+			<toc>top</toc>
+			<tocTopMax>6</tocTopMax>
+			<!-- Include the documentation and tools in the top navigation (in addition 
+				to links) -->
+			<topNav>Documentation|Tools|Contribute</topNav>
+			<!-- Split menus in the bottom navigation -->
+			<bottomNav maxSpan="9">
+				<column>Main|Tools</column>
+				<column>Download|Contribute</column>
+				<column>Documentation</column>
+				<column>Reports</column>
+			</bottomNav>
+			<bottomDescription>
+        <![CDATA[
+         Handy URI Templates is a <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> compliant URI 
+         template processor. The library allows clients to 
+         utilize templatized URIs and inject replacement variables to expand the template into a URI. 
+         The library sports a fluent API, ability to plugin custom object renderers, and supports all 
+         levels of URI templates.
+        ]]>
+			</bottomDescription>
+			<pages>
+				<index project="reflow-parent">
+					<!-- Override the title -->
+					<titleTemplate>Handy URI Templates</titleTemplate>
+					<!-- no breadcrumbs on the main index page -->
+					<breadcrumbs>false</breadcrumbs>
+					<!-- no ToC on the main index page -->
+					<toc>false</toc>
+					<markPageHeader>false</markPageHeader>
+					<sections>
+						<carousel />
+						<columns>2</columns>
+						<body />
+						<sidebar />
+					</sections>
+				</index>
+				<contribute>
+					<breadcrumbs>false</breadcrumbs>
+				</contribute>
+				<!-- Disable source highlighting for Maven reports -->
+				<source-repository>
+					<highlightJs>false</highlightJs>
+				</source-repository>
+				<issue-tracking>
+					<highlightJs>false</highlightJs>
+					<toc>false</toc>
+				</issue-tracking>
+				<license>
+					<highlightJs>false</highlightJs>
+					<toc>false</toc>
+				</license>
+				<!-- Disable ToC for some Maven reports -->
+				<project-info>
+					<toc>false</toc>
+				</project-info>
+				<dependencies>
+					<tocTopMax>4</tocTopMax>
+				</dependencies>
+			</pages>
+		</reflowSkin>
+	</custom>
+
+	<body>
+		<!-- Add a rel to Google profile for all pages -->
+		<head>
+			<link rel="author" href="http://twitter.com/damnhandy" />
+		</head>
+
+		<links>
+			<item name="Download" href="skin/index.html#Usage" />
+			<item name="GitHub project" href="https://github.com/damnhandy/Handy-URI-Templates" />
+		</links>
+
+		<breadcrumbs>
+			<item name="Handy URI Templates" href="/" />
+		</breadcrumbs>
+
+		<menu name="Main" inherit="top">
+			<item name="Home" href="./" />
+			<item name="GitHub project" href="https://github.com/damnhandy/Handy-URI-Templates" />
+			<item name="Blog" href="http://damnhandy.github.io/Handy-URI-Templates/" />
+			<item name="Release notes" href="changes-report.html" />
+		</menu>
+		<menu name="Download" inherit="top">
+			<item name="Download" href="skin/index.html#Usage" />
+			<item name="License" href="license.html" />
+		</menu>
+		<menu name="Documentation" inherit="bottom">
+			<item name="Usage" href="skin/" />
+			<item name="JaCoCo Reports" href="jacoco/index.html"/>
+		</menu>
+		
+		<menu name="Contribute" inherit="bottom">
+			<item name="Contribute" href="contribute.html" />
+			<item name="Issues"
+				href="https://github.com/damnhandy/Handy-URI-Templates/issues/" />
+			<item name="Fork on GitHub" href="https://github.com/damnhandy/Handy-URI-Templates" />
+			<item name="Donate"
+				href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=QWKNRFZH52828" />
+		</menu>
+		<menu name="Maven Documentation" ref="reports" inherit="bottom"/>
+	</body>
+</project>
