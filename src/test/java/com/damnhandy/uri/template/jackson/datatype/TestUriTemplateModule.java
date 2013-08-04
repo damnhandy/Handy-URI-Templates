@@ -6,6 +6,7 @@ package com.damnhandy.uri.template.jackson.datatype;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -13,6 +14,8 @@ import org.junit.Test;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;
 import com.damnhandy.uri.template.UriTemplate;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -23,45 +26,72 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class TestUriTemplateModule
 {
-   
 
    private static ObjectMapper mapper;
-   
+
    @BeforeClass
-   public static void setUp() {
+   public static void setUp()
+   {
       mapper = new ObjectMapper();
       mapper.registerModule(new UriTemplateModule());
    }
-   
+
    @Test
-   public void testDeserialize() throws Exception 
+   public void testDeserialize() throws Exception
    {
       Dummy dummy = mapper.readValue(new File("./src/test/resources/json/test1.json"), Dummy.class);
       Assert.assertEquals("http://example.com/orders/{orderId}{?view}", dummy.getTemplate().getTemplate());
    }
-   
+
    @Test
-   public void testSerialize() throws Exception 
+   public void testDeserializeWithError()
+   {
+
+      try
+      {
+         mapper.readValue(new File("./src/test/resources/json/errorTest1.json"), Dummy.class);
+      }
+
+      catch (JsonMappingException e)
+      {
+         Assert.assertTrue(e.getCause().getClass().isAssignableFrom(JsonParseException.class));
+         JsonParseException jpe = (JsonParseException) e.getCause();
+         Assert.assertEquals(3, jpe.getLocation().getLineNr());
+         Assert.assertEquals(3, jpe.getLocation().getLineNr());
+         MalformedUriTemplateException mte = (MalformedUriTemplateException) jpe.getCause();
+         Assert.assertEquals(40, mte.getLocation());
+      }
+      catch (IOException e)
+      {
+         Assert.fail();
+      }
+
+   }
+
+   @Test
+   public void testSerialize() throws Exception
    {
       Dummy dummy = new Dummy("test", "http://example.com/orders/{orderId}{?view}");
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       mapper.writer().writeValue(out, dummy);
-      
+
       Dummy dummy2 = mapper.readValue(out.toByteArray(), Dummy.class);
-      
+
       Assert.assertEquals("test", dummy2.getName());
       Assert.assertEquals("http://example.com/orders/{orderId}{?view}", dummy2.getTemplate().getTemplate());
    }
-   
-   
+
    public static class Dummy
    {
       private String name;
+
       private UriTemplate template;
-      
-      public Dummy() {
-         
+
+      public Dummy()
+      {
+
       }
+
       /**
        * Create a new Dummy.
        * 
@@ -74,6 +104,7 @@ public class TestUriTemplateModule
          this.name = name;
          this.template = UriTemplate.fromTemplate(template);
       }
+
       /**
        * Get the name.
        * 
@@ -83,6 +114,7 @@ public class TestUriTemplateModule
       {
          return name;
       }
+
       /**
        * Set the name.
        * 
@@ -92,6 +124,7 @@ public class TestUriTemplateModule
       {
          this.name = name;
       }
+
       /**
        * Get the template.
        * 
@@ -101,6 +134,7 @@ public class TestUriTemplateModule
       {
          return template;
       }
+
       /**
        * Set the template.
        * 

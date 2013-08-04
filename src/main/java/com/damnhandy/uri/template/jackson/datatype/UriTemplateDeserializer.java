@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;
 import com.damnhandy.uri.template.UriTemplate;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -34,7 +35,7 @@ public class UriTemplateDeserializer extends JsonDeserializer<UriTemplate>
       }
       catch (MalformedUriTemplateException e)
       {
-         throw new IOException(e);
+         throw new JsonParseException("Error parsing the URI Template", parser.getCurrentLocation(), e);
       }
    }
 
