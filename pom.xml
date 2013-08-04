@@ -10,7 +10,6 @@
 	<artifactId>handy-uri-templates</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
-	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
 	<prerequisites>
 		<maven>3.0.3</maven>
 	</prerequisites>
@@ -40,8 +39,8 @@
 		<name>Ryan J. McDonough</name>
 	</organization>
 	<ciManagement>
-		<system>jenkins</system>
-		<url>https://damnhandy.ci.cloudbees.com/job/Handy-URI-Templates/</url>
+		<system>travis-ci</system>
+		<url>https://travis-ci.org/damnhandy/Handy-URI-Templates</url>
 	</ciManagement>
 	<issueManagement>
 		<system>Github Issues</system>
@@ -475,4 +474,5 @@
 
 
 
+	<description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.</description>
 </project>
