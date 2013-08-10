@@ -308,7 +308,7 @@ public class Expression extends UriTemplateComponent
          {
             operator = Operator.fromOpCode(firstChar);
          }
-         catch (IllegalOperatorException e)
+         catch (IllegalArgumentException e)
          {
             throw new MalformedUriTemplateException("Invalid operator" , this.location, e);
          }
