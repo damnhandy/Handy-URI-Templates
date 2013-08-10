@@ -21,8 +21,8 @@
  * ...
  * </pre>
  * 
- * <p
- * >Both option will yeild the same results
+ * <p>
+ * Both options will yield the same results
  * </p>
  * 
  * 
