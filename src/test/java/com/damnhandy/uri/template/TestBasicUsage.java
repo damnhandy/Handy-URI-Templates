@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public class TestCreateUriTemplate
+public class TestBasicUsage
 {
 
    @Test
