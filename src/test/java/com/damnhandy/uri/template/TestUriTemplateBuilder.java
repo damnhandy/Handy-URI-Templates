@@ -98,6 +98,12 @@ public class TestUriTemplateBuilder
    }
    
    
+   /**
+    * This test fails as you shouldn't be able to create multiple fragment identifiers
+    * in a URI.
+    * 
+    * @throws Exception
+    */
    @Test(expected = UriTemplateBuilderException.class)
    public void testMessedUpUri() throws Exception
    {
