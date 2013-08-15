@@ -72,7 +72,7 @@ You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templa
 
 ## URI Template Builder API
 
-Starting in version 2.x, the `UriTemplateBuilder` was added to make it easier to dyamically construct URI templates. It's used like this:
+Starting in version 2.x, the `UriTemplateBuilder` was added to make it easier to programatically construct URI templates. It's used like this:
 
 ```java
 UriTemplate template = 
@@ -83,7 +83,7 @@ UriTemplate template =
                  .build();
 ```
 
-This will yeild the following URL template string:
+This will yield the following URL template string:
 
 	"http://example.com/foo{/thing1,explodedThing*}{#prefix:2}"
 

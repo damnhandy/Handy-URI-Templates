@@ -5,9 +5,7 @@
 
 	<bannerLeft>
 		<!-- Reflow Maven Skin, but with "Reflow" highlighted -->
-		<name><![CDATA[<br/>
-          		<span class="color-highlight">Handy URI Templates</span> 
-          ]]></name>
+
 		<href>http://damnhandy.github.io/Handy-URI-Templates/</href>
 	</bannerLeft>
 
@@ -51,7 +49,7 @@
 				<column>Main|Tools</column>
 				<column>Download|Contribute</column>
 				<column>Documentation</column>
-				<column>Reports</column>
+				<column>reports</column>
 			</bottomNav>
 			<bottomDescription>
         <![CDATA[
@@ -105,7 +103,7 @@
 	</custom>
 
 	<body>
-		<!-- Add a rel to Google profile for all pages -->
+		<!-- Add a link to Twitter profile for all pages -->
 		<head>
 			<link rel="author" href="http://twitter.com/damnhandy" />
 		</head>
@@ -130,8 +128,9 @@
 			<item name="License" href="license.html" />
 		</menu>
 		<menu name="Documentation" inherit="bottom">
-			<item name="Usage" href="skin/" />
-			<item name="JaCoCo Reports" href="jacoco/index.html"/>
+			<item name="Basic Usage" href="index.html" />
+            <item name="URI Template Builder" href="uri_template_builder.html" />
+			<!--item name="JaCoCo Reports" href="./jacoco/index.html"/-->
 		</menu>
 		
 		<menu name="Contribute" inherit="bottom">
@@ -139,8 +138,7 @@
 			<item name="Issues"
 				href="https://github.com/damnhandy/Handy-URI-Templates/issues/" />
 			<item name="Fork on GitHub" href="https://github.com/damnhandy/Handy-URI-Templates" />
-			<item name="Donate"
-				href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=QWKNRFZH52828" />
+
 		</menu>
 		<menu name="Maven Documentation" ref="reports" inherit="bottom"/>
 	</body>
