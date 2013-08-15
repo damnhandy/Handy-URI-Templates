@@ -48,6 +48,20 @@ public class TestUriTemplateBuilder
 
       Assert.assertEquals("http://example.com/foo{/thing1,explodedThing*}{#prefix:2}", template.getTemplate());
    }
+
+    @Test
+    public void testCreateFromBaseTemplate() throws Exception
+    {
+
+        UriTemplate rootTemplate = UriTemplate.fromTemplate("http://example.com/foo{/thing1}");
+
+        UriTemplate template = UriTemplate.buildFromTemplate(rootTemplate)
+                .path(var("explodedThing", true))
+                .fragment(var("prefix", 2))
+                .build();
+
+        Assert.assertEquals("http://example.com/foo{/thing1}{/explodedThing*}{#prefix:2}", template.getTemplate());
+    }
    
    
    @Test
