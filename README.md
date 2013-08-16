@@ -22,7 +22,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>1.1.7</version>
+  <version>2.0.0.BETA1</version>
 </dependency>
 ```
 

@@ -107,7 +107,7 @@ While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-
 
 Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings.
 
-##@ Unsupported Value Types
+### Unsupported Value Types
 
 The template processor will not accept the following types of value combinations:
 
