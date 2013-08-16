@@ -110,7 +110,7 @@
 
 		<links>
 			<item name="Download" href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates" />
-			<item name="GitHub project" href="https://github.com/damnhandy/Handy-URI-Templates" />
+			<item name="GitHub project" href="http://github.com/damnhandy/Handy-URI-Templates" />
 		</links>
 
 		<breadcrumbs>
@@ -119,7 +119,7 @@
 
 		<menu name="Main" inherit="top">
 			<item name="Home" href="./" />
-			<item name="GitHub Project" href="https://github.com/damnhandy/Handy-URI-Templates" />
+			<item name="GitHub Project" href="http://github.com/damnhandy/Handy-URI-Templates" />
 			<item name="Blog" href="http://damnhandy.github.io/Handy-URI-Templates/" />
 			<item name="Release notes" href="changes-report.html" />
 		</menu>
@@ -135,8 +135,8 @@
 		
 		<menu name="Contribute" inherit="bottom">
 			<item name="Issues"
-				href="https://github.com/damnhandy/Handy-URI-Templates/issues/" />
-			<item name="Fork on GitHub" href="https://github.com/damnhandy/Handy-URI-Templates" />
+				href="http://github.com/damnhandy/Handy-URI-Templates/issues/" />
+			<item name="Fork on GitHub" href="http://github.com/damnhandy/Handy-URI-Templates" />
 
 		</menu>
 		<menu name="Maven Documentation" ref="reports" inherit="bottom"/>
