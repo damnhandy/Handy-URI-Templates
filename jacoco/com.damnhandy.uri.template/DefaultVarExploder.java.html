@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultVarExploder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">DefaultVarExploder.java</span></div><h1>DefaultVarExploder.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.damnhandy.uri.template;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+
+/**
+ * &lt;p&gt;
+ * The {@link DefaultVarExploder} is a {@link VarExploder} implementation that takes in a Java object and
+ * extracts the properties for use in a URI Template. Given the following URI expression:
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * /mapper{?address*}
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * And this Java object for an address:
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * Address address = new Address();
+ * address.setState(&quot;CA&quot;);
+ * address.setCity(&quot;Newport Beach&quot;);
+ * String result = UriTemplate.fromTemplate(&quot;/mapper{?address*}&quot;).set(&quot;address&quot;, address).expand();
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * The expanded URI will be:
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * /mapper?city=Newport%20Beach&amp;state=CA
+ * &lt;/pre&gt;
+ *
+ * &lt;p&gt;
+ * The {@link DefaultVarExploder} breaks down the object properties as follows:
+ * &lt;ul&gt;
+ *  &lt;li&gt;All properties that contain a non-null return value will be included&lt;/li&gt;
+ *  &lt;li&gt;Getters or fields annotated with {@link UriTransient} will &lt;b&gt;NOT&lt;/b&gt; included in the list&lt;/li&gt;
+ *  &lt;li&gt;By default, the property name is used as the label in the URI. This can be overridden by
+ *      placing the {@link VarName} annotation on the field or getter method and specifying a name.&lt;/li&gt;
+ *  &lt;li&gt;Field level annotation take priority of getter annotations&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * @see VarName
+ * @see UriTransient
+ * @see VarExploder
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
+ * @since 1.0
+ */
+public class DefaultVarExploder implements VarExploder
+{
+   /**
+    * The original object.
+    */
+   private Object source;
+
+   /**
+    * The objects properties that have been extracted to a {@link Map}
+    */
+<span class="fc" id="L81">   private Map&lt;String, Object&gt; pairs = new LinkedHashMap&lt;String, Object&gt;();</span>
+
+   /**
+    *
+    *
+    *
+    * @param source the Object to explode
+    */
+   public DefaultVarExploder(Object source) throws VarExploderException
+<span class="fc" id="L90">   {</span>
+<span class="fc" id="L91">      this.setSource(source);</span>
+<span class="fc" id="L92">   }</span>
+
+   /**
+    *
+    *
+    * @return
+    */
+   @Override
+   public Map&lt;String, Object&gt; getNameValuePairs()
+   {
+<span class="fc" id="L102">      return pairs;</span>
+   }
+
+
+   public void setSource(Object source) throws VarExploderException
+   {
+<span class="fc" id="L108">      this.source = source;</span>
+<span class="fc" id="L109">      this.initValues();</span>
+<span class="fc" id="L110">   }</span>
+
+   /**
+    *
+    *
+    */
+   private void initValues() throws VarExploderException
+   {
+
+<span class="fc" id="L119">      Class&lt;?&gt; c = source.getClass();</span>
+<span class="pc bpc" id="L120" title="4 of 8 branches missed.">      if (c.isAnnotation() || c.isArray() || c.isEnum() || c.isPrimitive())</span>
+      {
+<span class="nc" id="L122">         throw new IllegalArgumentException(&quot;The value must an object&quot;);</span>
+      }
+      BeanInfo beanInfo;
+      try
+      {
+<span class="fc" id="L127">         beanInfo = Introspector.getBeanInfo(c);</span>
+      }
+<span class="nc" id="L129">      catch (IntrospectionException e)</span>
+      {
+<span class="nc" id="L131">         throw new RuntimeException(e);</span>
+<span class="fc" id="L132">      }</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">      for (PropertyDescriptor p : beanInfo.getPropertyDescriptors())</span>
+      {
+<span class="fc" id="L135">         Method readMethod = p.getReadMethod();</span>
+<span class="pc bpc" id="L136" title="1 of 4 branches missed.">         if (!readMethod.isAnnotationPresent(UriTransient.class) &amp;&amp; !p.getName().equals(&quot;class&quot;))</span>
+         {
+<span class="fc" id="L138">            Object value = getValue(readMethod);</span>
+<span class="fc" id="L139">            String name = p.getName();</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">            if (readMethod.isAnnotationPresent(VarName.class))</span>
+            {
+<span class="nc" id="L142">               name = readMethod.getAnnotation(VarName.class).value();</span>
+            }
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (value != null)</span>
+            {
+<span class="fc" id="L146">               pairs.put(name, value);</span>
+            }
+         }
+
+      }
+<span class="fc" id="L151">      scanFields(c);</span>
+<span class="fc" id="L152">   }</span>
+
+   /**
+    * Scans the fields on the class or super classes to look for
+    * annotations on the fields.
+    *
+    * @param c
+    */
+   private void scanFields(Class&lt;?&gt; c)
+   {
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">      if (!c.isInterface())</span>
+      {
+<span class="fc" id="L164">         Field[] fields = c.getDeclaredFields();</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">         for (Field field : fields)</span>
+         {
+<span class="fc" id="L167">            String fieldName = field.getName();</span>
+
+<span class="fc bfc" id="L169" title="All 2 branches covered.">            if (pairs.containsKey(fieldName))</span>
+            {
+<span class="fc bfc" id="L171" title="All 2 branches covered.">               if (field.isAnnotationPresent(UriTransient.class))</span>
+               {
+<span class="fc" id="L173">                  pairs.remove(fieldName);</span>
+               }
+<span class="fc bfc" id="L175" title="All 2 branches covered.">               else if (field.isAnnotationPresent(VarName.class))</span>
+               {
+<span class="fc" id="L177">                  String name = field.getAnnotation(VarName.class).value();</span>
+<span class="fc" id="L178">                  pairs.put(name, pairs.get(fieldName));</span>
+<span class="fc" id="L179">                  pairs.remove(fieldName);</span>
+               }
+            }
+         }
+      }
+      /*
+       * We still need to scan the fields of the super class if its
+       * not Object to check for annotations. There might be a better
+       * way to do this.
+       */
+<span class="fc bfc" id="L189" title="All 2 branches covered.">      if (!c.getSuperclass().equals(Object.class))</span>
+      {
+<span class="fc" id="L191">         scanFields(c.getSuperclass());</span>
+      }
+<span class="fc" id="L193">   }</span>
+
+   private Object getValue(Method method) throws VarExploderException
+   {
+      try
+      {
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">         if (method == null)</span>
+         {
+<span class="nc" id="L201">            return null;</span>
+         }
+<span class="fc" id="L203">         return method.invoke(source);</span>
+      }
+<span class="nc" id="L205">      catch (IllegalArgumentException e)</span>
+      {
+<span class="nc" id="L207">         throw new VarExploderException(e);</span>
+      }
+<span class="nc" id="L209">      catch (IllegalAccessException e)</span>
+      {
+<span class="nc" id="L211">         throw new VarExploderException(e);</span>
+      }
+<span class="nc" id="L213">      catch (InvocationTargetException e)</span>
+      {
+<span class="nc" id="L215">         throw new VarExploderException(e);</span>
+      }
+   }
+
+   @Override
+   public Collection&lt;Object&gt; getValues() throws VarExploderException
+   {
+<span class="fc" id="L222">      Collection&lt;Object&gt; c = pairs.values();</span>
+<span class="fc" id="L223">      return c;</span>
+   }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>VarExploderFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">VarExploderFactory.java</span></div><h1>VarExploderFactory.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.damnhandy.uri.template.impl;
+
+import com.damnhandy.uri.template.DefaultVarExploder;
+import com.damnhandy.uri.template.VarExploder;
+import com.damnhandy.uri.template.VarExploderException;
+
+/**
+ *
+ *
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
+ */
+public final class VarExploderFactory
+{
+   //private static final String DEFAULT_MSG = &quot;&quot;;
+
+   private VarExploderFactory()
+<span class="nc" id="L33">   {</span>
+<span class="nc" id="L34">   }</span>
+
+   /**
+    *
+    *
+    * @param varValue
+    * @return
+    */
+   public static VarExploder getExploder(Object varValue, VarSpec varSpec) throws VarExploderException
+   {
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">      if (varValue instanceof VarExploder)</span>
+      {
+<span class="nc" id="L46">         return (VarExploder) varValue;</span>
+      }
+
+//      if (varValue.getClass().isAnnotationPresent(ExplodeWith.class))
+//      {
+//         Class&lt;?&gt; exploderClass = varValue.getClass().getAnnotation(ExplodeWith.class).value();
+//         return fromCustom(exploderClass, varValue, varSpec);
+//      }
+<span class="fc" id="L54">      return new DefaultVarExploder(varValue);</span>
+   }
+
+
+//   private static VarExploder fromCustom(Class&lt;?&gt; exploderClass, Object varValue, VarSpec varSpec)
+//   {
+//      if (exploderClass.isAssignableFrom(VarExploder.class))
+//      {
+//         String msg = buildErrorMessage(
+//               exploderClass.getSimpleName() + &quot; must be an instance of &quot; + VarExploder.class.getSimpleName(),
+//               exploderClass, varValue, varSpec);
+//         throw new VariableExpansionException(msg);
+//      }
+//
+//      try
+//      {
+//         Constructor&lt;?&gt; constructor = exploderClass.getConstructor(Object.class);
+//         VarExploder exploder = (VarExploder) constructor.newInstance(varValue);
+//         return exploder;
+//      }
+//
+//      catch (IllegalArgumentException e)
+//      {
+//         throwException(DEFAULT_MSG, e, exploderClass, varValue, varSpec);
+//      }
+//      catch (NoSuchMethodException e)
+//      {
+//         throwException(DEFAULT_MSG, e, exploderClass, varValue, varSpec);
+//      }
+//      catch (InstantiationException e)
+//      {
+//         throwException(DEFAULT_MSG, e, exploderClass, varValue, varSpec);
+//      }
+//      catch (IllegalAccessException e)
+//      {
+//         throwException(DEFAULT_MSG, e, exploderClass, varValue, varSpec);
+//      }
+//      catch (InvocationTargetException e)
+//      {
+//         throwException(DEFAULT_MSG, e, exploderClass, varValue, varSpec);
+//      }
+//      return null;
+//   }
+
+
+//   private static void throwException(String message, Throwable e, Class&lt;?&gt; exploderClass, Object varValue,
+//         VarSpec varSpec) throws VariableExpansionException
+//   {
+//      String msg = buildErrorMessage(message, exploderClass, varValue, varSpec);
+//      throw new VariableExpansionException(msg, e);
+//   }
+
+//   private static String buildErrorMessage(String message, Class&lt;?&gt; exploderClass, Object varValue, VarSpec varSpec)
+//   {
+//      StringBuilder b = new StringBuilder();
+//      b.append(message)
+//       .append(&quot;[ varspec: &quot;).append(varSpec)
+//       .append(&quot; variable value:&quot;).append(varValue)
+//       .append(&quot; exploder class: &quot;).append(exploderClass.getName()).append(&quot;]&quot;);
+//      return b.toString();
+//   }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

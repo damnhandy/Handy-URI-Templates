@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>VarSpec.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">VarSpec.java</span></div><h1>VarSpec.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.damnhandy.uri.template.impl;
+
+import java.io.Serializable;
+
+
+/**
+ * Represents a variable in a URI template expression.
+ *
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
+ */
+public final class VarSpec implements Serializable
+{
+   /** The serialVersionUID */
+   private static final long serialVersionUID = 5850478145190940514L;
+
+<span class="pc" id="L32">   public static enum VarFormat {</span>
+<span class="fc" id="L33">      SINGLE, ARRAY, PAIRS;</span>
+   }
+
+   private static final String BASE_PATTERN = &quot;([\\w.~\\-\\_]|%[A-Fa-f0-9]{2})&quot;;
+   /**
+    *
+    */
+<span class="fc" id="L40">   private Modifier modifier = Modifier.NONE;</span>
+
+   /**
+    *
+    */
+   private String value;
+
+   /**
+    *
+    */
+<span class="fc" id="L50">   private Integer position = null;</span>
+
+   /**
+    *
+    */
+   private String variableName;
+
+   /**
+    *
+    */
+   private String regexMatchString;
+
+
+   /**
+    * Create a new VarSpec.
+    *
+    * @param modifier
+    * @param value
+    */
+   public VarSpec(String value, Modifier modifier)
+   {
+<span class="fc" id="L71">      this(value, modifier, null);</span>
+<span class="fc" id="L72">   }</span>
+
+   /**
+    * Create a new VarSpec.
+    *
+    * @param modifier
+    * @param value
+    * @param position
+    */
+   public VarSpec(String value, Modifier modifier, Integer position)
+<span class="fc" id="L82">   {</span>
+<span class="fc" id="L83">      this.modifier = modifier;</span>
+<span class="fc" id="L84">      this.value = value;</span>
+<span class="fc" id="L85">      this.position = position;</span>
+<span class="fc" id="L86">      initVariableName();</span>
+<span class="fc" id="L87">      initRegExMatchString();</span>
+<span class="fc" id="L88">   }</span>
+
+   /**
+    * Get the modifier.
+    *
+    * @return the modifier.
+    */
+   public Modifier getModifier()
+   {
+<span class="fc" id="L97">      return modifier;</span>
+   }
+
+   private void initRegExMatchString()
+   {
+<span class="fc" id="L102">      StringBuilder b = new StringBuilder(BASE_PATTERN);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">      if (modifier == Modifier.PREFIX)</span>
+      {
+<span class="fc" id="L105">         b.append(&quot;{&quot;).append(getPosition()).append(&quot;}&quot;);</span>
+      }
+      else
+      {
+<span class="fc" id="L109">         b.append(&quot;+&quot;);</span>
+      }
+<span class="fc" id="L111">      regexMatchString = b.toString();</span>
+<span class="fc" id="L112">   }</span>
+
+    /**
+     * Returns a regex pattern that matches the variable.
+     * @return
+     */
+   public String getRegExMatchString()
+   {
+<span class="nc bnc" id="L120" title="All 2 branches missed.">      if(regexMatchString == null)</span>
+      {
+<span class="nc" id="L122">         initRegExMatchString();</span>
+      }
+<span class="nc" id="L124">      return regexMatchString;</span>
+   }
+   /**
+    * Get the value.
+    *
+    * @return the value.
+    */
+   public String getValue()
+   {
+<span class="fc" id="L133">      return value;</span>
+   }
+
+   /**
+    * Get the position.
+    *
+    * @return the position.
+    */
+   public Integer getPosition()
+   {
+<span class="fc" id="L143">      return position;</span>
+   }
+
+   private void initVariableName()
+   {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">      if (modifier != Modifier.NONE)</span>
+      {
+<span class="fc bfc" id="L150" title="All 2 branches covered.">         if (modifier == Modifier.PREFIX)</span>
+         {
+<span class="fc" id="L152">            String[] values = getValue().split(Modifier.PREFIX.getValue());</span>
+<span class="fc" id="L153">            variableName = values[0];</span>
+<span class="fc" id="L154">         }</span>
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">         else if (modifier == Modifier.EXPLODE)</span>
+         {
+<span class="fc" id="L157">            variableName = getValue().substring(0, getValue().length() - 1);</span>
+         }
+      }
+      else
+      {
+<span class="fc" id="L162">         variableName = getValue();</span>
+      }
+<span class="fc" id="L164">   }</span>
+
+   /**
+    * FIXME Comment this
+    *
+    * @return
+    */
+   public String getVariableName()
+   {
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">      if (variableName == null)</span>
+      {
+<span class="nc" id="L175">         return getValue();</span>
+      }
+<span class="fc" id="L177">      return variableName;</span>
+   }
+
+   @Override
+   public String toString()
+   {
+<span class="nc" id="L183">      return &quot;VarSpec [modifier=&quot; + modifier + &quot;, value=&quot; + value + &quot;, position=&quot; + position + &quot;, variableName=&quot;</span>
+            + variableName + &quot;]&quot;;
+   }
+   
+<span class="nc" id="L187">   public static class Builder</span>
+   {
+      
+      
+   }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

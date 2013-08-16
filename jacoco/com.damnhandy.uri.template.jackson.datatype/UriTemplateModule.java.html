@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UriTemplateModule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.jackson.datatype</a> &gt; <span class="el_source">UriTemplateModule.java</span></div><h1>UriTemplateModule.java</h1><pre class="source lang-java linenums">/*
+ *
+ *
+ */
+package com.damnhandy.uri.template.jackson.datatype;
+
+import com.damnhandy.uri.template.UriTemplate;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+/**
+ * Uri Template module for Jackson. To use it, simpley register it 
+ * with an {@link ObjectMapper} like so:
+ * 
+ * &lt;pre&gt;
+ * ObjectMapper mapper = new ObjectMapper();
+ * mapper.registerModule(new UriTemplateModule());
+ * &lt;/pre&gt;
+ * 
+ * Any mapped JSON property that is a {@link UriTemplate} will be
+ * serialized or deserialized properly. 
+ * 
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
+ */
+public class UriTemplateModule extends SimpleModule
+{
+
+   /** The serialVersionUID */
+   private static final long serialVersionUID = 20L;
+
+   /**
+    * 
+    * Create a new UriTemplateModule.
+    *
+    */
+   public UriTemplateModule() {
+<span class="fc" id="L39">      super(&quot;Handy-URI-Templates&quot;, Version.unknownVersion());</span>
+<span class="fc" id="L40">      addDeserializer(UriTemplate.class, new UriTemplateDeserializer());</span>
+<span class="fc" id="L41">      addSerializer(UriTemplate.class, new UriTemplateSerializer());</span>
+<span class="fc" id="L42">   }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

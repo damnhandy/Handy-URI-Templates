@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Expression.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">Expression.java</span></div><h1>Expression.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2012, Ryan J. McDonough
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.damnhandy.uri.template;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.damnhandy.uri.template.impl.Modifier;
+import com.damnhandy.uri.template.impl.Operator;
+import com.damnhandy.uri.template.impl.VarSpec;
+
+/**
+ * &lt;p&gt;
+ * An Expression represents the text between '{' and '}', including the enclosing
+ * braces, as defined in &lt;a href=&quot;ietf.org/html/rfc6570#section-2&quot;&gt;Section 2 of RFC6570&lt;/a&gt;.
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ * http://www.example.com/foo{?query,number}
+                              \___________/
+                                    ^
+                                    |
+                                    |
+                              The expression
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * This class models this representation and adds helper functions for replacement and reverse matching.
+ * &lt;/p&gt;
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
+ * @see ExpressionImpl
+ * @since 2.0
+ */
+public class Expression extends UriTemplateComponent
+{
+
+   /** The serialVersionUID */
+   private static final long serialVersionUID = -5305648325957481840L;
+   
+   /**
+    * Regex to validate the variable name.
+    */
+<span class="fc" id="L58">   private static final Pattern VARNAME_REGEX = Pattern.compile(&quot;([\\w\\_\\.]|%[A-Fa-f0-9]{2})+&quot;);</span>
+   /**
+    * A regex quoted string that matches the expression for replacement in the
+    * expansion process. For example:
+    * &lt;pre&gt;
+    *          \Q{?query,number}\E
+    * &lt;/pre&gt;
+    */
+   private String replacementPattern;
+
+   /**
+    * That {@link Operator} value that is associated with this Expression
+    */
+   private Operator op;
+   
+   /**
+    * The character position where this expression occurs in the URI template
+    */
+   private final int location;
+   /**
+    * The the parsed {@link VarSpec} instances found in the expression.
+    */
+   private List&lt;VarSpec&gt; varSpecs;
+   
+   /**
+    * The Patter that would be used to reverse match this expression 
+    */
+   private Pattern matchPattern;
+   
+   
+   /**
+    * Creates a new {@link Builder} to create a simple expression according
+    * to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.2&quot;&gt;3.2.2&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.simple(var(&quot;var&quot;)).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder simple(VarSpec...varSpec)
+   {
+<span class="fc" id="L106">      return Builder.create(Operator.NUL, varSpec);</span>
+   }
+   
+
+
+   /**
+    * Creates a new {@link Builder} to create an expression that will use reserved expansion
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.3&quot;&gt;3.2.3&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.reserved().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {+var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder reserved(VarSpec...varSpec)
+   {
+<span class="fc" id="L129">      return Builder.create(Operator.RESERVED, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression with a fragment operator
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.4&quot;&gt;3.2.4&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.fragment().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {#var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder fragment(VarSpec...varSpec)
+   {
+<span class="fc" id="L150">      return Builder.create(Operator.FRAGMENT, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression using label expansion
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.5&quot;&gt;3.2.5&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.label(var(&quot;var&quot;)).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {.var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder label(VarSpec...varSpec)
+   {
+<span class="fc" id="L171">      return Builder.create(Operator.NAME_LABEL, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression using path expansion
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.6&quot;&gt;3.2.6&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.path().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {/var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder path(VarSpec...varSpec)
+   {
+<span class="fc" id="L192">      return Builder.create(Operator.PATH, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression using path-style parameter
+    * (a.k.a. matrix parameter) expansion according to
+    * section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.7&quot;&gt;3.2.7&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.matrix().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {;var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder matrix(VarSpec...varSpec)
+   {
+<span class="fc" id="L214">      return Builder.create(Operator.MATRIX, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression using form-style query string expansion
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.8&quot;&gt;3.2.8&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.query().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {?var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder query(VarSpec...varSpec)
+   {
+<span class="fc" id="L235">      return Builder.create(Operator.QUERY, varSpec);</span>
+   }
+
+   /**
+    * Creates a new {@link Builder} to create an expression using form-style query continuation expansion
+    * according to section &lt;a href=&quot;http://tools.ietf.org/html/rfc6570#section-3.2.9&quot;&gt;3.2.9&lt;/a&gt;.
+    * Calling:
+    * &lt;pre&gt;
+    * String exp = Expression.continuation().var(&quot;var&quot;).build().toString();
+    * &lt;/pre&gt;
+    * &lt;p&gt;
+    * Will return the following expression:
+    * &lt;/p&gt;
+    * &lt;pre&gt;
+    * {&amp;var}
+    * &lt;/pre&gt;
+    *
+    * @return
+    */
+   public static Builder continuation(VarSpec...varSpec)
+   {
+<span class="fc" id="L256">      return Builder.create(Operator.CONTINUATION, varSpec);</span>
+   }
+
+
+   /**
+    * Create a new Expression.
+    *
+    * @param replacementToken
+    * @param op
+    * @param varSpecs
+    */
+   public Expression(final String rawExpression, final int startPosition) throws MalformedUriTemplateException
+   {
+<span class="fc" id="L269">      super(startPosition);</span>
+<span class="fc" id="L270">      this.location = startPosition;</span>
+<span class="fc" id="L271">      this.parseRawExpression(rawExpression);  </span>
+<span class="fc" id="L272">   }</span>
+
+   /**
+    *
+    * Create a new Expression
+    *
+    * @param op
+    * @param varSpecs
+    * @throws MalformedUriTemplateException
+    */
+   public Expression(final Operator op, final List&lt;VarSpec&gt; varSpecs) 
+   {
+<span class="fc" id="L284">      super(0);</span>
+<span class="fc" id="L285">      this.op = op;</span>
+<span class="fc" id="L286">      this.varSpecs = varSpecs;</span>
+<span class="fc" id="L287">      this.replacementPattern = Pattern.quote(toString());</span>
+<span class="fc" id="L288">      this.matchPattern = buildMatchingPattern();</span>
+<span class="fc" id="L289">      this.location = 0;</span>
+<span class="fc" id="L290">   }</span>
+
+   /**
+    * FIXME Comment this
+    *
+    * @param rawExpression
+    * @throws MalformedUriTemplateException
+    */
+   private void parseRawExpression(String rawExpression) throws MalformedUriTemplateException
+   {
+<span class="fc" id="L300">      final String expressionReplacement = Pattern.quote(rawExpression);</span>
+<span class="fc" id="L301">      String token = rawExpression.substring(1, rawExpression.length() - 1);</span>
+      // Check for URI operators
+<span class="fc" id="L303">      Operator operator = Operator.NUL;</span>
+<span class="fc" id="L304">      String firstChar = token.substring(0, 1);</span>
+<span class="fc bfc" id="L305" title="All 2 branches covered.">      if (UriTemplate.containsOperator(firstChar))</span>
+      {
+         try
+         {
+<span class="fc" id="L309">            operator = Operator.fromOpCode(firstChar);</span>
+         }
+<span class="fc" id="L311">         catch (IllegalArgumentException e)</span>
+         {
+<span class="fc" id="L313">            throw new MalformedUriTemplateException(&quot;Invalid operator&quot; , this.location, e);</span>
+<span class="fc" id="L314">         }</span>
+<span class="fc" id="L315">         token = token.substring(1, token.length());</span>
+      }
+<span class="fc" id="L317">      String[] varspecStrings = token.split(&quot;,&quot;);</span>
+<span class="fc" id="L318">      List&lt;VarSpec&gt; varspecs = new ArrayList&lt;VarSpec&gt;();</span>
+
+<span class="fc bfc" id="L320" title="All 2 branches covered.">      for (String varname : varspecStrings)</span>
+      {
+<span class="fc" id="L322">         int subStrPos = varname.indexOf(Modifier.PREFIX.getValue());</span>
+         /*
+          * Prefix variable
+          */
+<span class="fc bfc" id="L326" title="All 2 branches covered.">         if (subStrPos &gt; 0)</span>
+         {
+<span class="fc" id="L328">            String[] pair = varname.split(Modifier.PREFIX.getValue());</span>
+            try
+            {
+<span class="fc" id="L331">               validateVarname(pair[0]);</span>
+<span class="fc" id="L332">               Integer pos = Integer.valueOf(varname.substring(subStrPos + 1));</span>
+<span class="fc" id="L333">               varspecs.add(new VarSpec(pair[0], Modifier.PREFIX, pos));</span>
+            }
+<span class="fc" id="L335">            catch (NumberFormatException e)</span>
+            {
+<span class="fc" id="L337">               throw new MalformedUriTemplateException(&quot;The prefix value for &quot;+ pair[0]+ &quot; was not a number&quot;, this.location, e);</span>
+<span class="fc" id="L338">            }</span>
+<span class="fc" id="L339">         }</span>
+
+         /*
+          * Variable will be exploded
+          */
+<span class="fc bfc" id="L344" title="All 2 branches covered.">         else if (varname.lastIndexOf(Modifier.EXPLODE.getValue()) &gt; 0)</span>
+         {
+<span class="fc" id="L346">            validateVarname(varname.substring(0, varname.length() - 1));</span>
+<span class="fc" id="L347">            varspecs.add(new VarSpec(varname, Modifier.EXPLODE));</span>
+         }
+         /*
+          * Standard Value
+          */
+         else
+         {
+<span class="fc" id="L354">            validateVarname(varname);</span>
+<span class="fc" id="L355">            varspecs.add(new VarSpec(varname, Modifier.NONE));</span>
+         }
+      }
+<span class="fc" id="L358">      this.replacementPattern = expressionReplacement;</span>
+<span class="fc" id="L359">      this.op = operator;</span>
+<span class="fc" id="L360">      this.varSpecs = varspecs;</span>
+<span class="fc" id="L361">   }</span>
+
+   /**
+    * Validates that the varname conforms to the spec.
+    *
+    * @param varname
+    */
+   private void validateVarname(String varname) throws MalformedUriTemplateException {
+<span class="fc" id="L369">      Matcher matcher = VARNAME_REGEX.matcher(varname);</span>
+<span class="fc bfc" id="L370" title="All 2 branches covered.">      if(!matcher.matches())</span>
+      {
+<span class="fc" id="L372">         throw new MalformedUriTemplateException(&quot;The variable name &quot;+varname+&quot; contains invalid characters&quot;, this.location);</span>
+      }
+
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">      if(varname.contains(&quot; &quot;))</span>
+      {
+<span class="nc" id="L377">         throw new MalformedUriTemplateException(&quot;The variable name &quot;+varname+&quot; cannot contain spaces (leading or trailing)&quot;, this.location);</span>
+      }
+<span class="fc" id="L379">   }</span>
+
+
+   /**
+    * 
+    *
+    * @return
+    */
+   private Pattern buildMatchingPattern()
+   {
+<span class="fc" id="L389">      StringBuilder b = new StringBuilder();</span>
+<span class="fc bfc" id="L390" title="All 2 branches covered.">      for(VarSpec v : getVarSpecs())</span>
+      {
+<span class="fc" id="L392">         b.append(&quot;(?&lt;&quot;).append(v.getVariableName()).append(&quot;&gt;[^\\/]+)&quot;);</span>
+<span class="fc" id="L393">      }</span>
+<span class="fc" id="L394">      return Pattern.compile(b.toString());</span>
+   }
+   
+   /**
+    * Returns a string that contains a regular expression that matches the
+    * URI template expression.
+    * 
+    * @return
+    */
+   @Override
+   public Pattern getMatchPattern()
+   {
+<span class="nc bnc" id="L406" title="All 2 branches missed.">      if(this.matchPattern == null)</span>
+      {
+<span class="nc" id="L408">         this.matchPattern = buildMatchingPattern();</span>
+      }
+<span class="nc" id="L410">      return this.matchPattern;</span>
+   }
+   /**
+    * Get the replacementToken.
+    *
+    * @return the replacementToken.
+    */
+   public String getReplacementPattern()
+   {
+<span class="fc" id="L419">      return replacementPattern;</span>
+   }
+
+   /**
+    * Get the {@link Operator} value for this expression.
+    *
+    * @return the operator value.
+    */
+   public Operator getOperator()
+   {
+<span class="fc" id="L429">      return op;</span>
+   }
+
+   /**
+    * Get the varSpecs.
+    *
+    * @return the varSpecs.
+    */
+   public List&lt;VarSpec&gt; getVarSpecs()
+   {
+<span class="fc" id="L439">      return varSpecs;</span>
+   }
+
+   /**
+    * Returns the string representation of the expression.
+    *
+    * @see Object#toString()
+    */
+   public String toString()
+   {
+<span class="fc" id="L449">      StringBuilder b = new StringBuilder();</span>
+<span class="fc" id="L450">      b.append(&quot;{&quot;).append(this.getOperator().getOperator());</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">      for (int i = 0; i &lt; varSpecs.size(); i++)</span>
+      {
+<span class="fc" id="L453">         VarSpec v = varSpecs.get(i);</span>
+<span class="fc" id="L454">         b.append(v.getValue());</span>
+<span class="fc" id="L455">         b.append(v.getModifier().getValue());</span>
+<span class="fc bfc" id="L456" title="All 2 branches covered.">         if (v.getModifier() == Modifier.PREFIX)</span>
+         {
+<span class="fc" id="L458">            b.append(v.getPosition());</span>
+         }
+<span class="fc bfc" id="L460" title="All 2 branches covered.">         if (i != (varSpecs.size() - 1))</span>
+         {
+<span class="fc" id="L462">            b.append(&quot;,&quot;);</span>
+         }
+      }
+<span class="fc" id="L465">      return b.append(&quot;}&quot;).toString();</span>
+   }
+
+   /**
+    * Returns the value of this component
+    * 
+    * @return
+    */
+   @Override
+   public String getValue()
+   {
+<span class="fc" id="L476">      return toString();</span>
+   }
+   
+   @Override
+   public int hashCode()
+   {
+<span class="nc" id="L482">      final int prime = 31;</span>
+<span class="nc" id="L483">      int result = 1;</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">      result = prime * result + ((op == null) ? 0 : op.hashCode());</span>
+<span class="nc bnc" id="L485" title="All 2 branches missed.">      result = prime * result + ((varSpecs == null) ? 0 : varSpecs.hashCode());</span>
+<span class="nc" id="L486">      return result;</span>
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+<span class="nc bnc" id="L492" title="All 2 branches missed.">      if (this == obj)</span>
+      {
+<span class="nc" id="L494">         return true;</span>
+      }
+<span class="nc bnc" id="L496" title="All 2 branches missed.">      if (obj == null)</span>
+      {
+<span class="nc" id="L498">         return false;</span>
+      }
+<span class="nc bnc" id="L500" title="All 2 branches missed.">      if (getClass() != obj.getClass())</span>
+      {
+<span class="nc" id="L502">         return false;</span>
+      }
+<span class="nc" id="L504">      Expression other = (Expression) obj;</span>
+<span class="nc bnc" id="L505" title="All 2 branches missed.">      if (op != other.op)</span>
+      {
+<span class="nc" id="L507">         return false;</span>
+      }
+<span class="nc bnc" id="L509" title="All 2 branches missed.">      if (varSpecs == null)</span>
+      {
+<span class="nc bnc" id="L511" title="All 2 branches missed.">         if (other.varSpecs != null)</span>
+         {
+<span class="nc" id="L513">            return false;</span>
+         }
+      }
+<span class="nc bnc" id="L516" title="All 2 branches missed.">      else if (!varSpecs.equals(other.varSpecs))</span>
+      {
+<span class="nc" id="L518">         return false;</span>
+      }
+<span class="nc" id="L520">      return true;</span>
+   }
+
+
+   /**
+    *
+    * A ExpressionBuilder.
+    *
+    * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+    * @version $Revision: 1.1 $
+    */
+   public static class Builder
+   {
+      /**
+       *
+       */
+      private Operator operator;
+
+      /**
+       *
+       */
+      private List&lt;VarSpec&gt; varSpecs;
+
+      /**
+       *
+       * Create a new ExpressionBuilder.
+       *
+       * @param operator
+       */
+      private Builder(Operator operator, VarSpec...varSpec)
+<span class="fc" id="L550">      {</span>
+<span class="fc" id="L551">         this.operator = operator;</span>
+<span class="fc" id="L552">         this.varSpecs = new ArrayList&lt;VarSpec&gt;();</span>
+<span class="fc bfc" id="L553" title="All 2 branches covered.">         for(VarSpec v : varSpec)</span>
+         {
+<span class="fc" id="L555">            varSpecs.add(v);</span>
+         }
+<span class="fc" id="L557">      }</span>
+
+      /**
+       *
+       *
+       * @param operator
+       * @return
+       */
+      static Builder create(Operator operator, VarSpec...varSpec)
+      {
+<span class="fc" id="L567">         return new Builder(operator, varSpec);</span>
+      }
+
+      
+
+      public Expression build() 
+      {
+<span class="fc" id="L574">         return new Expression(operator, varSpecs);</span>
+      }
+   }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
