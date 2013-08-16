@@ -13,7 +13,7 @@
 		<meta name="description" content="" />
 		<meta http-equiv="content-language" content="en" />
  
-		<link href="http://netdna.bootstrapcdn.com/bootswatch/2.2.2/superhero/bootstrap.min.css" rel="stylesheet" />
+		<link href="http://netdna.bootstrapcdn.com/bootswatch/2.2.2/cyborg/bootstrap.min.css" rel="stylesheet" />
 		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
 		<link href="http://damnhandy.github.io/Handy-URI-Templates//css/bootswatch.css" rel="stylesheet" />
 		<link href="http://damnhandy.github.io/Handy-URI-Templates//css/reflow-skin.css" rel="stylesheet" />
@@ -60,20 +60,18 @@
 					<a class="brand" href="http://damnhandy.github.io/Handy-URI-Templates/"><span class="color-highlight">Handy URI Templates</span></a>
 					<div class="nav-collapse">
 						<ul class="nav pull-right">
-							<li><a href="skin/index.html#Usage" title="Download">Download </a></li>
+							<li><a href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates" title="Download" class="externalLink">Download </a></li>
 							<li class="active"><a href="./" title="GitHub project">GitHub project </a></li>
 							<li class="dropdown active">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li class="active"><a href="" title="Basic Usage">Basic Usage </a></li>
 									<li><a href="uri_template_builder.html" title="URI Template Builder">URI Template Builder </a></li>
-									<li><a href="jacoco/index.html" title="JaCoCo Reports">JaCoCo Reports </a></li>
 								</ul>
 							</li>
 							<li class="dropdown active">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Contribute <b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="contribute.html" title="Contribute">Contribute </a></li>
 									<li><a href="issues/" title="Issues">Issues </a></li>
 									<li class="active"><a href="./" title="Fork on GitHub">Fork on GitHub </a></li>
 								</ul>
@@ -92,7 +90,7 @@
 		<div class="row" id="banner">
 			<div class="span12">
 				<div class="pull-left">
-					<a href="http://damnhandy.github.io/Handy-URI-Templates/" id="bannerLeft"><h1>$banner.name</h1></a>
+					<a href="http://github.com/damnhandy/Handy-URI-Templates/" id="bannerLeft"><h1>Handy URI Templates</h1></a>
 					<p class="lead">Handy URI Templates is a RFC6570 compliant URI template
 				processor.</p>
 				</div>
@@ -102,7 +100,7 @@
 		</div>
 		<div>
 			<ul class="breadcrumb">
-				<li><a href="./" title="Handy URI Templates">Handy URI Templates </a></li>
+				<li><a href="./" title="Main">Main </a></li>
 				<li class="divider">/</li>
 				<li>What is it?</li>
 			</ul>
@@ -116,9 +114,33 @@
 						<li class="divider-vertical"></li>
 						<li class="toplevel"><a href="#Whats_it_used_for" title="What’s it used for?">What’s it used for?</a></li>
 						<li class="divider-vertical"></li>
-						<li class="toplevel"><a href="#Basic_Usage" title="Basic Usage">Basic Usage</a></li>
+						<li class="dropdown">
+							<a href="#Usage" title="Usage" class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#">Usage <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<!-- Repeat the item, otherwise it is not clickable as the dropdown root -->
+								<li><a href="#Usage" title="Usage">Usage</a></li>
+								<li class="divider"></li>
+								<li><a href="#Project_Set_Up" title="Project Set Up">Project Set Up</a></li>
+								<li><a href="#Using_the_API" title="Using the API">Using the API</a></li>
+								<li><a href="#Using_with_HTTP_Clients" title="Using with HTTP Clients">Using with HTTP Clients</a></li>
+								<li><a href="#Supported_Value_Types" title="Supported Value Types">Supported Value Types</a></li>
+
+							</ul>
+						</li>
 						<li class="divider-vertical"></li>
-						<li class="toplevel"><a href="#Project_Set_Up" title="Project Set Up">Project Set Up</a></li>
+						<li class="dropdown">
+							<a href="#a_Unsupported_Value_Types" title="@ Unsupported Value Types" class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#">@ Unsupported Value Types <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<!-- Repeat the item, otherwise it is not clickable as the dropdown root -->
+								<li><a href="#a_Unsupported_Value_Types" title="@ Unsupported Value Types">@ Unsupported Value Types</a></li>
+								<li class="divider"></li>
+								<li><a href="#Composite_Values" title="Composite Values">Composite Values</a></li>
+								<li><a href="#POJOs_as_Composite_Values" title="POJOs as Composite Values">POJOs as Composite Values</a></li>
+
+							</ul>
+						</li>
+						<li class="divider-vertical"></li>
+						<li class="toplevel"><a href="#License" title="License">License</a></li>
 					</ul>
 				</div>
 			</div>
@@ -153,39 +175,148 @@
   <li><a class="externalLink" href="http://stateless.co/hal_specification.html">HAL - Hypertext Application Language</a></li> 
   <li><a class="externalLink" href="http:/opensearch.org">OpenSearch</a></li> 
  </ul> 
- <p>And others. URI Templates can even used by themselves as a convienent means of parameterizing URLs.</p> 
+ <p>URI Templates can even used by themselves as a convenient means of parameterizing URLs.</p> 
 </div> 
 <div class="section"> 
- <h2 id="Basic_Usage">Basic Usage</h2> 
- <p>Using the library is simple:</p> 
- <div class="source"> 
-  <pre>String uri =  UriTemplate.fromTemplate(&quot;/{foo:1}{/foo,thing*}{?query,test2}&quot;)
-                         .set(&quot;foo&quot;, &quot;houses&quot;)
-                         .set(&quot;query&quot;, &quot;Ask something&quot;)
-                         .set(&quot;test2&quot;, &quot;someting else&quot;)
-                         .set(&quot;thing&quot;, &quot;A test&quot;)
-                         .expand();
-</pre> 
- </div> 
- <p>This will result in the following URI:</p> 
- <div class="source"> 
-  <pre>&quot;/h/houses/A%20test?query=Ask%20something&amp;test2=someting%20else&quot;
-</pre> 
- </div> 
- <p>You can see more examples in some of the <a class="externalLink" href="https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/TestBasicUsage.java">unit tests</a> or you can read more in the <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html">JavaDocs</a>.</p> 
-</div> 
-<div class="section"> 
- <h2 id="Project_Set_Up">Project Set Up</h2> 
- <p>To use the library in your project, simply add the following to your projects pom:</p> 
- <div class="source"> 
-  <pre>&lt;dependency&gt;
+ <h2 id="Usage">Usage</h2> 
+ <div class="section"> 
+  <h3 id="Project_Set_Up">Project Set Up</h3> 
+  <p>To use the library in your project, simply add the following to your projects pom:</p> 
+  <div class="source"> 
+   <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.damnhandy&lt;/groupId&gt;
   &lt;artifactId&gt;handy-uri-templates&lt;/artifactId&gt;
   &lt;version&gt;2.0.0&lt;/version&gt;
 &lt;/dependency&gt;
 </pre> 
+  </div> 
+  <p>You can also download the artifact directly at <a class="externalLink" href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates">http://search.maven.org</a></p> 
  </div> 
- <p>You can also download the artifact directly at <a class="externalLink" href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates">http://search.maven.org</a></p> 
+ <div class="section"> 
+  <h3 id="Using_the_API">Using the API</h3> 
+  <p>Using the library is simple:</p> 
+  <div class="source"> 
+   <pre>String uri =  UriTemplate.fromTemplate(&quot;/{foo:1}{/foo,thing*}{?query,test2}&quot;)
+                         .set(&quot;foo&quot;, &quot;houses&quot;)
+                         .set(&quot;query&quot;, &quot;Ask something&quot;)
+                         .set(&quot;test2&quot;, &quot;something else&quot;)
+                         .set(&quot;thing&quot;, &quot;A test&quot;)
+                         .expand();
+</pre> 
+  </div> 
+  <p>This will result in the following URI:</p> 
+  <div class="source"> 
+   <pre>&quot;/h/houses/A%20test?query=Ask%20something&amp;test2=someting%20else&quot;
+</pre> 
+  </div> 
+  <p>You can see more examples in some of the <a class="externalLink" href="https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/TestBasicUsage.java">unit tests</a> or you can read more in the <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html">JavaDocs</a>.</p> 
+ </div> 
+ <div class="section"> 
+  <h3 id="Using_with_HTTP_Clients">Using with HTTP Clients</h3> 
+  <p>The API can be used with existing HTTP frameworks like the most excellent <a class="externalLink" href="https://github.com/sonatype/async-http-client">Async Http Client</a>. Using the <a class="externalLink" href="http://developer.github.com/v3/repos/commits/">GitHub API</a>, we can use the a <tt>UriTemplate</tt> to create a URI to look at this repository:</p> 
+  <div class="source"> 
+   <pre>RequestBuilder builder = new RequestBuilder(&quot;GET&quot;);
+Request request = builder.setUrl(
+    UriTemplate.fromTemplate(&quot;https://api.github.com/repos{/user,repo,function,id}&quot;)
+               .set(&quot;user&quot;, &quot;damnhandy&quot;)
+               .set(&quot;repo&quot;, &quot;Handy-URI-Templates&quot;)
+               .set(&quot;function&quot;,&quot;commits&quot;)
+               .expand()).build();
+</pre> 
+  </div> 
+  <p>When <tt>Request.getUrl()</tt> is called, it will return:</p> 
+  <div class="source"> 
+   <pre>&quot;https://api.github.com/repos/damnhandy/Handy-URI-Templates/commits&quot;
+</pre> 
+  </div> 
+  <p>Please have a look at the example <a class="externalLink" href="https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/examples/TestGitHubApis.java">test case</a> for more details.</p> 
+  <p>Usage with the <a class="externalLink" href="http://hc.apache.org/httpcomponents-client-ga/index.html">Apache HTTP Client</a> is just as similar.</p> 
+ </div> 
+ <div class="section"> 
+  <h3 id="Supported_Value_Types">Supported Value Types</h3> 
+  <p>While the <tt>set()</tt> method of the <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/UriTemplate.html">UriTemplate</a> accepts any Java object, the following Java types are preferred:</p> 
+  <ul> 
+   <li>primitive and Object types such as:</li> 
+   <li>int &amp; Integer</li> 
+   <li>double &amp; Double</li> 
+   <li>char &amp; Character</li> 
+   <li>float &amp; Float</li> 
+   <li>double &amp; Double</li> 
+   <li>short &amp; Short</li> 
+   <li>long &amp; Long</li> 
+   <li>Arrays of the above types</li> 
+   <li>java.util.List&lt;Object&gt;</li> 
+   <li>java.util.Map&lt;String, Object%gt;</li> 
+   <li>java.util.Date. Dates will be formatted using the templates default formatter.</li> 
+   <li>Anything with a <tt>toString()</tt> method</li> 
+  </ul> 
+  <p>Values that are not strings are rendered into the URI by calling its <tt>toString()</tt> method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A <tt>char[]</tt> or <tt>Character[]</tt> array will be treated as String. A multi dimensional character array will be treated as a List of Strings.</p> 
+ </div> 
+</div> 
+<div class="section"> 
+ <h2 id="a_Unsupported_Value_Types">@ Unsupported Value Types</h2> 
+ <p>The template processor will not accept the following types of value combinations:</p> 
+ <ul> 
+  <li>with the exception of character arrays, multi dimensional arrays are not supported.</li> 
+  <li>Collections of Collections</li> 
+  <li>Maps that have values of type array, Collection, or Map.</li> 
+ </ul> 
+ <p>If you need such data structures in a URI, consider implementing your own <tt>VarExploder</tt> to handle it.</p> 
+ <div class="section"> 
+  <h3 id="Composite_Values">Composite Values</h3> 
+  <p>The URI Template spec supports <a class="externalLink" href="http://tools.ietf.org/html/rfc6570#section-2.4.2">composite values</a> where the variable may be a list of values of an associative array of (name, value) pairs. The template processor always treats lists as java.util.List and name/value pairs as a java.util.Map. Lists and Maps work with any supported type that is not anoth List, Map, or array.</p> 
+ </div> 
+ <div class="section"> 
+  <h3 id="POJOs_as_Composite_Values">POJOs as Composite Values</h3> 
+  <p>The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier “*”, a <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html">VarExploder</a> is invoked. The purpose of the <tt>VarExploder</tt> is to expose the object properties as name/value pairs.</p> 
+  <p>For most use cases, the <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html">DefaultVarExploder</a> should be sufficient. The <tt>DefaultVarExploder</tt> is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:</p> 
+  <div class="source"> 
+   <pre>/mapper{?address*}
+</pre> 
+  </div> 
+  <p>And this Java object for an address:</p> 
+  <div class="source"> 
+   <pre>Address address = new Address();
+address.setState(&quot;CA&quot;);
+address.setCity(&quot;Newport Beach&quot;);
+String result = UriTemplate.fromTemplate(&quot;/mapper{?address*}&quot;)
+                           .set(&quot;address&quot;, address)
+                           .expand();
+</pre> 
+  </div> 
+  <p>The expanded URI will be:</p> 
+  <div class="source"> 
+   <pre>/mapper?city=Newport%20Beach&amp;state=CA
+</pre> 
+  </div> 
+  <p>The <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html">DefaultVarExploder</a> breaks down the object properties as follows:</p> 
+  <ul> 
+   <li>All properties that contain a non-null return value will be included</li> 
+   <li>Getters or fields annotated with <tt>@UriTransient</tt> will be excluded</li> 
+   <li>By default, the property name is used as the label in the URI. This can be overridden by placing the <tt>@VarName</tt> annotation on the field or getter method and specifying a name.</li> 
+   <li>Field level annotation take priority of getter annotations</li> 
+   <li>Property names are sorted in the order that they are found in the target class.</li> 
+  </ul> 
+  <p>Please refer to the JavaDoc for more details on how the <tt>DefaultVarExploder</tt> works.</p> 
+  <p>Should the <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html">DefaultVarExploder</a> not be suitable for your needs, custom <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html">VarExploder</a> implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:</p> 
+  <div class="source"> 
+   <pre>UriTemplate.fromTemplate(&quot;/mapper{?address*}&quot;)
+           .set(&quot;address&quot;, new MyCustomVarExploder(address))
+           .expand();
+</pre> 
+  </div> 
+  <p>Note: All <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html">VarExploder</a> implementations are ONLY invoked when the explode modifier “*” is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.</p> 
+ </div> 
+</div> 
+<div class="section"> 
+ <h2 id="License">License</h2> 
+ <p>Copyright 2011-2013 Ryan J. McDonough</p> 
+ <p>Licensed under the Apache License, Version 2.0 (the “License”); you may not use this file except in compliance with the License. You may obtain a copy of the License at</p> 
+ <div class="source"> 
+  <pre>   http://www.apache.org/licenses/LICENSE-2.0
+</pre> 
+ </div> 
+ <p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an “AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p> 
 </div>
 			</div>
 		</div>
@@ -206,7 +337,7 @@
 							<a href="#" title="Home">Home </a>
 						</li>
 						<li class="active">
-							<a href="#" title="GitHub project">GitHub project </a>
+							<a href="#" title="GitHub Project">GitHub Project </a>
 						</li>
 						<li>
 							<a href="http://damnhandy.github.io/Handy-URI-Templates/" title="Blog" class="externalLink">Blog </a>
@@ -227,9 +358,6 @@
 						</li>
 						<li class="nav-header">Contribute</li>
 						<li>
-							<a href="contribute.html" title="Contribute">Contribute </a>
-						</li>
-						<li>
 							<a href="issues/" title="Issues">Issues </a>
 						</li>
 						<li class="active">
@@ -245,9 +373,6 @@
 						</li>
 						<li>
 							<a href="uri_template_builder.html" title="URI Template Builder">URI Template Builder </a>
-						</li>
-						<li>
-							<a href="jacoco/index.html" title="JaCoCo Reports">JaCoCo Reports </a>
 						</li>
 					</ul>
 				</div>
