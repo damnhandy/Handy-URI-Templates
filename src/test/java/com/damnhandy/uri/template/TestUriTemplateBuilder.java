@@ -15,15 +15,15 @@
  */
 package com.damnhandy.uri.template;
 
-import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static com.damnhandy.uri.template.UriTemplateBuilder.var;
 
 /**
  * A TestUriTemplateBuilder.
