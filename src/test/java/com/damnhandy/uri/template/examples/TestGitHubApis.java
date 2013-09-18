@@ -76,7 +76,7 @@ public class TestGitHubApis extends AbstractExampleTest
       }
       catch (UnknownHostException e)
       {
-           Assume.assumeFalse(false);
+           Assume.assumeFalse(true);
       }
 
 
