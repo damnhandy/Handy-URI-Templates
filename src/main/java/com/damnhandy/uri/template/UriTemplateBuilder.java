@@ -15,8 +15,23 @@ import com.damnhandy.uri.template.impl.UriTemplateParser;
 import com.damnhandy.uri.template.impl.VarSpec;
 
 /**
- * 
- * A UriTemplateBuilder.
+ * <p>
+ * A utility class used for programatically generating a {@link UriTemplate}.
+ * The class can be used as follows:
+ * </p>
+ * <pre>
+ * UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+ *                                   .literal("/foo")
+ *                                   .path(var("thing1"), var("explodedThing", true))
+ *                                   .fragment(var("prefix", 2))
+ *                                   .build();
+ * </pre>
+ * <p>
+ * This code will return a {@link UriTemplate} with the following value:
+ * </p>
+ * <pre>
+ * http://example.com/foo{/thing1,explodedThing*}{#prefix:2}
+ * </pre>
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -127,6 +142,11 @@ public final class UriTemplateBuilder
       return this;
    }
 
+    /**
+     *
+     * @param varSpec
+     * @return
+     */
    private static VarSpec[] toVarSpec(String...varSpec)
    {
       VarSpec[] vars = new VarSpec[varSpec.length];
@@ -138,7 +158,7 @@ public final class UriTemplateBuilder
    }
 
     /**
-     * Appends a template expression using the no operator. The following
+     * Appends a template expression using no operator. The following
      * code:
      * <pre>
      * UriTemplate template =
@@ -159,7 +179,26 @@ public final class UriTemplateBuilder
       return this;
    }
 
-
+    /**
+     * Appends a template expression using no operator but with an optional
+     * modifier. The following code:
+     * <pre>
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .simple(var("foo",true))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{foo*}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder simple(VarSpec...var)
    {
       addComponent(Expression.simple(var).build());
@@ -188,17 +227,21 @@ public final class UriTemplateBuilder
    }
 
    /**
-    * Appends a template expression using the reserved operator (+). The 
-    * following code:
+    * Appends a template expression using the reserved operator (+) along
+    * with an optional modifier. The following code:
     * <pre>
-    * UriTemplate template = 
+    * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+    *
+    * ...
+    *
+    * UriTemplate template =
     *        UriTemplate.buildFromTemplate("http://example.com/")
-    *                   .reserved("foo")
+    *                   .reserved(var("foo",1))
     *                   .build();
     * </pre>
     * Will generate the following URI Template string:
     * <pre>
-    * http://example.com/{+foo}
+    * http://example.com/{+foo:1}
     * </pre>
     * @param var
     * @return
@@ -234,9 +277,13 @@ public final class UriTemplateBuilder
    }
 
    /**
-    * Appends a template expression using the fragment operator (#). The 
-    * following code:
+    * Appends a template expression using the fragment operator (#) with a
+    * modifier. The following code:
     * <pre>
+    * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+    *
+    * ...
+    *
     * UriTemplate template = 
     *        UriTemplate.buildFromTemplate("http://example.com/")
     *                   .fragement(var("foo", 1))
@@ -261,7 +308,11 @@ public final class UriTemplateBuilder
       return this;
    }
 
-   
+    /**
+     * Scans the components for an expression with the specified operator.
+     * @param op
+     * @return
+     */
    private boolean hasExpressionWithOperator(Operator op)
    {
       for(UriTemplateComponent c : components)
@@ -299,6 +350,22 @@ public final class UriTemplateBuilder
       return this;
    }
 
+    /**
+     * Appends a template expression using the label (.) operator and modifier.
+     * The following code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .label(var("foo", true))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{.foo*}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder label(VarSpec...var)
    {
       addComponent(Expression.label(var).build());
@@ -315,7 +382,7 @@ public final class UriTemplateBuilder
      * </pre>
      * Will generate the following URI Template string:
      * <pre>
-     * http://example.com/{foo}
+     * http://example.com/{;foo}
      * </pre>
      * @param var
      * @return
@@ -325,7 +392,22 @@ public final class UriTemplateBuilder
       matrix(toVarSpec(var));
       return this;
    }
-
+    /**
+     * Appends a template expression using the matrix (;) operator and modifier.
+     * The following code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .matrix(var("foo", true))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{;foo*}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder matrix(VarSpec...var)
    {
       addComponent(Expression.matrix(var).build());
@@ -353,13 +435,23 @@ public final class UriTemplateBuilder
       path(toVarSpec(var));
       return this;
    }
-   
-   /**
-    *
-    * 
-    * @param var
-    * @return
-    */
+
+    /**
+     * Appends a template expression using the path (/) operator and modifier.
+     * The following code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com")
+     *                   .path(var("foo", 1))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com{/foo:1}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder path(VarSpec...var)
    {
       addComponent(Expression.path(var).build());
@@ -388,6 +480,27 @@ public final class UriTemplateBuilder
       return this;
    }
 
+    /**
+     * Appends a template expression using the query (?) operator and
+     * and optional modifier. The following
+     * code:
+     * <pre>
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .query(var("foo",1))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{?foo:1}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder query(VarSpec...var)
    {
       addComponent(Expression.query(var).build());
@@ -397,7 +510,9 @@ public final class UriTemplateBuilder
    
 
    /**
-    * FIXME Comment this
+    * <p>
+    * Generates a {@link UriTemplate} instance from the builder.
+    * </p>
     *
     * @return
     * @since 2.0
