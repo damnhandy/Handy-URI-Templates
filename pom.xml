@@ -15,7 +15,7 @@
 
 	<properties>
 		<http.client>4.1.1</http.client>
-		<jackson.version>[2.2.0,)</jackson.version>
+		<jackson.version>2.2.2</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -139,7 +139,6 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
-					
 				</executions>
 			</plugin>
 			<plugin>
@@ -175,7 +174,6 @@
 				<version>2.4.0</version>
 				<extensions>true</extensions>
 				<configuration>
-					<encoding>${project.build.sourceEncoding}</encoding>
 					<archive>
 						<forced>true</forced>
 					</archive>
