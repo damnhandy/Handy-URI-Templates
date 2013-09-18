@@ -97,7 +97,7 @@ public class TestUriTemplateBuilder
                                         .path("date")
                                         .build();
       
-      print(template);
+      //print(template);
       template.set("date", date);
       
       Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());
@@ -133,8 +133,13 @@ public class TestUriTemplateBuilder
                                         .fragment(VAR_NAME)
                                         .build();
    }
-   
-   
+
+    @Test
+    public void testSimpleExpression() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).simple(VAR_NAME).build();
+        Assert.assertEquals("http://example.com/{foo}", template.getTemplate());
+    }
    
    @Test
    public void testReservedExpression() throws Exception
