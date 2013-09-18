@@ -15,16 +15,16 @@
  */
 package com.damnhandy.uri.template.examples;
 
-import java.net.InetAddress;
-
+import com.damnhandy.uri.template.UriTemplate;
+import com.ning.http.client.Request;
+import com.ning.http.client.RequestBuilder;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.damnhandy.uri.template.UriTemplate;
-import com.ning.http.client.Request;
-import com.ning.http.client.RequestBuilder;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -47,7 +47,14 @@ public class TestTwitterSearchApi extends AbstractExampleTest
    @BeforeClass
    public static void setUp() throws Exception
    {
-      Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(4000));
+       try {
+           Assume.assumeTrue(InetAddress.getByName("search.twitter.com").isReachable(1000));
+       }
+       catch (UnknownHostException e)
+       {
+           Assume.assumeFalse(true);
+       }
+
    }
    /**
     *

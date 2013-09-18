@@ -15,17 +15,17 @@
  */
 package com.damnhandy.uri.template.examples;
 
-import java.net.InetAddress;
-
+import com.damnhandy.uri.template.UriTemplate;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.Request;
+import com.ning.http.client.RequestBuilder;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.damnhandy.uri.template.UriTemplate;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Request;
-import com.ning.http.client.RequestBuilder;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * <p>
@@ -51,6 +51,7 @@ import com.ning.http.client.RequestBuilder;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
+
 public class TestGitHubApis extends AbstractExampleTest
 {
 
@@ -67,9 +68,17 @@ public class TestGitHubApis extends AbstractExampleTest
    @BeforeClass
    public static void setUp() throws Exception
    {
-      Assume.assumeTrue(InetAddress.getByName("api.github.com").isReachable(1000));
-      Assume.assumeNotNull(System.getProperty("github.username"),
-                           System.getProperty("github.password"));
+
+      try {
+          Assume.assumeTrue(InetAddress.getByName("api.github.com").isReachable(100));
+          Assume.assumeNotNull(System.getProperty("github.username"),
+                  System.getProperty("github.password"));
+      }
+      catch (UnknownHostException e)
+      {
+           Assume.assumeFalse(false);
+      }
+
 
    }
 
