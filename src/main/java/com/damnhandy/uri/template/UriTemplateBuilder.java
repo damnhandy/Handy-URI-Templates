@@ -137,17 +137,28 @@ public final class UriTemplateBuilder
       return vars;
    }
 
-   /**
-    * FIXME Comment this
-    * 
-    * @param var
-    * @return
-    */
+    /**
+     * Appends a template expression using the no operator. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .simple("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{foo}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder simple(String...var)
    {
       simple(toVarSpec(var));
       return this;
    }
+
 
    public UriTemplateBuilder simple(VarSpec...var)
    {
@@ -266,12 +277,22 @@ public final class UriTemplateBuilder
       }
       return false;
    }
-   /**
-    * FIXME Comment this
-    * 
-    * @param var
-    * @return
-    */
+    /**
+     * Appends a template expression using the label (.) operator. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .label("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{.foo}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder label(String...var)
    {
       label(toVarSpec(var));
@@ -283,12 +304,22 @@ public final class UriTemplateBuilder
       addComponent(Expression.label(var).build());
       return this;
    }
-   /**
-    * FIXME Comment this
-    * 
-    * @param var
-    * @return
-    */
+    /**
+     * Appends a template expression using the matrix (;) operator. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .matrix("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{foo}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder matrix(String...var)
    {
       matrix(toVarSpec(var));
@@ -300,13 +331,23 @@ public final class UriTemplateBuilder
       addComponent(Expression.matrix(var).build());
       return this;
    }
-   
-   /**
-    * FIXME Comment this
-    * 
-    * @param var
-    * @return
-    */
+
+    /**
+     * Appends a template expression using the path (/) operator. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com")
+     *                   .path("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com{/foo}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder path(String...var)
    {
       path(toVarSpec(var));
@@ -314,7 +355,7 @@ public final class UriTemplateBuilder
    }
    
    /**
-    * FIXME Comment this
+    *
     * 
     * @param var
     * @return
@@ -324,8 +365,23 @@ public final class UriTemplateBuilder
       addComponent(Expression.path(var).build());
       return this;
    }
-   
-   
+
+    /**
+     * Appends a template expression using the query (?) operator. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .query("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{?foo}
+     * </pre>
+     * @param var
+     * @return
+     */
    public UriTemplateBuilder query(String...var)
    {
       query(toVarSpec(var));

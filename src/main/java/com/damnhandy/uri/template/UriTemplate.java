@@ -245,7 +245,8 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * FIXME Comment this
+    * Returns an array of {@link Expression} instances found in this
+    * template.
     *
     * @return
     */
@@ -255,7 +256,8 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * Returns the list of variable names in this template.
+    * Returns the list of unique variable names, from all {@link Expression}'s, in this template.
+    *
     * 
     * @return
     */
@@ -288,7 +290,7 @@ public class UriTemplate implements Serializable
    }
 
    /** 
-    * 
+    *  Initializes the collection of expressions in the template.
     */
    private void initExpressions()
    {
@@ -326,7 +328,7 @@ public class UriTemplate implements Serializable
    }
    
    /**
-    * FIXME Comment this
+    * Returns the
     * 
     * @return
     */
@@ -454,7 +456,7 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * FIXME Comment this
+    * Returns true if the {@link UriTemplate} contains the variableName.
     *
     * @param variableName
     * @return
@@ -835,7 +837,7 @@ public class UriTemplate implements Serializable
    private String expandStringValue(Operator operator, VarSpec varSpec, String variable, VarSpec.VarFormat format)
          throws VariableExpansionException
    {
-      String expanded = "";
+      String expanded;
 
       if (varSpec.getModifier() == Modifier.PREFIX)
       {
@@ -888,7 +890,7 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * FIXME Comment this
+    *
     *
     * @param joiner
     * @param parts
@@ -946,12 +948,12 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * FIXME Comment this
+    *
     * 
     * @return
     */
-   public String getRegexString()
-   {
-      return null;
-   }
+//   public String getRegexString()
+//   {
+//      return null;
+//   }
 }
