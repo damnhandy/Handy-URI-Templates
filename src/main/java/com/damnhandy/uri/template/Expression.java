@@ -290,7 +290,7 @@ public class Expression extends UriTemplateComponent
    }
 
    /**
-    * FIXME Comment this
+    *
     *
     * @param rawExpression
     * @throws MalformedUriTemplateException
@@ -523,7 +523,7 @@ public class Expression extends UriTemplateComponent
 
    /**
     *
-    * A ExpressionBuilder.
+    * Builder class for creating an {@link Expression}.
     *
     * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
     * @version $Revision: 1.1 $

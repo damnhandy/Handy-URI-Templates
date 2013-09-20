@@ -22,7 +22,7 @@
  * </pre>
  * 
  * <p>
- * Both options will yield the same results
+ * Both options will yield the same results, but the module registration is far more convenient.
  * </p>
  * 
  * 

@@ -15,9 +15,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
 /**
- * A UriTemplateDeserializer.
+ * A {@link JsonDeserializer} that deserializes a string into a {@link UriTemplate}.
  * 
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
+ * @see JsonDeserializer
+ * @since 2.0
  * @version $Revision: 1.1 $
  */
 public class UriTemplateDeserializer extends JsonDeserializer<UriTemplate>
