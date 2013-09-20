@@ -1,5 +1,5 @@
 -classpath
-'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/classes:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.0-SNAPSHOT/jackson-databind-2.3.0-SNAPSHOT.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.3.0-SNAPSHOT/jackson-core-2.3.0-SNAPSHOT.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.3.0-SNAPSHOT/jackson-annotations-2.3.0-SNAPSHOT.jar'
+'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/classes:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.2.2/jackson-databind-2.2.2.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.2.2/jackson-core-2.2.2.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.2.2/jackson-annotations-2.2.2.jar'
 -encoding
 'UTF-8'
 -protected
@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'Handy URI Templates 2.0.0.BETA1 API'
+'Handy URI Templates 2.0.0 API'
 -linkoffline
 'http://download.oracle.com/javase/6/docs/api' '/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'Handy URI Templates 2.0.0.BETA1 API'
+'Handy URI Templates 2.0.0 API'

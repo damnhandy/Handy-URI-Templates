@@ -15,12 +15,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
 /**
- * A UriTemplateDeserializer.
+ * A {@link JsonDeserializer} that deserializes a string into a {@link UriTemplate}.
  * 
  * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @see JsonDeserializer
+ * @since 2.0
  * @version $Revision: 1.1 $
  */
-<span class="fc" id="L23">public class UriTemplateDeserializer extends JsonDeserializer&lt;UriTemplate&gt;</span>
+<span class="fc" id="L25">public class UriTemplateDeserializer extends JsonDeserializer&lt;UriTemplate&gt;</span>
 {
 
    @Override
@@ -28,14 +30,14 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
          JsonProcessingException
    {
       
-<span class="fc" id="L31">      String value = parser.getText();</span>
+<span class="fc" id="L33">      String value = parser.getText();</span>
       try
       {
-<span class="fc" id="L34">         return UriTemplate.fromTemplate(value);</span>
+<span class="fc" id="L36">         return UriTemplate.fromTemplate(value);</span>
       }
-<span class="fc" id="L36">      catch (MalformedUriTemplateException e)</span>
+<span class="fc" id="L38">      catch (MalformedUriTemplateException e)</span>
       {
-<span class="fc" id="L38">         throw new JsonParseException(&quot;Error parsing the URI Template&quot;, parser.getCurrentLocation(), e);</span>
+<span class="fc" id="L40">         throw new JsonParseException(&quot;Error parsing the URI Template&quot;, parser.getCurrentLocation(), e);</span>
       }
    }
 

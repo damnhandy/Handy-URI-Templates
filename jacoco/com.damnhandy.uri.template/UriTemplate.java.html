@@ -245,35 +245,37 @@ public class UriTemplate implements Serializable
    }
 
    /**
-    * FIXME Comment this
+    * Returns an array of {@link Expression} instances found in this
+    * template.
     *
     * @return
     */
    public Expression[] getExpressions()
    {
-<span class="nc" id="L254">      return expressions;</span>
+<span class="nc" id="L255">      return expressions;</span>
    }
 
    /**
-    * Returns the list of variable names in this template.
+    * Returns the list of unique variable names, from all {@link Expression}'s, in this template.
+    *
     * 
     * @return
     */
    public String[] getVariables()
    {
-<span class="nc bnc" id="L264" title="All 2 branches missed.">      if(variables == null)</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">      if(variables == null)</span>
       {
-<span class="nc" id="L266">         Set&lt;String&gt; vars = new LinkedHashSet&lt;&gt;();</span>
-<span class="nc bnc" id="L267" title="All 2 branches missed.">         for(Expression e : getExpressions())</span>
+<span class="nc" id="L268">         Set&lt;String&gt; vars = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">         for(Expression e : getExpressions())</span>
          {
-<span class="nc bnc" id="L269" title="All 2 branches missed.">            for(VarSpec v : e.getVarSpecs())</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">            for(VarSpec v : e.getVarSpecs())</span>
             {
-<span class="nc" id="L271">               vars.add(v.getVariableName());</span>
-<span class="nc" id="L272">            }</span>
+<span class="nc" id="L273">               vars.add(v.getVariableName());</span>
+<span class="nc" id="L274">            }</span>
          }
-<span class="nc" id="L274">         variables = vars.toArray(new String[vars.size()]);</span>
+<span class="nc" id="L276">         variables = vars.toArray(new String[vars.size()]);</span>
       }
-<span class="nc" id="L276">      return variables;</span>
+<span class="nc" id="L278">      return variables;</span>
    }
    /**
     * Parse the URI template string into the template model.
@@ -281,62 +283,62 @@ public class UriTemplate implements Serializable
     */
    protected void parseTemplateString() throws MalformedUriTemplateException
    {
-<span class="fc" id="L284">      final String templateString = getTemplate();</span>
-<span class="fc" id="L285">      final UriTemplateParser scanner = new UriTemplateParser();</span>
-<span class="fc" id="L286">      this.components = scanner.scan(templateString);</span>
-<span class="fc" id="L287">      initExpressions();</span>
-<span class="fc" id="L288">   }</span>
+<span class="fc" id="L286">      final String templateString = getTemplate();</span>
+<span class="fc" id="L287">      final UriTemplateParser scanner = new UriTemplateParser();</span>
+<span class="fc" id="L288">      this.components = scanner.scan(templateString);</span>
+<span class="fc" id="L289">      initExpressions();</span>
+<span class="fc" id="L290">   }</span>
 
    /** 
-    * 
+    *  Initializes the collection of expressions in the template.
     */
    private void initExpressions()
    {
-<span class="fc" id="L295">      final List&lt;Expression&gt; expressionList = new LinkedList&lt;Expression&gt;();</span>
-<span class="fc bfc" id="L296" title="All 2 branches covered.">      for (UriTemplateComponent c : components)</span>
+<span class="fc" id="L297">      final List&lt;Expression&gt; expressionList = new LinkedList&lt;Expression&gt;();</span>
+<span class="fc bfc" id="L298" title="All 2 branches covered.">      for (UriTemplateComponent c : components)</span>
       {
-<span class="fc bfc" id="L298" title="All 2 branches covered.">         if (c instanceof Expression)</span>
+<span class="fc bfc" id="L300" title="All 2 branches covered.">         if (c instanceof Expression)</span>
          {
-<span class="fc" id="L300">            expressionList.add((Expression) c);</span>
+<span class="fc" id="L302">            expressionList.add((Expression) c);</span>
          }
 
-<span class="fc" id="L303">      }</span>
-<span class="fc" id="L304">      expressions = expressionList.toArray(new Expression[expressionList.size()]);</span>
-<span class="fc" id="L305">   }</span>
+<span class="fc" id="L305">      }</span>
+<span class="fc" id="L306">      expressions = expressionList.toArray(new Expression[expressionList.size()]);</span>
+<span class="fc" id="L307">   }</span>
    
    
    private void buildTemplateStringFromComponents()
    {
-<span class="fc" id="L310">      StringBuilder b = new StringBuilder();</span>
-<span class="fc bfc" id="L311" title="All 2 branches covered.">      for(UriTemplateComponent c : components)</span>
+<span class="fc" id="L312">      StringBuilder b = new StringBuilder();</span>
+<span class="fc bfc" id="L313" title="All 2 branches covered.">      for(UriTemplateComponent c : components)</span>
       {
-<span class="fc" id="L313">         b.append(c.getValue());</span>
-<span class="fc" id="L314">      }</span>
-<span class="fc" id="L315">      this.template = b.toString();</span>
-<span class="fc" id="L316">   }</span>
+<span class="fc" id="L315">         b.append(c.getValue());</span>
+<span class="fc" id="L316">      }</span>
+<span class="fc" id="L317">      this.template = b.toString();</span>
+<span class="fc" id="L318">   }</span>
    
    private void buildReverssMatchRegexFromComponents() 
    {
-<span class="nc" id="L320">      StringBuilder b = new StringBuilder();</span>
-<span class="nc bnc" id="L321" title="All 2 branches missed.">      for(UriTemplateComponent c : components)</span>
+<span class="nc" id="L322">      StringBuilder b = new StringBuilder();</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">      for(UriTemplateComponent c : components)</span>
       {
-<span class="nc" id="L323">         b.append(&quot;(&quot;).append(c.getMatchPattern()).append(&quot;)&quot;);</span>
-<span class="nc" id="L324">      }</span>
-<span class="nc" id="L325">      this.reverseMatchPattern = Pattern.compile(b.toString());</span>
-<span class="nc" id="L326">   }</span>
+<span class="nc" id="L325">         b.append(&quot;(&quot;).append(c.getMatchPattern()).append(&quot;)&quot;);</span>
+<span class="nc" id="L326">      }</span>
+<span class="nc" id="L327">      this.reverseMatchPattern = Pattern.compile(b.toString());</span>
+<span class="nc" id="L328">   }</span>
    
    /**
-    * FIXME Comment this
+    * Returns the
     * 
     * @return
     */
    protected Pattern getReverseMatchPattern() 
    {
-<span class="nc bnc" id="L335" title="All 2 branches missed.">      if(this.reverseMatchPattern == null)</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">      if(this.reverseMatchPattern == null)</span>
       {
-<span class="nc" id="L337">         buildReverssMatchRegexFromComponents();</span>
+<span class="nc" id="L339">         buildReverssMatchRegexFromComponents();</span>
       }
-<span class="nc" id="L339">      return this.reverseMatchPattern;</span>
+<span class="nc" id="L341">      return this.reverseMatchPattern;</span>
    }
    /**
     * Expands the given template string using the variable replacements
@@ -352,9 +354,9 @@ public class UriTemplate implements Serializable
    public static String expand(final String templateString, Map&lt;String, Object&gt; values)
          throws MalformedUriTemplateException, VariableExpansionException
    {
-<span class="fc" id="L355">      UriTemplate t = new UriTemplate(templateString);</span>
-<span class="fc" id="L356">      t.set(values);</span>
-<span class="fc" id="L357">      return t.expand();</span>
+<span class="fc" id="L357">      UriTemplate t = new UriTemplate(templateString);</span>
+<span class="fc" id="L358">      t.set(values);</span>
+<span class="fc" id="L359">      return t.expand();</span>
    }
 
    
@@ -370,8 +372,8 @@ public class UriTemplate implements Serializable
     */
    public String expand(Map&lt;String, Object&gt; vars) throws VariableExpansionException
    {
-<span class="fc" id="L373">      this.values = vars;</span>
-<span class="fc" id="L374">      return expand();</span>
+<span class="fc" id="L375">      this.values = vars;</span>
+<span class="fc" id="L376">      return expand();</span>
    }
 
 
@@ -386,13 +388,13 @@ public class UriTemplate implements Serializable
     */
    public String expand() throws VariableExpansionException
    {
-<span class="fc" id="L389">      String template = getTemplate();</span>
-<span class="fc bfc" id="L390" title="All 2 branches covered.">      for (Expression expression : expressions)</span>
+<span class="fc" id="L391">      String template = getTemplate();</span>
+<span class="fc bfc" id="L392" title="All 2 branches covered.">      for (Expression expression : expressions)</span>
       {
-<span class="fc" id="L392">         final String replacement = expressionReplacementString(expression);</span>
-<span class="fc" id="L393">         template = template.replaceAll(expression.getReplacementPattern(), replacement);</span>
+<span class="fc" id="L394">         final String replacement = expressionReplacementString(expression);</span>
+<span class="fc" id="L395">         template = template.replaceAll(expression.getReplacementPattern(), replacement);</span>
       }
-<span class="fc" id="L395">      return template;</span>
+<span class="fc" id="L397">      return template;</span>
    }
    /**
     * Returns the original URI template expression.
@@ -402,7 +404,7 @@ public class UriTemplate implements Serializable
     */
    public String getTemplate()
    {
-<span class="fc" id="L405">      return template;</span>
+<span class="fc" id="L407">      return template;</span>
    }
 
    /**
@@ -413,7 +415,7 @@ public class UriTemplate implements Serializable
     */
    public Map&lt;String, Object&gt; getValues()
    {
-<span class="fc" id="L416">      return this.values;</span>
+<span class="fc" id="L418">      return this.values;</span>
    }
 
    /**
@@ -424,7 +426,7 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate withDefaultDateFormat(String dateFormatString)
    {
-<span class="fc" id="L427">      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));</span>
+<span class="fc" id="L429">      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));</span>
    }
 
    /**
@@ -435,8 +437,8 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate withDefaultDateFormat(DateFormat dateFormat)
    {
-<span class="fc" id="L438">      defaultDateFormat = dateFormat;</span>
-<span class="fc" id="L439">      return this;</span>
+<span class="fc" id="L440">      defaultDateFormat = dateFormat;</span>
+<span class="fc" id="L441">      return this;</span>
    }
 
    /**
@@ -449,19 +451,19 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate set(String variableName, Object value)
    {
-<span class="fc" id="L452">      values.put(variableName, value);</span>
-<span class="fc" id="L453">      return this;</span>
+<span class="fc" id="L454">      values.put(variableName, value);</span>
+<span class="fc" id="L455">      return this;</span>
    }
 
    /**
-    * FIXME Comment this
+    * Returns true if the {@link UriTemplate} contains the variableName.
     *
     * @param variableName
     * @return
     */
    public boolean hasVariable(String variableName)
    {
-<span class="nc" id="L464">      return values.containsKey(variableName);</span>
+<span class="nc" id="L466">      return values.containsKey(variableName);</span>
    }
 
    /**
@@ -472,7 +474,7 @@ public class UriTemplate implements Serializable
     */
    public Object get(String variableName)
    {
-<span class="nc" id="L475">      return values.get(variableName);</span>
+<span class="nc" id="L477">      return values.get(variableName);</span>
    }
 
    /**
@@ -487,8 +489,8 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate set(String variableName, Date value)
    {
-<span class="fc" id="L490">      values.put(variableName, value);</span>
-<span class="fc" id="L491">      return this;</span>
+<span class="fc" id="L492">      values.put(variableName, value);</span>
+<span class="fc" id="L493">      return this;</span>
    }
 
    /**
@@ -501,14 +503,14 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate set(Map&lt;String, Object&gt; values)
    {
-<span class="pc bpc" id="L504" title="1 of 2 branches missed.">      if (values != null)</span>
+<span class="pc bpc" id="L506" title="1 of 2 branches missed.">      if (values != null)</span>
       {
-<span class="fc bfc" id="L506" title="All 2 branches covered.">         if (!values.isEmpty())</span>
+<span class="fc bfc" id="L508" title="All 2 branches covered.">         if (!values.isEmpty())</span>
          {
-<span class="fc" id="L508">            this.values.putAll(values);</span>
+<span class="fc" id="L510">            this.values.putAll(values);</span>
          }
       }
-<span class="fc" id="L511">      return this;</span>
+<span class="fc" id="L513">      return this;</span>
    }
 
    /**
@@ -519,7 +521,7 @@ public class UriTemplate implements Serializable
     */
    public static boolean containsOperator(String op)
    {
-<span class="fc" id="L522">      return OPERATOR_BITSET.get(op.toCharArray()[0]);</span>
+<span class="fc" id="L524">      return OPERATOR_BITSET.get(op.toCharArray()[0]);</span>
    }
 
 
@@ -534,21 +536,21 @@ public class UriTemplate implements Serializable
     */
    private String expressionReplacementString(Expression expression) throws VariableExpansionException
    {
-<span class="fc" id="L537">      final Operator operator = expression.getOperator();</span>
-<span class="fc" id="L538">      final List&lt;String&gt; replacements = expandVariables(expression);</span>
-<span class="fc" id="L539">      String result = joinParts(operator.getSeparator(), replacements);</span>
-<span class="fc bfc" id="L540" title="All 2 branches covered.">      if (result != null)</span>
+<span class="fc" id="L539">      final Operator operator = expression.getOperator();</span>
+<span class="fc" id="L540">      final List&lt;String&gt; replacements = expandVariables(expression);</span>
+<span class="fc" id="L541">      String result = joinParts(operator.getSeparator(), replacements);</span>
+<span class="fc bfc" id="L542" title="All 2 branches covered.">      if (result != null)</span>
       {
-<span class="fc bfc" id="L542" title="All 2 branches covered.">         if (operator != Operator.RESERVED)</span>
+<span class="fc bfc" id="L544" title="All 2 branches covered.">         if (operator != Operator.RESERVED)</span>
          {
-<span class="fc" id="L544">            result = operator.getPrefix() + result;</span>
+<span class="fc" id="L546">            result = operator.getPrefix() + result;</span>
          }
       }
       else
       {
-<span class="fc" id="L549">         result = &quot;&quot;;</span>
+<span class="fc" id="L551">         result = &quot;&quot;;</span>
       }
-<span class="fc" id="L551">      return result;</span>
+<span class="fc" id="L553">      return result;</span>
    }
 
    /**
@@ -563,108 +565,108 @@ public class UriTemplate implements Serializable
    {&quot;rawtypes&quot;, &quot;unchecked&quot;})
    private List&lt;String&gt; expandVariables(Expression expression) throws VariableExpansionException
    {
-<span class="fc" id="L566">      final List&lt;String&gt; replacements = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L567">      final Operator operator = expression.getOperator();</span>
-<span class="fc bfc" id="L568" title="All 2 branches covered.">      for (VarSpec varSpec : expression.getVarSpecs())</span>
+<span class="fc" id="L568">      final List&lt;String&gt; replacements = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L569">      final Operator operator = expression.getOperator();</span>
+<span class="fc bfc" id="L570" title="All 2 branches covered.">      for (VarSpec varSpec : expression.getVarSpecs())</span>
       {
-<span class="fc bfc" id="L570" title="All 2 branches covered.">         if (values.containsKey(varSpec.getVariableName()))</span>
+<span class="fc bfc" id="L572" title="All 2 branches covered.">         if (values.containsKey(varSpec.getVariableName()))</span>
          {
-<span class="fc" id="L572">            Object value = values.get(varSpec.getVariableName());</span>
-<span class="fc" id="L573">            String expanded = null;</span>
+<span class="fc" id="L574">            Object value = values.get(varSpec.getVariableName());</span>
+<span class="fc" id="L575">            String expanded = null;</span>
 
-<span class="fc bfc" id="L575" title="All 2 branches covered.">            if (value != null)</span>
+<span class="fc bfc" id="L577" title="All 2 branches covered.">            if (value != null)</span>
             {
-<span class="fc bfc" id="L577" title="All 2 branches covered.">               if (value.getClass().isArray())</span>
+<span class="fc bfc" id="L579" title="All 2 branches covered.">               if (value.getClass().isArray())</span>
                {
-<span class="fc bfc" id="L579" title="All 2 branches covered.">                  if (value instanceof char[][])</span>
+<span class="fc bfc" id="L581" title="All 2 branches covered.">                  if (value instanceof char[][])</span>
                   {
-<span class="fc" id="L581">                     final char[][] chars = (char[][]) value;</span>
-<span class="fc" id="L582">                     final List&lt;String&gt; strings = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L583" title="All 2 branches covered.">                     for (char[] c : chars)</span>
+<span class="fc" id="L583">                     final char[][] chars = (char[][]) value;</span>
+<span class="fc" id="L584">                     final List&lt;String&gt; strings = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L585" title="All 2 branches covered.">                     for (char[] c : chars)</span>
                      {
-<span class="fc" id="L585">                        strings.add(String.valueOf(c));</span>
+<span class="fc" id="L587">                        strings.add(String.valueOf(c));</span>
                      }
-<span class="fc" id="L587">                     value = strings;</span>
-<span class="fc" id="L588">                  }</span>
-<span class="fc bfc" id="L589" title="All 2 branches covered.">                  else if (value instanceof char[])</span>
+<span class="fc" id="L589">                     value = strings;</span>
+<span class="fc" id="L590">                  }</span>
+<span class="fc bfc" id="L591" title="All 2 branches covered.">                  else if (value instanceof char[])</span>
                   {
-<span class="fc" id="L591">                     value = String.valueOf((char[]) value);</span>
+<span class="fc" id="L593">                     value = String.valueOf((char[]) value);</span>
                   }
                   else
                   {
-<span class="fc" id="L595">                     value = arrayToList(value);</span>
+<span class="fc" id="L597">                     value = arrayToList(value);</span>
                   }
 
                }
             }
-<span class="fc" id="L600">            final boolean explodable = isExplodable(value);</span>
-<span class="fc bfc" id="L601" title="All 4 branches covered.">            if (explodable &amp;&amp; varSpec.getModifier() == Modifier.PREFIX)</span>
+<span class="fc" id="L602">            final boolean explodable = isExplodable(value);</span>
+<span class="fc bfc" id="L603" title="All 4 branches covered.">            if (explodable &amp;&amp; varSpec.getModifier() == Modifier.PREFIX)</span>
             {
-<span class="fc" id="L603">               throw new VariableExpansionException(</span>
+<span class="fc" id="L605">               throw new VariableExpansionException(</span>
                      &quot;Prefix modifiers are not applicable to variables that have composite values.&quot;);
             }
 
-<span class="fc bfc" id="L607" title="All 2 branches covered.">            if (explodable)</span>
+<span class="fc bfc" id="L609" title="All 2 branches covered.">            if (explodable)</span>
             {
                final VarExploder exploder;
-<span class="fc bfc" id="L610" title="All 2 branches covered.">               if (value instanceof VarExploder)</span>
+<span class="fc bfc" id="L612" title="All 2 branches covered.">               if (value instanceof VarExploder)</span>
                {
-<span class="fc" id="L612">                  exploder = (VarExploder) value;</span>
+<span class="fc" id="L614">                  exploder = (VarExploder) value;</span>
                }
                else
                {
-<span class="fc" id="L616">                  exploder = VarExploderFactory.getExploder(value, varSpec);</span>
+<span class="fc" id="L618">                  exploder = VarExploderFactory.getExploder(value, varSpec);</span>
                }
-<span class="fc bfc" id="L618" title="All 2 branches covered.">               if (varSpec.getModifier() == Modifier.EXPLODE)</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">               if (varSpec.getModifier() == Modifier.EXPLODE)</span>
                {
-<span class="fc" id="L620">                  expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());</span>
+<span class="fc" id="L622">                  expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());</span>
                }
-<span class="pc bpc" id="L622" title="1 of 2 branches missed.">               else if (varSpec.getModifier() != Modifier.EXPLODE)</span>
+<span class="pc bpc" id="L624" title="1 of 2 branches missed.">               else if (varSpec.getModifier() != Modifier.EXPLODE)</span>
                {
-<span class="fc" id="L624">                  expanded = expandCollection(operator, varSpec, exploder.getValues());</span>
+<span class="fc" id="L626">                  expanded = expandCollection(operator, varSpec, exploder.getValues());</span>
                }
             }
 
             /*
              * Format the date if we have a java.util.Date
              */
-<span class="fc bfc" id="L631" title="All 2 branches covered.">            if (value instanceof Date)</span>
+<span class="fc bfc" id="L633" title="All 2 branches covered.">            if (value instanceof Date)</span>
             {
-<span class="fc" id="L633">               value = defaultDateFormat.format((Date) value);</span>
+<span class="fc" id="L635">               value = defaultDateFormat.format((Date) value);</span>
             }
             /*
              * The variable value contains a list of values
              */
-<span class="fc bfc" id="L638" title="All 2 branches covered.">            if (value instanceof Collection)</span>
+<span class="fc bfc" id="L640" title="All 2 branches covered.">            if (value instanceof Collection)</span>
             {
-<span class="fc" id="L640">               expanded = this.expandCollection(operator, varSpec, (Collection) value);</span>
+<span class="fc" id="L642">               expanded = this.expandCollection(operator, varSpec, (Collection) value);</span>
             }
             /*
              * The variable value contains a list of key-value pairs
              */
-<span class="fc bfc" id="L645" title="All 2 branches covered.">            else if (value instanceof Map)</span>
+<span class="fc bfc" id="L647" title="All 2 branches covered.">            else if (value instanceof Map)</span>
             {
-<span class="fc" id="L647">               expanded = expandMap(operator, varSpec, (Map) value);</span>
+<span class="fc" id="L649">               expanded = expandMap(operator, varSpec, (Map) value);</span>
             }
             /*
              * The variable value is null or has o value.
              */
-<span class="fc bfc" id="L652" title="All 2 branches covered.">            else if (value == null)</span>
+<span class="fc bfc" id="L654" title="All 2 branches covered.">            else if (value == null)</span>
             {
-<span class="fc" id="L654">               expanded = null;</span>
+<span class="fc" id="L656">               expanded = null;</span>
             }
-<span class="fc bfc" id="L656" title="All 2 branches covered.">            else if (expanded == null)</span>
+<span class="fc bfc" id="L658" title="All 2 branches covered.">            else if (expanded == null)</span>
             {
-<span class="fc" id="L658">               expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);</span>
+<span class="fc" id="L660">               expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);</span>
             }
-<span class="fc bfc" id="L660" title="All 2 branches covered.">            if (expanded != null)</span>
+<span class="fc bfc" id="L662" title="All 2 branches covered.">            if (expanded != null)</span>
             {
-<span class="fc" id="L662">               replacements.add(expanded);</span>
+<span class="fc" id="L664">               replacements.add(expanded);</span>
             }
 
          }
-<span class="fc" id="L666">      }</span>
-<span class="fc" id="L667">      return replacements;</span>
+<span class="fc" id="L668">      }</span>
+<span class="fc" id="L669">      return replacements;</span>
    }
 
    /**
@@ -675,19 +677,19 @@ public class UriTemplate implements Serializable
     */
    private boolean isExplodable(Object value)
    {
-<span class="fc bfc" id="L678" title="All 2 branches covered.">      if (value == null)</span>
+<span class="fc bfc" id="L680" title="All 2 branches covered.">      if (value == null)</span>
       {
-<span class="fc" id="L680">         return false;</span>
+<span class="fc" id="L682">         return false;</span>
       }
-<span class="pc bpc" id="L682" title="1 of 6 branches missed.">      if (value instanceof Collection || value instanceof Map || value.getClass().isArray())</span>
+<span class="pc bpc" id="L684" title="1 of 6 branches missed.">      if (value instanceof Collection || value instanceof Map || value.getClass().isArray())</span>
       {
-<span class="fc" id="L684">         return true;</span>
+<span class="fc" id="L686">         return true;</span>
       }
-<span class="fc bfc" id="L686" title="All 2 branches covered.">      if (!isSimpleType(value))</span>
+<span class="fc bfc" id="L688" title="All 2 branches covered.">      if (!isSimpleType(value))</span>
       {
-<span class="fc" id="L688">         return true;</span>
+<span class="fc" id="L690">         return true;</span>
       }
-<span class="fc" id="L690">      return false;</span>
+<span class="fc" id="L692">      return false;</span>
    }
 
    /**
@@ -706,13 +708,13 @@ public class UriTemplate implements Serializable
    private boolean isSimpleType(Object value)
    {
 
-<span class="pc bpc" id="L709" title="1 of 10 branches missed.">      if (value.getClass().isPrimitive() || value instanceof Number || value instanceof CharSequence</span>
+<span class="pc bpc" id="L711" title="1 of 10 branches missed.">      if (value.getClass().isPrimitive() || value instanceof Number || value instanceof CharSequence</span>
             || value instanceof Date || value instanceof Boolean)
       {
-<span class="fc" id="L712">         return true;</span>
+<span class="fc" id="L714">         return true;</span>
       }
 
-<span class="fc" id="L715">      return false;</span>
+<span class="fc" id="L717">      return false;</span>
    }
 
    /**
@@ -727,36 +729,36 @@ public class UriTemplate implements Serializable
          throws VariableExpansionException
    {
 
-<span class="pc bpc" id="L730" title="1 of 4 branches missed.">      if (variable == null || variable.isEmpty())</span>
+<span class="pc bpc" id="L732" title="1 of 4 branches missed.">      if (variable == null || variable.isEmpty())</span>
       {
-<span class="fc" id="L732">         return null;</span>
+<span class="fc" id="L734">         return null;</span>
       }
 
-<span class="fc" id="L735">      final List&lt;String&gt; stringValues = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L736">      final Iterator&lt;?&gt; i = variable.iterator();</span>
-<span class="fc" id="L737">      String separator = operator.getSeparator();</span>
-<span class="fc bfc" id="L738" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
+<span class="fc" id="L737">      final List&lt;String&gt; stringValues = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L738">      final Iterator&lt;?&gt; i = variable.iterator();</span>
+<span class="fc" id="L739">      String separator = operator.getSeparator();</span>
+<span class="fc bfc" id="L740" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
       {
-<span class="fc" id="L740">         separator = operator.getListSeparator();</span>
+<span class="fc" id="L742">         separator = operator.getListSeparator();</span>
       }
-<span class="fc bfc" id="L742" title="All 2 branches covered.">      while (i.hasNext())</span>
+<span class="fc bfc" id="L744" title="All 2 branches covered.">      while (i.hasNext())</span>
       {
-<span class="fc" id="L744">         final Object obj = i.next();</span>
-<span class="fc" id="L745">         checkValue(obj);</span>
-<span class="fc" id="L746">         final String value = obj.toString();</span>
-<span class="fc" id="L747">         stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));</span>
-<span class="fc" id="L748">      }</span>
+<span class="fc" id="L746">         final Object obj = i.next();</span>
+<span class="fc" id="L747">         checkValue(obj);</span>
+<span class="fc" id="L748">         final String value = obj.toString();</span>
+<span class="fc" id="L749">         stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));</span>
+<span class="fc" id="L750">      }</span>
 
-<span class="fc bfc" id="L750" title="All 4 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE &amp;&amp; operator.useVarNameWhenExploded())</span>
+<span class="fc bfc" id="L752" title="All 4 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE &amp;&amp; operator.useVarNameWhenExploded())</span>
       {
-<span class="fc" id="L752">         final String parts = joinParts(separator, stringValues);</span>
-<span class="pc bpc" id="L753" title="1 of 4 branches missed.">         if (operator == Operator.QUERY &amp;&amp; parts == null)</span>
+<span class="fc" id="L754">         final String parts = joinParts(separator, stringValues);</span>
+<span class="pc bpc" id="L755" title="1 of 4 branches missed.">         if (operator == Operator.QUERY &amp;&amp; parts == null)</span>
          {
-<span class="nc" id="L755">            return varSpec.getVariableName() + &quot;=&quot;;</span>
+<span class="nc" id="L757">            return varSpec.getVariableName() + &quot;=&quot;;</span>
          }
-<span class="fc" id="L757">         return varSpec.getVariableName() + &quot;=&quot; + parts;</span>
+<span class="fc" id="L759">         return varSpec.getVariableName() + &quot;=&quot; + parts;</span>
       }
-<span class="fc" id="L759">      return joinParts(separator, stringValues);</span>
+<span class="fc" id="L761">      return joinParts(separator, stringValues);</span>
    }
 
    /**
@@ -765,11 +767,11 @@ public class UriTemplate implements Serializable
     */
    private void checkValue(Object obj) throws VariableExpansionException
    {
-<span class="pc bpc" id="L768" title="2 of 6 branches missed.">      if (obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())</span>
+<span class="pc bpc" id="L770" title="2 of 6 branches missed.">      if (obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())</span>
       {
-<span class="fc" id="L770">         throw new VariableExpansionException(&quot;Nested data structures are not supported.&quot;);</span>
+<span class="fc" id="L772">         throw new VariableExpansionException(&quot;Nested data structures are not supported.&quot;);</span>
       }
-<span class="fc" id="L772">   }</span>
+<span class="fc" id="L774">   }</span>
 
    /**
     *
@@ -782,45 +784,45 @@ public class UriTemplate implements Serializable
    private String expandMap(Operator operator, VarSpec varSpec, Map&lt;String, Object&gt; variable)
          throws VariableExpansionException
    {
-<span class="pc bpc" id="L785" title="1 of 4 branches missed.">      if (variable == null || variable.isEmpty())</span>
+<span class="pc bpc" id="L787" title="1 of 4 branches missed.">      if (variable == null || variable.isEmpty())</span>
       {
-<span class="fc" id="L787">         return null;</span>
+<span class="fc" id="L789">         return null;</span>
       }
 
-<span class="fc" id="L790">      List&lt;String&gt; stringValues = new ArrayList&lt;String&gt;();</span>
-<span class="fc" id="L791">      String pairJoiner = &quot;=&quot;;</span>
-<span class="fc bfc" id="L792" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
+<span class="fc" id="L792">      List&lt;String&gt; stringValues = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L793">      String pairJoiner = &quot;=&quot;;</span>
+<span class="fc bfc" id="L794" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
       {
-<span class="fc" id="L794">         pairJoiner = &quot;,&quot;;</span>
+<span class="fc" id="L796">         pairJoiner = &quot;,&quot;;</span>
       }
-<span class="fc" id="L796">      String joiner = operator.getSeparator();</span>
-<span class="fc bfc" id="L797" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
+<span class="fc" id="L798">      String joiner = operator.getSeparator();</span>
+<span class="fc bfc" id="L799" title="All 2 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE)</span>
       {
-<span class="fc" id="L799">         joiner = operator.getListSeparator();</span>
+<span class="fc" id="L801">         joiner = operator.getListSeparator();</span>
       }
-<span class="fc bfc" id="L801" title="All 2 branches covered.">      for (Entry&lt;String, Object&gt; entry : variable.entrySet())</span>
+<span class="fc bfc" id="L803" title="All 2 branches covered.">      for (Entry&lt;String, Object&gt; entry : variable.entrySet())</span>
       {
 
-<span class="fc" id="L804">         String key = entry.getKey();</span>
-<span class="fc" id="L805">         checkValue(entry.getValue());</span>
-<span class="fc" id="L806">         String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner</span>
+<span class="fc" id="L806">         String key = entry.getKey();</span>
+<span class="fc" id="L807">         checkValue(entry.getValue());</span>
+<span class="fc" id="L808">         String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner</span>
                + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
 
-<span class="fc" id="L809">         stringValues.add(pair);</span>
-<span class="fc" id="L810">      }</span>
+<span class="fc" id="L811">         stringValues.add(pair);</span>
+<span class="fc" id="L812">      }</span>
 
-<span class="fc bfc" id="L812" title="All 8 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE</span>
+<span class="fc bfc" id="L814" title="All 8 branches covered.">      if (varSpec.getModifier() != Modifier.EXPLODE</span>
             &amp;&amp; (operator == Operator.MATRIX || operator == Operator.QUERY || operator == Operator.CONTINUATION))
       {
-<span class="fc" id="L815">         String joinedValues = joinParts(joiner, stringValues);</span>
-<span class="pc bpc" id="L816" title="1 of 4 branches missed.">         if (operator == Operator.QUERY &amp;&amp; joinedValues == null)</span>
+<span class="fc" id="L817">         String joinedValues = joinParts(joiner, stringValues);</span>
+<span class="pc bpc" id="L818" title="1 of 4 branches missed.">         if (operator == Operator.QUERY &amp;&amp; joinedValues == null)</span>
          {
-<span class="nc" id="L818">            return varSpec.getVariableName() + &quot;=&quot;;</span>
+<span class="nc" id="L820">            return varSpec.getVariableName() + &quot;=&quot;;</span>
          }
-<span class="fc" id="L820">         return varSpec.getVariableName() + &quot;=&quot; + joinedValues;</span>
+<span class="fc" id="L822">         return varSpec.getVariableName() + &quot;=&quot; + joinedValues;</span>
       }
 
-<span class="fc" id="L823">      return joinParts(joiner, stringValues);</span>
+<span class="fc" id="L825">      return joinParts(joiner, stringValues);</span>
    }
 
    /**
@@ -835,60 +837,60 @@ public class UriTemplate implements Serializable
    private String expandStringValue(Operator operator, VarSpec varSpec, String variable, VarSpec.VarFormat format)
          throws VariableExpansionException
    {
-<span class="fc" id="L838">      String expanded = &quot;&quot;;</span>
+      String expanded;
 
-<span class="fc bfc" id="L840" title="All 2 branches covered.">      if (varSpec.getModifier() == Modifier.PREFIX)</span>
+<span class="fc bfc" id="L842" title="All 2 branches covered.">      if (varSpec.getModifier() == Modifier.PREFIX)</span>
       {
-<span class="fc" id="L842">         int position = varSpec.getPosition();</span>
-<span class="fc bfc" id="L843" title="All 2 branches covered.">         if (position &lt; variable.length())</span>
+<span class="fc" id="L844">         int position = varSpec.getPosition();</span>
+<span class="fc bfc" id="L845" title="All 2 branches covered.">         if (position &lt; variable.length())</span>
          {
-<span class="fc" id="L845">            variable = variable.substring(0, position);</span>
+<span class="fc" id="L847">            variable = variable.substring(0, position);</span>
          }
       }
 
       try
       {
-<span class="fc bfc" id="L851" title="All 2 branches covered.">         if (operator.getEncoding() == Encoding.UR)</span>
+<span class="fc bfc" id="L853" title="All 2 branches covered.">         if (operator.getEncoding() == Encoding.UR)</span>
          {
-<span class="fc" id="L853">            expanded = UriUtil.encodeFragment(variable);</span>
+<span class="fc" id="L855">            expanded = UriUtil.encodeFragment(variable);</span>
          }
          else
          {
-<span class="fc" id="L857">            expanded = UriUtil.encode(variable);</span>
+<span class="fc" id="L859">            expanded = UriUtil.encode(variable);</span>
          }
       }
-<span class="nc" id="L860">      catch (UnsupportedEncodingException e)</span>
+<span class="nc" id="L862">      catch (UnsupportedEncodingException e)</span>
       {
-<span class="nc" id="L862">         throw new VariableExpansionException(&quot;Could not expand variable due to a problem URI encoding the value.&quot;, e);</span>
-<span class="fc" id="L863">      }</span>
+<span class="nc" id="L864">         throw new VariableExpansionException(&quot;Could not expand variable due to a problem URI encoding the value.&quot;, e);</span>
+<span class="fc" id="L865">      }</span>
 
-<span class="fc bfc" id="L865" title="All 2 branches covered.">      if (operator.isNamed())</span>
+<span class="fc bfc" id="L867" title="All 2 branches covered.">      if (operator.isNamed())</span>
       {
-<span class="fc bfc" id="L867" title="All 4 branches covered.">         if (expanded.isEmpty() &amp;&amp; !operator.getSeparator().equals(&quot;&amp;&quot;))</span>
+<span class="fc bfc" id="L869" title="All 4 branches covered.">         if (expanded.isEmpty() &amp;&amp; !operator.getSeparator().equals(&quot;&amp;&quot;))</span>
          {
-<span class="fc" id="L869">            expanded = varSpec.getValue();</span>
+<span class="fc" id="L871">            expanded = varSpec.getValue();</span>
          }
-<span class="fc bfc" id="L871" title="All 2 branches covered.">         else if (format == VarSpec.VarFormat.SINGLE)</span>
+<span class="fc bfc" id="L873" title="All 2 branches covered.">         else if (format == VarSpec.VarFormat.SINGLE)</span>
          {
-<span class="fc" id="L873">            expanded = varSpec.getVariableName() + &quot;=&quot; + expanded;</span>
+<span class="fc" id="L875">            expanded = varSpec.getVariableName() + &quot;=&quot; + expanded;</span>
          }
 
          else
          {
-<span class="fc bfc" id="L878" title="All 2 branches covered.">            if (varSpec.getModifier() == Modifier.EXPLODE)</span>
+<span class="fc bfc" id="L880" title="All 2 branches covered.">            if (varSpec.getModifier() == Modifier.EXPLODE)</span>
             {
-<span class="pc bpc" id="L880" title="1 of 4 branches missed.">               if (operator.useVarNameWhenExploded() &amp;&amp; format != VarSpec.VarFormat.PAIRS)</span>
+<span class="pc bpc" id="L882" title="1 of 4 branches missed.">               if (operator.useVarNameWhenExploded() &amp;&amp; format != VarSpec.VarFormat.PAIRS)</span>
                {
-<span class="fc" id="L882">                  expanded = varSpec.getVariableName() + &quot;=&quot; + expanded;</span>
+<span class="fc" id="L884">                  expanded = varSpec.getVariableName() + &quot;=&quot; + expanded;</span>
                }
             }
          }
       }
-<span class="fc" id="L887">      return expanded;</span>
+<span class="fc" id="L889">      return expanded;</span>
    }
 
    /**
-    * FIXME Comment this
+    *
     *
     * @param joiner
     * @param parts
@@ -896,31 +898,31 @@ public class UriTemplate implements Serializable
     */
    private String joinParts(final String joiner, List&lt;String&gt; parts)
    {
-<span class="fc bfc" id="L899" title="All 2 branches covered.">      if (parts.size() == 0)</span>
+<span class="fc bfc" id="L901" title="All 2 branches covered.">      if (parts.size() == 0)</span>
       {
-<span class="fc" id="L901">         return null;</span>
+<span class="fc" id="L903">         return null;</span>
       }
 
-<span class="fc bfc" id="L904" title="All 2 branches covered.">      if (parts.size() == 1)</span>
+<span class="fc bfc" id="L906" title="All 2 branches covered.">      if (parts.size() == 1)</span>
       {
-<span class="fc" id="L906">         return parts.get(0);</span>
+<span class="fc" id="L908">         return parts.get(0);</span>
       }
 
-<span class="fc" id="L909">      final StringBuilder builder = new StringBuilder();</span>
-<span class="fc bfc" id="L910" title="All 2 branches covered.">      for (int i = 0; i &lt; parts.size(); i++)</span>
+<span class="fc" id="L911">      final StringBuilder builder = new StringBuilder();</span>
+<span class="fc bfc" id="L912" title="All 2 branches covered.">      for (int i = 0; i &lt; parts.size(); i++)</span>
       {
-<span class="fc" id="L912">         final String part = parts.get(i);</span>
-<span class="fc bfc" id="L913" title="All 2 branches covered.">         if (!part.isEmpty())</span>
+<span class="fc" id="L914">         final String part = parts.get(i);</span>
+<span class="fc bfc" id="L915" title="All 2 branches covered.">         if (!part.isEmpty())</span>
          {
-<span class="fc" id="L915">            builder.append(part);</span>
-<span class="pc bpc" id="L916" title="1 of 4 branches missed.">            if (parts.size() &gt; 0 &amp;&amp; i != (parts.size() - 1))</span>
+<span class="fc" id="L917">            builder.append(part);</span>
+<span class="pc bpc" id="L918" title="1 of 4 branches missed.">            if (parts.size() &gt; 0 &amp;&amp; i != (parts.size() - 1))</span>
             {
-<span class="fc" id="L918">               builder.append(joiner);</span>
+<span class="fc" id="L920">               builder.append(joiner);</span>
             }
          }
 
       }
-<span class="fc" id="L923">      return builder.toString();</span>
+<span class="fc" id="L925">      return builder.toString();</span>
    }
 
    /**
@@ -931,28 +933,28 @@ public class UriTemplate implements Serializable
     */
    private List&lt;Object&gt; arrayToList(Object array) throws VariableExpansionException
    {
-<span class="fc" id="L934">      List&lt;Object&gt; list = new ArrayList&lt;Object&gt;();</span>
-<span class="fc" id="L935">      int length = Array.getLength(array);</span>
-<span class="fc bfc" id="L936" title="All 2 branches covered.">      for (int i = 0; i &lt; length; i++)</span>
+<span class="fc" id="L936">      List&lt;Object&gt; list = new ArrayList&lt;Object&gt;();</span>
+<span class="fc" id="L937">      int length = Array.getLength(array);</span>
+<span class="fc bfc" id="L938" title="All 2 branches covered.">      for (int i = 0; i &lt; length; i++)</span>
       {
-<span class="fc" id="L938">         final Object element = Array.get(array, i);</span>
-<span class="fc bfc" id="L939" title="All 2 branches covered.">         if (element.getClass().isArray())</span>
+<span class="fc" id="L940">         final Object element = Array.get(array, i);</span>
+<span class="fc bfc" id="L941" title="All 2 branches covered.">         if (element.getClass().isArray())</span>
          {
-<span class="fc" id="L941">            throw new VariableExpansionException(&quot;Multi-dimenesional arrays are not supported.&quot;);</span>
+<span class="fc" id="L943">            throw new VariableExpansionException(&quot;Multi-dimenesional arrays are not supported.&quot;);</span>
          }
-<span class="fc" id="L943">         list.add(element);</span>
+<span class="fc" id="L945">         list.add(element);</span>
       }
-<span class="fc" id="L945">      return list;</span>
+<span class="fc" id="L947">      return list;</span>
    }
 
    /**
-    * FIXME Comment this
+    *
     * 
     * @return
     */
-   public String getRegexString()
-   {
-<span class="nc" id="L955">      return null;</span>
-   }
+//   public String getRegexString()
+//   {
+//      return null;
+//   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

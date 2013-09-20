@@ -9,7 +9,7 @@ Handy URI Templates,com.damnhandy.uri.template,VariableExpansionException,9,4,0,
 Handy URI Templates,com.damnhandy.uri.template,MalformedUriTemplateException,0,18,0,0,0,7,0,3,0,3
 Handy URI Templates,com.damnhandy.uri.template,DefaultVarExploder,37,181,8,24,11,40,8,15,0,7
 Handy URI Templates,com.damnhandy.uri.template,UriTemplateComponent,10,6,0,0,2,3,2,1,2,1
-Handy URI Templates,com.damnhandy.uri.template,UriTemplate,143,942,22,144,27,201,26,96,9,30
+Handy URI Templates,com.damnhandy.uri.template,UriTemplate,141,940,22,144,26,200,25,96,8,30
 Handy URI Templates,com.damnhandy.uri.template,Expression,102,365,21,19,24,77,14,28,3,19
 Handy URI Templates,com.damnhandy.uri.template,UriTemplate.Encoding,9,29,0,0,0,2,2,2,2,2
 Handy URI Templates,com.damnhandy.uri.template.impl,UriTemplateParser,25,249,8,32,5,60,8,21,0,9
