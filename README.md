@@ -6,6 +6,7 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 * Fluent Java API for manipulating uritemplates 
 * Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
+* Strong validation and error reporting
 * Java objects as template values
 * Support for rendering date values 
 * Template expression validation
