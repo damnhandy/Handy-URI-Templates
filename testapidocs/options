@@ -15,7 +15,7 @@
 -docencoding
 'UTF-8'
 -doctitle
-'Handy URI Templates 2.0.0 Test API'
+'Handy URI Templates 2.0.1 Test API'
 -link
 '../apidocs'
 -linkoffline
@@ -23,4 +23,4 @@
 -use
 -version
 -windowtitle
-'Handy URI Templates 2.0.0 Test API'
+'Handy URI Templates 2.0.1 Test API'
