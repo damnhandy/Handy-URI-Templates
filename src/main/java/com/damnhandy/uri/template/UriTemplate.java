@@ -265,7 +265,7 @@ public class UriTemplate implements Serializable
    {
       if(variables == null)
       {
-         Set<String> vars = new LinkedHashSet<>();
+         Set<String> vars = new LinkedHashSet<String>();
          for(Expression e : getExpressions())
          {
             for(VarSpec v : e.getVarSpecs())
