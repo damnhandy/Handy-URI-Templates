@@ -30,7 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class TestSpecExamples extends AbstractUriTemplateConformanceTest
 {
 
-   @Parameters
+   @Parameters(name = "{1}")
    public static Collection<Object[]> testData() throws Exception
    {
       File file = new File("./uritemplate-test/spec-examples.json");
