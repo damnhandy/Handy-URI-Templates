@@ -9,9 +9,7 @@
 	<artifactId>handy-uri-templates</artifactId>
 	<version>2.0.2-SNAPSHOT</version>
 	<name>Handy URI Templates</name>
-    <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to
-        utilize templatized URIs and inject replacement variables to expand the template into a URI. The library
-        sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.
+    <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.
     </description>
 
     <prerequisites>
@@ -20,8 +18,10 @@
 
 	<properties>
 		<http.client>4.1.1</http.client>
-		<jackson.version>2.2.2</jackson.version>
+		<jackson.version>2.3.1</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <findbugs.plugin>2.5.2</findbugs.plugin>
+        <cobertura.plugin>2.6</cobertura.plugin>
 	</properties>
 
 	<url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -115,37 +115,17 @@
 						<mailingList>${project.url}/mail-lists.html</mailingList>
 						<name>${project.name}</name>
 						<programmingLanguage>Java</programmingLanguage>
-
 						<shortdesc>${project.description}</shortdesc>
 						<vendor>${project.organization.name}</vendor>
 					</doapOptions>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.6.3.201306030806</version>
-				<configuration>
-					<destfile>${basedir}/target/coverage-reports/jacoco-unit.exec</destfile>
-					<datafile>${basedir}/target/coverage-reports/jacoco-unit.exec</datafile>
-				</configuration>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura.plugin}</version>
+            </plugin>
 
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -222,13 +202,7 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-
 					<reportPlugins>
-						<plugin>
-							<groupId>org.jacoco</groupId>
-							<artifactId>jacoco-maven-plugin</artifactId>
-							<version>0.6.3.201306030806</version>
-						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -253,18 +227,21 @@
 							<artifactId>maven-javadoc-plugin</artifactId>
 							<version>2.8</version>
 						</plugin>
-						<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>cobertura-maven-plugin</artifactId> 
-							<version>2.5.2</version> </plugin> -->
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>cobertura-maven-plugin</artifactId>
+                            <version>${cobertura.plugin}</version>
+                        </plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-surefire-report-plugin</artifactId>
-							<version>2.15</version>
+							<version>2.16</version>
 
 						</plugin>
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>findbugs-maven-plugin</artifactId>
-							<version>2.3.2</version>
+							<version>${findbugs.plugin}</version>
 						</plugin>
 
 						<plugin>
@@ -279,6 +256,7 @@
 						</plugin>
 					</reportPlugins>
 				</configuration>
+
 				<executions>
 					<execution>
 						<id>attach-descriptor</id>
@@ -288,9 +266,15 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.plugin}</version>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -300,12 +284,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.15</version>
-				<!-- <configuration> <argLine>-XX:-UseSplitVerifier</argLine> </configuration> -->
+				<version>2.16</version>
 			</plugin>
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>cobertura-maven-plugin</artifactId> 
-				<version>2.5.2</version> <executions> <execution> <goals> <goal>clean</goal> 
-				</goals> </execution> </executions> </plugin> -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -320,6 +301,25 @@
 					</execution>
 				</executions>
 			</plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>false</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <mode>development</mode>
+                            <url>${project.url}</url>
+                            <key>value</key>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -347,8 +347,10 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to tweak Eclipse m2e settings
+					only. It has no influence on the Maven build itself.
+					It merely keeps m2e from whining about the exec plugin.
+					 -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -394,6 +396,7 @@
 			</activation>
 			<build>
 				<plugins>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
@@ -449,7 +452,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>14.0.1</version>
+			<version>16.0.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -457,13 +460,13 @@
 		<dependency>
 			<groupId>com.ning</groupId>
 			<artifactId>async-http-client</artifactId>
-			<version>1.7.16</version>
+			<version>1.8.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.2.5</version>
+			<version>4.3.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
