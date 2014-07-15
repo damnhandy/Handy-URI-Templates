@@ -81,8 +81,8 @@ public final class UriUtil
    /**
     *
     *
-    * @param source
-    * @return
+    * @param sourceValue
+    * @return the encoded string
     */
    public static String encodeFragment(String sourceValue) throws UnsupportedEncodingException
    {
@@ -92,8 +92,8 @@ public final class UriUtil
    /**
     *
     *
-    * @param source
-    * @return
+    * @param sourceValue
+    * @return the encoded string
     */
    public static String encode(String sourceValue) throws UnsupportedEncodingException
    {
@@ -105,7 +105,7 @@ public final class UriUtil
     *
     * @param soureValue
     * @param chars
-    * @return
+    * @return the encoded string
     * @throws UriEncodingException
     */
    private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException

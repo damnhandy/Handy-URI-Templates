@@ -59,6 +59,13 @@ public class TestSingleExpression
       String result = template.expand();
       Assert.assertEquals(expected, result);
 
+      String r2 = com.damnhandy.uri.template.UriTemplate.expand("", new java.util.HashMap<String, Object>() {
+          @Override
+          public Object put(String key, Object value) {
+              return super.put(key, value);
+          }
+      });
+
       //Pattern p = Pattern.compile("([?&](fields)(?:=([^&]*))?)([?&](first_name)(?:=([^&]*))?)([?&](last.name)(?:=([^&]*))?)([?&](token)(?:=([^&]*))?)");
    }
    

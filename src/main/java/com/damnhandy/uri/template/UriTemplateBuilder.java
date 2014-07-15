@@ -514,7 +514,7 @@ public final class UriTemplateBuilder
     * Generates a {@link UriTemplate} instance from the builder.
     * </p>
     *
-    * @return
+    * @return the UriTemplate
     * @since 2.0
     */
    public UriTemplate build() throws MalformedUriTemplateException
@@ -545,7 +545,7 @@ public final class UriTemplateBuilder
     * </pre>
     *
     * @param varName
-    * @return
+    * @return  the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
     */
    public static VarSpec var(String varName)
    {
@@ -566,7 +566,7 @@ public final class UriTemplateBuilder
     *
     * @param varName
     * @param explode
-    * @return
+    * @return  the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
     */
    public static VarSpec var(String varName, boolean explode)
    {
@@ -590,7 +590,7 @@ public final class UriTemplateBuilder
     * </pre>
     * @param varName
     * @param prefix
-    * @return
+    * @return  the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
     */
    public static VarSpec var(String varName, int prefix)
    {
@@ -603,7 +603,7 @@ public final class UriTemplateBuilder
     * @param varName
     * @param modifier
     * @param position
-    * @return
+    * @return  the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
     */
    private static VarSpec var(String varName, Modifier modifier, Integer position)
    {

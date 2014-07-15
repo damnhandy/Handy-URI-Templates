@@ -326,11 +326,11 @@
 				<version>2.9.1</version>
 				<configuration>
 					<aggregate>true</aggregate>
-					<source>1.7</source>
+					<source>1.8</source>
 					<encoding>UTF-8</encoding>
 					<maxmemory>1g</maxmemory>
 					<links>
-						<link>http://java.sun.com/javase/7/docs/api/</link>
+						<link>http://download.java.net/jdk8/docs/api/</link>
 					</links>
 				</configuration>
 				<executions>
@@ -340,6 +340,9 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
 					</execution>
 				</executions>
 			</plugin>

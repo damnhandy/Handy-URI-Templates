@@ -349,7 +349,7 @@ public class UriTemplate implements Serializable
     * @since 1.0
     * @throws MalformedUriTemplateException
     * @throws VariableExpansionException
-    * @return
+    * @return the expanded URI as a String
     */
    public static String expand(final String templateString, Map<String, Object> values)
          throws MalformedUriTemplateException, VariableExpansionException
@@ -382,7 +382,7 @@ public class UriTemplate implements Serializable
     * Applies variable substitution the URI Template and returns the expanded
     * URI.
     *
-    * @return
+    * @return the expanded URI as a String
     * @throw VariableExpansionException
     * @since 1.0
     */
@@ -399,7 +399,7 @@ public class UriTemplate implements Serializable
    /**
     * Returns the original URI template expression.
     *
-    * @return
+    * @return the template string
     * @since 1.1.4
     */
    public String getTemplate()
@@ -410,7 +410,7 @@ public class UriTemplate implements Serializable
    /**
     * Returns the collection of name/value pairs contained in the instance.
     *
-    * @return
+    * @return the name value pairs
     * @since 1.0
     */
    public Map<String, Object> getValues()
@@ -421,7 +421,7 @@ public class UriTemplate implements Serializable
    /**
     *
     * @param dateFormatString
-    * @return
+    * @return the date format used to render dates
     * @since 1.0
     */
    public UriTemplate withDefaultDateFormat(String dateFormatString)
@@ -432,7 +432,7 @@ public class UriTemplate implements Serializable
    /**
     *
     * @param dateFormat
-    * @return
+    * @return the date format used to render dates
     * @since 1.0
     */
    public UriTemplate withDefaultDateFormat(DateFormat dateFormat)

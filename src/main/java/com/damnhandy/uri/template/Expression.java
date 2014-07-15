@@ -379,11 +379,7 @@ public class Expression extends UriTemplateComponent
    }
 
 
-   /**
-    * 
-    *
-    * @return
-    */
+
    private Pattern buildMatchingPattern()
    {
       StringBuilder b = new StringBuilder();
@@ -398,7 +394,7 @@ public class Expression extends UriTemplateComponent
     * Returns a string that contains a regular expression that matches the
     * URI template expression.
     * 
-    * @return
+    * @return the match pattern
     */
    @Override
    public Pattern getMatchPattern()
@@ -468,7 +464,7 @@ public class Expression extends UriTemplateComponent
    /**
     * Returns the value of this component
     * 
-    * @return
+    * @return the string value of this component.
     */
    @Override
    public String getValue()
@@ -560,7 +556,7 @@ public class Expression extends UriTemplateComponent
        *
        *
        * @param operator
-       * @return
+       * @return the builder
        */
       static Builder create(Operator operator, VarSpec...varSpec)
       {

@@ -15,8 +15,8 @@
  * <p>Or via annotations on the desired property:</p>
  * 
  * <pre>
- * @JsonDeserialize(using = UriTemplateDeserializer.class)
- * @JsonSerialize(using = UriTemplateSerializer.class)
+ * {@literal @}JsonDeserialize(using = UriTemplateDeserializer.class)
+ * {@literal @}JsonSerialize(using = UriTemplateSerializer.class)
  * private UriTemplate template;
  * ...
  * </pre>
