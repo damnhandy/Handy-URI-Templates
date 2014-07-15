@@ -4,11 +4,11 @@
 
 Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
 
-* Fluent Java API for manipulating uritemplates 
+* Fluent Java API for manipulating uritemplates
 * Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
 * Strong validation and error reporting
 * Java objects as template values
-* Support for rendering date values 
+* Support for rendering date values
 * Template expression validation
 * Custom object expanders
 * Support for [Jackson](http://jackson.codehaus.org/) serializers and deserializers.
@@ -34,7 +34,7 @@ The next version of Handy URI Templates includes some big changes to the API. If
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.0-SNAPSHOT</version>
+  <version>2.0.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -44,19 +44,19 @@ In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots re
 
 ```xml
 <repository>
-  <id>sonatype-nexus-snapshots</id>   
+  <id>sonatype-nexus-snapshots</id>
   <name>sonatype-nexus-snapshots</name>
   <url>https://oss.sonatype.org/content/repositories/snapshots</url>
 </repository>
 ```
 
 You can also download the artifact directly at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates)
-	
-    
+
+
 ## Basic Usage
 
 Using the library is simple:
-	
+
 ```java
 String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query,test2}")
                          .set("foo", "houses")
@@ -69,7 +69,7 @@ String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query,test2}")
 This will result in the following URI:
 
 	"/h/houses/A%20test?query=Ask%20something&test2=someting%20else"
-	
+
 You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html).
 
 ## URI Template Builder API
@@ -77,7 +77,7 @@ You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templa
 Starting in version 2.x, the `UriTemplateBuilder` was added to make it easier to programatically construct URI templates. It's used like this:
 
 ```java
-UriTemplate template = 
+UriTemplate template =
       UriTemplate.buildFromTemplate("http://example.com")
                  .literal("/foo")
                  .path(var("thing1"),var("explodedThing", true))
@@ -89,7 +89,7 @@ This will yield the following URL template string:
 
 	"http://example.com/foo{/thing1,explodedThing*}{#prefix:2}"
 
-This API is still a work in progress an feedback is appreciated. 
+This API is still a work in progress an feedback is appreciated.
 
 ## Using with HTTP Clients
 
@@ -127,11 +127,11 @@ While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-
   * long & Long
 * Arrays of the above types
 * java.util.List<Object>
-* java.util.Map<String, Object>	
+* java.util.Map<String, Object>
 * java.util.Date. Dates will be formatted using the templates default formatter.
 * Anything with a `toString()` method
 
-Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings. 
+Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings.
 
 ## Unsupported Value Types
 
@@ -141,20 +141,20 @@ The template processor will not accept the following types of value combinations
 * Collections of Collections
 * Maps that have values of type array, Collection, or Map.
 
-If you need such data structures in a URI, consider implementing your own `VarExploder` to handle it. 
+If you need such data structures in a URI, consider implementing your own `VarExploder` to handle it.
 
 ## Composite Values
 
-The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values of an associative array of (name, value) pairs. The template processor always treats lists as java.util.List and name/value pairs as a java.util.Map. Lists and Maps work with any supported type that is not anoth List, Map, or array. 
+The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values of an associative array of (name, value) pairs. The template processor always treats lists as java.util.List and name/value pairs as a java.util.Map. Lists and Maps work with any supported type that is not anoth List, Map, or array.
 
 ## POJOs as Composite Values
 
-The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs. 
+The template process can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs.
 
 For most use cases, the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
 
 	/mapper{?address*}
- 
+
 And this Java object for an address:
 
 ```java
@@ -169,11 +169,11 @@ String result = UriTemplate.fromTemplate("/mapper{?address*}")
 The expanded URI will be:
 
 	/mapper?city=Newport%20Beach&state=CA
- 
+
 The [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) breaks down the object properties as follows:
 
 * All properties that contain a non-null return value will be included
-* Getters or fields annotated with `@UriTransient` will be excluded 
+* Getters or fields annotated with `@UriTransient` will be excluded
 * By default, the property name is used as the label in the URI. This can be overridden by placing the `@VarName` annotation on the field or getter method and specifying a name.
 * Field level annotation take priority of getter annotations
 * Property names are sorted in the order that they are found in the target class.
@@ -193,7 +193,7 @@ Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/
 License
 -------
 
-   Copyright 2011-2013 Ryan J. McDonough 
+   Copyright 2011-2013 Ryan J. McDonough
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
