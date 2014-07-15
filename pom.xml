@@ -7,7 +7,7 @@
 	</parent>
 	<groupId>com.damnhandy</groupId>
 	<artifactId>handy-uri-templates</artifactId>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>2.0.2</version>
 	<name>Handy URI Templates</name>
     <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to utilize templatized URIs and inject replacement variables to expand the template into a URI. The library sports a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.
     </description>
