@@ -1,24 +1,24 @@
 -classpath
-'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/classes:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.4.1/jackson-databind-2.4.1.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.4.1/jackson-core-2.4.1.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.4.1/jackson-annotations-2.4.1.jar'
+'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/classes:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.4.1/jackson-databind-2.4.1.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.4.1/jackson-core-2.4.1.jar:/Users/ryan/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.4.1/jackson-annotations-2.4.1.jar'
 -encoding
 'UTF-8'
 -protected
 -sourcepath
-'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/src/main/java'
+'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/src/main/java'
 -author
 -bottom
 'Copyright &#169; 2012-04-30-2014 <a href="https://github.com/damnhandy/Handy-URI-Templates">Ryan J. McDonough</a>. All Rights Reserved.'
 -charset
 'UTF-8'
 -d
-'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/site/apidocs'
+'/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/site/apidocs'
 -docencoding
 'UTF-8'
 -doctitle
-'Handy URI Templates 2.0.2-SNAPSHOT API'
+'Handy URI Templates 2.0.2 API'
 -linkoffline
-'http://download.oracle.com/javase/6/docs/api' '/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/javadoc-bundle-options'
+'http://download.oracle.com/javase/6/docs/api' '/Users/ryan/Documents/Code/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'Handy URI Templates 2.0.2-SNAPSHOT API'
+'Handy URI Templates 2.0.2 API'
