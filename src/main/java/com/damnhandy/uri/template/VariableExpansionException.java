@@ -30,7 +30,7 @@ package com.damnhandy.uri.template;
  * @version $Revision: 1.1 $
  * @since 1.0
  */
-public class VariableExpansionException extends Exception
+public class VariableExpansionException extends RuntimeException
 {
 
    /** The serialVersionUID */

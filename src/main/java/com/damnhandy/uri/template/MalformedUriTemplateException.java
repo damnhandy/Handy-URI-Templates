@@ -23,7 +23,7 @@ package com.damnhandy.uri.template;
  * @version $Revision: 1.1 $
  * @since 2.0
  */
-public class MalformedUriTemplateException extends Exception
+public class MalformedUriTemplateException extends RuntimeException
 {
 
    /** The serialVersionUID */
