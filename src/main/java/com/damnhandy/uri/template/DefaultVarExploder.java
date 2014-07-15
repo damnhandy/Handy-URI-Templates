@@ -94,7 +94,7 @@ public class DefaultVarExploder implements VarExploder
    /**
     *
     *
-    * @return
+    * @return the name value pairs of the input
     */
    @Override
    public Map<String, Object> getNameValuePairs()
