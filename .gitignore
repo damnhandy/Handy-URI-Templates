@@ -8,10 +8,13 @@
 .settings
 .classpath
 .metadata
+.springBeans
 .idea
 *.iml
 *.ipr
 *.iws
+git.properties
+*.log
 .checkstyle
 nbproject
 .DS_Store
@@ -19,3 +22,11 @@ target
 test-output
 nbactions.xml
 build
+release.properties
+**/pom.xml.backup
+**/release.properties
+**/pom.xml.branch
+**/pom.xml.next
+**/pom.xml.releaseBackup
+**/pom.xml.tag
+atlassian-ide-plugin.xml
