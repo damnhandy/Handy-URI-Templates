@@ -1,5 +1,7 @@
 # Handy URI Templates
 
+[![Join the chat at https://gitter.im/damnhandy/Handy-URI-Templates](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/damnhandy/Handy-URI-Templates?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
 
 Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
