@@ -20,18 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.damnhandy.uri.template.impl.Modifier;
@@ -359,7 +349,25 @@ public class UriTemplate implements Serializable
       return t.expand();
    }
 
-   
+   /**
+    * Expands the given template string using the variable replacements
+    * in the supplied {@link Map}. Expressions without replacements get
+    * preserved and still exist in the expanded URI string.
+    *
+    * @param templateString URI template
+    * @param values Replacements
+    * @return The expanded URI as a String
+    * @throws MalformedUriTemplateException
+    * @throws VariableExpansionException
+    */
+   public static String expandPartial(final String templateString, Map<String, Object> values)
+         throws MalformedUriTemplateException, VariableExpansionException
+   {
+      UriTemplate t = new UriTemplate(templateString);
+      t.set(values);
+      return t.expandPartial();
+   }
+
    /**
     * Expand the URI template using the supplied values
     *
@@ -391,11 +399,23 @@ public class UriTemplate implements Serializable
       String template = getTemplate();
       for (Expression expression : expressions)
       {
-         final String replacement = expressionReplacementString(expression);
+         final String replacement = expressionReplacementString(expression, false);
          template = template.replaceAll(expression.getReplacementPattern(), replacement);
       }
       return template;
    }
+
+   public String expandPartial() throws VariableExpansionException
+   {
+      String template = getTemplate();
+      for (Expression expression : expressions)
+      {
+         final String replacement = expressionReplacementString(expression, true);
+         template = template.replaceAll(expression.getReplacementPattern(), replacement);
+      }
+      return template;
+   }
+
    /**
     * Returns the original URI template expression.
     *
@@ -534,14 +554,14 @@ public class UriTemplate implements Serializable
     * @throws VariableExpansionException
     * @return
     */
-   private String expressionReplacementString(Expression expression) throws VariableExpansionException
+   private String expressionReplacementString(Expression expression, boolean partial) throws VariableExpansionException
    {
       final Operator operator = expression.getOperator();
-      final List<String> replacements = expandVariables(expression);
-      String result = joinParts(operator.getSeparator(), replacements);
+      final List<String> replacements = expandVariables(expression, partial);
+      String result = partial ? joinParts(expression, replacements) : joinParts(operator.getSeparator(), replacements);
       if (result != null)
       {
-         if (operator != Operator.RESERVED)
+         if (!partial && operator != Operator.RESERVED)
          {
             result = operator.getPrefix() + result;
          }
@@ -563,7 +583,7 @@ public class UriTemplate implements Serializable
     */
    @SuppressWarnings(
    {"rawtypes", "unchecked"})
-   private List<String> expandVariables(Expression expression) throws VariableExpansionException
+   private List<String> expandVariables(Expression expression, boolean partial) throws VariableExpansionException
    {
       final List<String> replacements = new ArrayList<String>();
       final Operator operator = expression.getOperator();
@@ -664,6 +684,9 @@ public class UriTemplate implements Serializable
                replacements.add(expanded);
             }
 
+         }
+         else if (partial) {
+           replacements.add(null);
          }
       }
       return replacements;
@@ -923,6 +946,46 @@ public class UriTemplate implements Serializable
 
       }
       return builder.toString();
+   }
+
+   /**
+    * Joins parts by preserving expressions without values.
+    * @param expression Expression for the given parts
+    * @param parts Parts to join
+    * @return Joined parts
+    */
+   private String joinParts(final Expression expression, List<String> parts)
+   {
+      List<String> replacedParts = new ArrayList<String>(parts.size());
+      for(int i = 0; i < parts.size(); i++) {
+         StringBuilder builder = new StringBuilder();
+         if(parts.get(i) == null)
+         {
+            builder.append('{');
+            while(i < parts.size() && parts.get(i) == null)
+            {
+               if(builder.length() == 1)
+               {
+                  builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
+               }
+               else
+               {
+                  builder.append(DEFAULT_SEPARATOR);
+               }
+               builder.append(expression.getVarSpecs().get(i).getValue());
+               i++;
+            }
+            i--;
+            builder.append('}');
+         } else {
+           if(expression.getOperator() != Operator.RESERVED) {
+            builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
+           }
+           builder.append(parts.get(i));
+         }
+         replacedParts.add(builder.toString());
+      }
+      return joinParts("", replacedParts);
    }
 
    /**
