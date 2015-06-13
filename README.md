@@ -6,6 +6,8 @@
 
 [![Dependency Status](https://www.versioneye.com/user/projects/5499a5516b1b8171590000b5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5499a5516b1b8171590000b5)
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates)
+
 Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on final realease of the uri template spec. The template processor supports the following features:
 
 * Fluent Java API for manipulating uritemplates
