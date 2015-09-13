@@ -70,7 +70,7 @@
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<site>
-			<id>github-project-site</id>
+			<id>github.com</id>
 			<url>gitsite:git@github.com/damnhandy/Handy-URI-Templates.git</url>
 		</site>
 	</distributionManagement>
@@ -82,12 +82,12 @@
 			<extension>
 				<groupId>org.apache.maven.scm</groupId>
 				<artifactId>maven-scm-provider-gitexe</artifactId>
-				<version>1.3</version>
+				<version>1.9.4</version>
 			</extension>
 			<extension>
 				<groupId>org.apache.maven.scm</groupId>
 				<artifactId>maven-scm-manager-plexus</artifactId>
-				<version>1.3</version>
+				<version>1.9.4</version>
 			</extension>
 			<extension>
 				<groupId>org.kathrynhuxtable.maven.wagon</groupId>
