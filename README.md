@@ -18,8 +18,11 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 * Template expression validation
 * Custom object expanders
 * Support for [Jackson](http://jackson.codehaus.org/) serializers and deserializers.
+* Support for partial template expansion
 
 As of version `1.1.1`, Handy URI Templates is passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
+
+The complete [JavaDocs are here](http://damnhandy.github.io/Handy-URI-Templates/apidocs/).
 
 
 ## Maven
@@ -30,7 +33,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.0.2</version>
+  <version>2.0.3</version>
 </dependency>
 ```
 
@@ -40,7 +43,7 @@ The next version of Handy URI Templates includes some big changes to the API. If
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>2.0.4-SNAPSHOT</version>
 </dependency>
 ```
 
