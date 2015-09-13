@@ -22,7 +22,6 @@ target
 test-output
 nbactions.xml
 build
-maven
 release.properties
 **/pom.xml.backup
 **/release.properties
