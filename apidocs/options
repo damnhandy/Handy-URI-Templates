@@ -16,10 +16,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'Handy URI Templates 2.0.3 API'
+'Handy URI Templates 2.0.4 API'
 -linkoffline
 'http://download.oracle.com/javase/6/docs/api' '/Users/ryan/Documents/Projects/Handy-Uri-Templates-Projects/Handy-URI-Templates/target/checkout/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'Handy URI Templates 2.0.3 API'
+'Handy URI Templates 2.0.4 API'
