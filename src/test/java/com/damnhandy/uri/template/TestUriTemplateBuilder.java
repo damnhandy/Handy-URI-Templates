@@ -18,6 +18,8 @@ package com.damnhandy.uri.template;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -98,6 +100,33 @@ public class TestUriTemplateBuilder
                                         .build();
       
       //print(template);
+      template.set("date", date);
+      
+      Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());
+      Assert.assertEquals("http://example.com/foo/2012-04-20", template.expand());
+   }
+
+   @Test
+   public void testWithSimpleDateFormat() throws Exception
+   {
+      Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT-04:00"));
+      cal.set(Calendar.YEAR, 2012);
+      cal.set(Calendar.MONTH, Calendar.APRIL);
+      cal.set(Calendar.DAY_OF_MONTH, 20);
+      cal.set(Calendar.HOUR_OF_DAY, 16);
+      cal.set(Calendar.MINUTE, 20);
+      cal.set(Calendar.SECOND, 0);
+      cal.set(Calendar.MILLISECOND, 0);
+      Date date = cal.getTime();
+      
+      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      
+      UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+                                        .withDefaultDateFormat(dateFormat)
+                                        .literal("/foo")
+                                        .path("date")
+                                        .build();
+      
       template.set("date", date);
       
       Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());

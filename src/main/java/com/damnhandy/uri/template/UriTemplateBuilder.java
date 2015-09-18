@@ -9,6 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
@@ -47,7 +50,7 @@ public final class UriTemplateBuilder
    /**
     *
     */
-   private DateFormat defaultDateFormat = null;
+   private DateTimeFormatter defaultDateTimeFormatter = null;
 
    /**
     *
@@ -78,7 +81,7 @@ public final class UriTemplateBuilder
    {
       this(template.getTemplate());
       this.values = template.getValues();
-      this.defaultDateFormat = template.defaultDateFormat;
+      this.defaultDateTimeFormatter = template.defaultDateTimeFormatter;
    }
 
 
@@ -91,7 +94,13 @@ public final class UriTemplateBuilder
    */
    public UriTemplateBuilder withDefaultDateFormat(String dateFormatString)
    {
-      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));
+      return this.withDefaultDateFormat(DateTimeFormat.forPattern(dateFormatString));
+   }
+
+   private UriTemplateBuilder withDefaultDateFormat(DateTimeFormatter dateTimeFormatter)
+   {
+      defaultDateTimeFormatter = dateTimeFormatter;
+      return this;
    }
 
    /**
@@ -99,10 +108,17 @@ public final class UriTemplateBuilder
     * @param dateFormat
     * @return
     * @since 2.0
+    * @deprecated replaced by {@link #withDefaultDateFormat(String) withDefaultDateFormat}
     */
+   @Deprecated
    public UriTemplateBuilder withDefaultDateFormat(DateFormat dateFormat)
    {
-      defaultDateFormat = dateFormat;
+      if (!(dateFormat instanceof SimpleDateFormat))
+      {
+         throw new IllegalArgumentException(
+            "The only supported subclass of java.text.DateFormat is java.text.SimpleDateFormat");
+      }
+      defaultDateTimeFormatter = DateTimeFormat.forPattern(((SimpleDateFormat) dateFormat).toPattern());
       return this;
    }
 
@@ -525,9 +541,9 @@ public final class UriTemplateBuilder
          template.set(values);
       }
       
-      if (defaultDateFormat != null)
+      if (defaultDateTimeFormatter != null)
       {
-         template.defaultDateFormat = defaultDateFormat;
+         template.defaultDateTimeFormatter = defaultDateTimeFormatter;
       }
       return template;
    }
