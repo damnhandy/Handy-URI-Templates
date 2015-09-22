@@ -83,6 +83,16 @@ public class TestWithDateFormats
    }
 
    @Test
+   public void testWithSimpleDateFormat() throws Exception
+   {
+      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      UriTemplate template = UriTemplate.fromTemplate(TEMPLATE)
+                                        .withDefaultDateFormat(dateFormat)
+                                        .set("date",date);
+      assertEquals("/2012/2012-04-20", template.expand());
+   }
+
+   @Test
    public void testDateRangeQueryString() throws Exception
    {
       Date start = formatDate("2012-04-01T16:20:00.000-0400");

@@ -24,6 +24,10 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
@@ -83,7 +87,13 @@ public class UriTemplate implements Serializable
    /**
     *
     */
-   protected DateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+   DateTimeFormatter defaultDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+   /**
+    * @deprecated Replaced by {@link #defaultDateTimeFormatter defaultDateTimeFormatter}
+    */
+   @Deprecated
+   protected DateFormat defaultDateFormat = null;
 
    /**
     *
@@ -446,7 +456,13 @@ public class UriTemplate implements Serializable
     */
    public UriTemplate withDefaultDateFormat(String dateFormatString)
    {
-      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));
+      return this.withDefaultDateFormat(DateTimeFormat.forPattern(dateFormatString));
+   }
+
+   private UriTemplate withDefaultDateFormat(DateTimeFormatter dateTimeFormatter)
+   {
+      defaultDateTimeFormatter = dateTimeFormatter;
+      return this;
    }
 
    /**
@@ -454,10 +470,17 @@ public class UriTemplate implements Serializable
     * @param dateFormat
     * @return the date format used to render dates
     * @since 1.0
+    * @deprecated replaced by {@link #withDefaultDateFormat(String) withDefaultDateFormat}
     */
+   @Deprecated
    public UriTemplate withDefaultDateFormat(DateFormat dateFormat)
    {
-      defaultDateFormat = dateFormat;
+      if (!(dateFormat instanceof SimpleDateFormat))
+      {
+         throw new IllegalArgumentException(
+            "The only supported subclass of java.text.DateFormat is java.text.SimpleDateFormat");
+      }
+      defaultDateTimeFormatter = DateTimeFormat.forPattern(((SimpleDateFormat) dateFormat).toPattern());
       return this;
    }
 
@@ -652,7 +675,7 @@ public class UriTemplate implements Serializable
              */
             if (value instanceof Date)
             {
-               value = defaultDateFormat.format((Date) value);
+               value = defaultDateTimeFormatter.print(new DateTime((Date) value));
             }
             /*
              * The variable value contains a list of values
