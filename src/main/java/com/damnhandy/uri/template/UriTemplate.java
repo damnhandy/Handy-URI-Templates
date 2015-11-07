@@ -28,11 +28,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.damnhandy.uri.template.impl.Modifier;
-import com.damnhandy.uri.template.impl.Operator;
-import com.damnhandy.uri.template.impl.UriTemplateParser;
-import com.damnhandy.uri.template.impl.VarExploderFactory;
-import com.damnhandy.uri.template.impl.VarSpec;
+import com.damnhandy.uri.template.impl.*;
 
 /**
  * <p>
@@ -193,13 +189,13 @@ public class UriTemplate implements Serializable
     * This method is useful when the base template is less volatile than the child
     * expression and you want to merge the two.
     * </p>
-    * @param base
+    * @param baseTemplate
     * @return
     * @since 2.0
     */
-   public static UriTemplateBuilder buildFromTemplate(UriTemplate template) throws MalformedUriTemplateException
+   public static UriTemplateBuilder buildFromTemplate(UriTemplate baseTemplate) throws MalformedUriTemplateException
    {
-      return new UriTemplateBuilder(template);
+      return new UriTemplateBuilder(baseTemplate);
    }
 
    /**
@@ -224,13 +220,13 @@ public class UriTemplate implements Serializable
     * This method is useful when the base template is less volatile than the child
     * expression and you want to merge the two.
     * </p>
-    * @param base
+    * @param baseTemplate
     * @return
     * @since 1.0
     */
-   public static UriTemplateBuilder fromTemplate(UriTemplate base) throws MalformedUriTemplateException
+   public static UriTemplateBuilder fromTemplate(UriTemplate baseTemplate) throws MalformedUriTemplateException
    {
-      return new UriTemplateBuilder(base.getTemplate());
+      return new UriTemplateBuilder(baseTemplate.getTemplate());
    }
 
    
@@ -317,7 +313,7 @@ public class UriTemplate implements Serializable
       this.template = b.toString();
    }
    
-   private void buildReverssMatchRegexFromComponents() 
+   private void buildReverseMatchRegexFromComponents()
    {
       StringBuilder b = new StringBuilder();
       for(UriTemplateComponent c : components)
@@ -336,7 +332,7 @@ public class UriTemplate implements Serializable
    {
       if(this.reverseMatchPattern == null)
       {
-         buildReverssMatchRegexFromComponents();
+         buildReverseMatchRegexFromComponents();
       }
       return this.reverseMatchPattern;
    }
@@ -415,6 +411,11 @@ public class UriTemplate implements Serializable
       return template;
    }
 
+    /**
+     *
+     * @return
+     * @throws VariableExpansionException
+     */
    public String expandPartial() throws VariableExpansionException
    {
       String template = getTemplate();
@@ -615,6 +616,7 @@ public class UriTemplate implements Serializable
          if (values.containsKey(varSpec.getVariableName()))
          {
             Object value = values.get(varSpec.getVariableName());
+             // The expanded value
             String expanded = null;
 
             if (value != null)
@@ -642,13 +644,15 @@ public class UriTemplate implements Serializable
 
                }
             }
+             // Check to see if the value is explodable, meaning that we need to pass it to VarExploder to
+             // decompose the object to simple key/value pairs. We don't handle prefix modifiers on composite values.
             final boolean explodable = isExplodable(value);
             if (explodable && varSpec.getModifier() == Modifier.PREFIX)
             {
                throw new VariableExpansionException(
                      "Prefix modifiers are not applicable to variables that have composite values.");
             }
-
+            // If it's explodable, lookup the appropriate exploder
             if (explodable)
             {
                final VarExploder exploder;
@@ -698,6 +702,9 @@ public class UriTemplate implements Serializable
             {
                expanded = null;
             }
+            /*
+             * the value hasn't been expanded yet and we should call toString() on it.
+             */
             else if (expanded == null)
             {
                expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
@@ -742,10 +749,14 @@ public class UriTemplate implements Serializable
     * Returns true of the object is:
     *
     * <ul>
-    * <li>a primitive type</li>
-    * <li>an instance of {@link CharSequence}</li>
-    * <li>an instance of {@link Number} <li>
-    * <li>an instance of {@link Date} <li>
+    *   <li>a primitive type</li>
+    *   <li>an enum</li>
+    *   <li>an instance of {@link CharSequence}</li>
+    *   <li>an instance of {@link Number} <li>
+    *   <li>an instance of {@link Date} <li>
+    *   <li>an instance of {@link Boolean}</li>
+    *   <li>an instance of {@link UUID}</li>
+    *   <li>an instance of {@link Class}</li>
     * </ul>
     *
     * @param value
@@ -754,12 +765,18 @@ public class UriTemplate implements Serializable
    private boolean isSimpleType(Object value)
    {
 
-      if (value.getClass().isPrimitive() || value instanceof Number || value instanceof CharSequence
-            || value instanceof Date || value instanceof Boolean)
+      if (value.getClass().isPrimitive()
+            || value.getClass().isEnum()
+            || value instanceof Class
+            || value instanceof Number
+            || value instanceof CharSequence
+            || value instanceof Date
+            || value instanceof Boolean
+            || value instanceof UUID
+            )
       {
          return true;
       }
-
       return false;
    }
 
