@@ -15,79 +15,78 @@
  */
 package com.damnhandy.uri.template;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
- *
- *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
 public class TestExplodeWithPOJO
 {
 
-   private static final String EXPLODE_TEMPLATE = "/mapper{?address*}";
+    private static final String EXPLODE_TEMPLATE = "/mapper{?address*}";
 
-   private static final String NON_EXPLODE_TEMPLATE = "/mapper{?address}";
+    private static final String NON_EXPLODE_TEMPLATE = "/mapper{?address}";
 
-   @Test
-   public void testExplodeAddress() throws Exception
-   {
-      Address address = new Address();
-      address.setState("CA");
-      address.setCity("Newport Beach");
-      String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
+    @Test
+    public void testExplodeAddress() throws Exception
+    {
+        Address address = new Address();
+        address.setState("CA");
+        address.setCity("Newport Beach");
+        address.setActive(true);
+        String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
 
-      Assert.assertEquals("/mapper?city=Newport%20Beach&state=CA", result);
-   }
+        Assert.assertEquals("/mapper?active=true&city=Newport%20Beach&state=CA", result);
+    }
 
-   @Test
-   public void testExplodeAddressWithNoExplodeOperator() throws Exception
-   {
-      Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      String result = UriTemplate.fromTemplate(NON_EXPLODE_TEMPLATE).set("address", address).expand();
-      Assert.assertEquals("/mapper?address=Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
-   }
+    @Test
+    public void testExplodeAddressWithNoExplodeOperator() throws Exception
+    {
+        Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setActive(true);
+        String result = UriTemplate.fromTemplate(NON_EXPLODE_TEMPLATE).set("address", address).expand();
+        Assert.assertEquals("/mapper?address=true,Boston,USA,MA,4%20Yawkey%20Way,02215-3496", result);
+    }
 
-   /**
-    *
-    *
-    * @throws Exception
-    */
-   @Test
-   public void testSimpleAddress() throws Exception
-   {
-      Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
-      Assert.assertEquals("/mapper?city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
-   }
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleAddress() throws Exception
+    {
+        Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setActive(true);
+        String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
+        Assert.assertEquals("/mapper?active=true&city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
+    }
 
-   @Test
-   public void testExplodeWithSubclass() throws Exception
-   {
-      ExtendedAddress address = new ExtendedAddress("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      address.setIgnored("This should be ignored");
-      address.setLabel("A label");
-      String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
+    @Test
+    public void testExplodeWithSubclass() throws Exception
+    {
+        ExtendedAddress address = new ExtendedAddress("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setIgnored("This should be ignored");
+        address.setLabel("A label");
+        String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
 
-      Assert.assertEquals(
-            "/mapper?city=Boston&country=USA&label=A%20label&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496",
-            result);
-   }
+        Assert.assertEquals(
+        "/mapper?active=false&city=Boston&country=USA&label=A%20label&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496",
+        result);
+    }
 
-   @Test
-   public void testWrappedExploder() throws Exception
-   {
-      Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      Map<String, Object> values = new HashMap<String, Object>();
-      values.put("address", new DefaultVarExploder(address));
-      String result = UriTemplate.expand(EXPLODE_TEMPLATE, values);
-      Assert.assertEquals("/mapper?city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
+    @Test
+    public void testWrappedExploder() throws Exception
+    {
+        Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put("address", new DefaultVarExploder(address));
+        String result = UriTemplate.expand(EXPLODE_TEMPLATE, values);
+        Assert.assertEquals("/mapper?active=false&city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&zipcode=02215-3496", result);
 
-   }
+    }
 }

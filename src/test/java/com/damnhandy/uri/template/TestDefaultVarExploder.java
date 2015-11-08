@@ -15,9 +15,7 @@
  */
 package com.damnhandy.uri.template;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +44,7 @@ public class TestDefaultVarExploder
    public void testBasic() throws Exception
    {
       Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+      address.setActive(true);
       address.setIgnored("This should be ignored");
       VarExploder exploder = new DefaultVarExploder(address);
       Map<String, Object> values = exploder.getNameValuePairs();
@@ -57,18 +56,14 @@ public class TestDefaultVarExploder
       assertTrue(values.containsKey("state"));
       assertTrue(values.containsKey("country"));
       assertFalse(values.containsKey("ignored"));
+      assertTrue(values.containsKey("active"));
       assertEquals("4 Yawkey Way", values.get("street"));
       assertEquals("Boston", values.get("city"));
       assertEquals("MA", values.get("state"));
       assertEquals("02215-3496", values.get("zipcode"));
       assertEquals("USA", values.get("country"));
 
-      List<Object> list = new LinkedList<Object>(exploder.getValues());
-      assertEquals("4 Yawkey Way", list.get(3));
-      assertEquals("Boston", list.get(0));
-      assertEquals("MA", list.get(2));
-      assertEquals("02215-3496", list.get(4));
-      assertEquals("USA", list.get(1));
+
    }
 
 

@@ -1,9 +1,9 @@
 package com.damnhandy.uri.template;
 
+import java.util.UUID;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.UUID;
 
 /**
  * Created by ryan on 11/6/15.
