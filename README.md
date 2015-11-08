@@ -33,7 +33,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.0.4</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
@@ -43,7 +43,7 @@ The next version of Handy URI Templates includes some big changes to the API. If
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.0-SNAPSHOT</version>
+  <version>2.1.1-SNAPSHOT</version>
 </dependency>
 ```
 
