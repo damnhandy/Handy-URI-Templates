@@ -107,4 +107,10 @@ public class TestExpressionBuilder
       Expression e = Expression.simple(var("foo", 1), var("bar"), var("thing", true)).build();
       Assert.assertEquals("{foo:1,bar,thing*}", e.toString());
    }
+
+    @Test
+    public void testUnderscorVariableName() throws Exception {
+        Expression e = Expression.query(var("test_var")).build();
+        Assert.assertEquals("{?test_var}", e.toString());
+    }
 }
