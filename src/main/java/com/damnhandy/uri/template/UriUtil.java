@@ -106,10 +106,10 @@ public final class UriUtil
    /**
     *
     *
-    * @param soureValue
+    * @param sourceValue
     * @param chars
     * @return the encoded string
-    * @throws UriEncodingException
+    * @throws UnsupportedEncodingException
     */
    private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException
    {
