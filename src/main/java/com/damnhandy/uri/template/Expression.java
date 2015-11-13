@@ -285,7 +285,6 @@ public class Expression extends UriTemplateComponent
       this.op = op;
       this.varSpecs = varSpecs;
       this.replacementPattern = Pattern.quote(toString());
-      this.matchPattern = buildMatchingPattern();
       this.location = 0;
    }
 

@@ -134,6 +134,8 @@ While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-
   * double & Double
   * short & Short
   * long & Long
+  * UUID
+  * Enums 
 * Arrays of the above types
 * java.util.List<Object>
 * java.util.Map<String, Object>
@@ -215,4 +217,3 @@ License
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
