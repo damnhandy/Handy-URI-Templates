@@ -52,6 +52,18 @@ public class TestUriTemplateBuilder
    }
 
     @Test
+    public void testCreateBasicTemplateWithUnderScores() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
+        .literal("/foo")
+        .path(var("thing1"), var("exploded_thing", true))
+        .fragment(var("prefix", 2))
+        .build();
+
+        Assert.assertEquals("http://example.com/foo{/thing1,exploded_thing*}{#prefix:2}", template.getTemplate());
+    }
+
+    @Test
     public void testCreateFromBaseTemplate() throws Exception
     {
 
@@ -64,8 +76,8 @@ public class TestUriTemplateBuilder
 
         Assert.assertEquals("http://example.com/foo{/thing1}{/explodedThing*}{#prefix:2}", template.getTemplate());
     }
-   
-   
+
+
    @Test
    public void testLiteral() throws Exception
    {
@@ -73,12 +85,12 @@ public class TestUriTemplateBuilder
                                         .literal("/foo")
                                         .literal(null)
                                         .build();
-      
+
       print(template);
       Assert.assertEquals("http://example.com/foo", template.getTemplate());
    }
-   
-   
+
+
    @Test
    public void testWithDateFormat() throws Exception
    {
@@ -91,17 +103,17 @@ public class TestUriTemplateBuilder
       cal.set(Calendar.SECOND, 0);
       cal.set(Calendar.MILLISECOND, 0);
       Date date = cal.getTime();
-      
-   
+
+
       UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
                                         .withDefaultDateFormat("yyyy-MM-dd")
                                         .literal("/foo")
                                         .path("date")
                                         .build();
-      
+
       //print(template);
       template.set("date", date);
-      
+
       Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());
       Assert.assertEquals("http://example.com/foo/2012-04-20", template.expand());
    }
@@ -118,17 +130,17 @@ public class TestUriTemplateBuilder
       cal.set(Calendar.SECOND, 0);
       cal.set(Calendar.MILLISECOND, 0);
       Date date = cal.getTime();
-      
+
       DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-      
+
       UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
                                         .withDefaultDateFormat(dateFormat)
                                         .literal("/foo")
                                         .path("date")
                                         .build();
-      
+
       template.set("date", date);
-      
+
       Assert.assertEquals("http://example.com/foo{/date}", template.getTemplate());
       Assert.assertEquals("http://example.com/foo/2012-04-20", template.expand());
    }
@@ -139,12 +151,12 @@ public class TestUriTemplateBuilder
       System.out.println(template.set(VAR_NAME, "boo").expand());
       System.out.println(" ");
    }
-   
-   
+
+
    /**
     * This test fails as you shouldn't be able to create multiple fragment identifiers
     * in a URI.
-    * 
+    *
     * @throws Exception
     */
    @Test(expected = UriTemplateBuilderException.class)
@@ -169,7 +181,7 @@ public class TestUriTemplateBuilder
         UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).simple(VAR_NAME).build();
         Assert.assertEquals("http://example.com/{foo}", template.getTemplate());
     }
-   
+
    @Test
    public void testReservedExpression() throws Exception
    {
@@ -183,14 +195,14 @@ public class TestUriTemplateBuilder
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var(VAR_NAME,true)).build();
       Assert.assertEquals("http://example.com/{+foo*}", template.getTemplate());
    }
-   
+
    @Test
    public void testReservedExpressionWithExplodeAndPre() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).reserved(var(VAR_NAME,2)).build();
       Assert.assertEquals("http://example.com/{+foo:2}", template.getTemplate());
    }
-   
+
    @Test
    public void testLabelExpression() throws Exception
    {
@@ -204,15 +216,15 @@ public class TestUriTemplateBuilder
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).label(var(VAR_NAME,true)).build();
       Assert.assertEquals("http://example.com/{.foo*}", template.getTemplate());
    }
-   
+
    @Test
    public void testLabelExpressionWithExplodeAndPre() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).label(var(VAR_NAME,2)).build();
       Assert.assertEquals("http://example.com/{.foo:2}", template.getTemplate());
    }
-   
-   
+
+
    @Test
    public void testFragmentExpression() throws Exception
    {
@@ -226,14 +238,14 @@ public class TestUriTemplateBuilder
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).fragment(var("foo",true)).build();
       Assert.assertEquals("http://example.com/{#foo*}", template.getTemplate());
    }
-   
+
    @Test
    public void testFragmentExpressionWithExplodeAndPre() throws Exception
    {
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).fragment(var("foo",2)).build();
       Assert.assertEquals("http://example.com/{#foo:2}", template.getTemplate());
    }
-   
+
    @Test
    public void testQueryExpression() throws Exception
    {
@@ -247,7 +259,7 @@ public class TestUriTemplateBuilder
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).query(var("foo",true)).build();
       Assert.assertEquals("http://example.com/{?foo*}", template.getTemplate());
    }
-   
+
    @Test
    public void testQueryExpressionWithExplodeAndPre() throws Exception
    {
