@@ -32,7 +32,7 @@ public class TestVarSpec {
 
     @Test
     public void testWithExplodeModifier() throws Exception {
-        VarSpec varSpec = new VarSpec("experiment*", Modifier.EXPLODE, null);
+        VarSpec varSpec = new VarSpec("experiment", Modifier.EXPLODE, null);
         Assert.assertEquals("experiment", varSpec.getVariableName());
     }
 
@@ -52,7 +52,7 @@ public class TestVarSpec {
         VarSpec varSpec = UriTemplateBuilder.var("experiment", true);
 
         //then
-        Assert.assertEquals("experiment*", varSpec.getVariableName());
+        Assert.assertEquals("experiment", varSpec.getVariableName());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TestVarSpec {
     public void usingAnExpandedExplodedVariableInUriTemplateReturnsAURLContainingTheExpandedVariable() throws Exception {
         //when
         UriTemplate uriTemplate = buildFromTemplate("http://foo.com/").query(var("experiment", true)).build();
-
+        Assert.assertEquals("http://foo.com/{?experiment*}", uriTemplate.getTemplate());
         //then
         Assert.assertEquals("http://foo.com/?experiment=expandedExperiment", uriTemplate.set("experiment", "expandedExperiment").expand());
     }

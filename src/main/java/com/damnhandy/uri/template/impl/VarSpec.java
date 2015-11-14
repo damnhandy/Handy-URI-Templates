@@ -26,168 +26,174 @@ import java.io.Serializable;
  */
 public final class VarSpec implements Serializable
 {
-   /** The serialVersionUID */
-   private static final long serialVersionUID = 5850478145190940514L;
+    /**
+     * The serialVersionUID
+     */
+    private static final long serialVersionUID = 5850478145190940514L;
 
-   public static enum VarFormat {
-      SINGLE, ARRAY, PAIRS;
-   }
+    public static enum VarFormat
+    {
+        SINGLE, ARRAY, PAIRS;
+    }
 
-   private static final String BASE_PATTERN = "([\\w.~\\-\\_]|%[A-Fa-f0-9]{2})";
-   /**
-    *
-    */
-   private Modifier modifier = Modifier.NONE;
+    private static final String BASE_PATTERN = "([\\w.~\\-\\_]|%[A-Fa-f0-9]{2})";
+    /**
+     *
+     */
+    private Modifier modifier = Modifier.NONE;
 
-   /**
-    *
-    */
-   private String value;
+    /**
+     *
+     */
+    private String value;
 
-   /**
-    *
-    */
-   private Integer position = null;
+    /**
+     *
+     */
+    private Integer position = null;
 
-   /**
-    *
-    */
-   private String variableName;
+    /**
+     *
+     */
+    private String variableName;
 
-   /**
-    *
-    */
-   private String regexMatchString;
+    /**
+     *
+     */
+    private String regexMatchString;
 
 
-   /**
-    * Create a new VarSpec.
-    *
-    * @param modifier
-    * @param value
-    */
-   public VarSpec(String value, Modifier modifier)
-   {
-      this(value, modifier, null);
-   }
+    /**
+     * Create a new VarSpec.
+     *
+     * @param modifier
+     * @param value
+     */
+    public VarSpec(String value, Modifier modifier)
+    {
+        this(value, modifier, null);
+    }
 
-   /**
-    * Create a new VarSpec.
-    *
-    * @param modifier
-    * @param value
-    * @param position
-    */
-   public VarSpec(String value, Modifier modifier, Integer position)
-   {
-      this.modifier = modifier;
-      this.value = value;
-      this.position = position;
-      initVariableName();
-      initRegExMatchString();
-   }
+    /**
+     * Create a new VarSpec.
+     *
+     * @param modifier
+     * @param value
+     * @param position
+     */
+    public VarSpec(String value, Modifier modifier, Integer position)
+    {
+        this.modifier = modifier;
+        this.value = value;
+        this.position = position;
+        initVariableName();
+        initRegExMatchString();
+    }
 
-   /**
-    * Get the modifier.
-    *
-    * @return the modifier.
-    */
-   public Modifier getModifier()
-   {
-      return modifier;
-   }
+    /**
+     * Get the modifier.
+     *
+     * @return the modifier.
+     */
+    public Modifier getModifier()
+    {
+        return modifier;
+    }
 
-   private void initRegExMatchString()
-   {
-      StringBuilder b = new StringBuilder(BASE_PATTERN);
-      if (modifier == Modifier.PREFIX)
-      {
-         b.append("{").append(getPosition()).append("}");
-      }
-      else
-      {
-         b.append("+");
-      }
-      regexMatchString = b.toString();
-   }
+    private void initRegExMatchString()
+    {
+        StringBuilder b = new StringBuilder(BASE_PATTERN);
+        if (modifier == Modifier.PREFIX)
+        {
+            b.append("{").append(getPosition()).append("}");
+        }
+        else
+        {
+            b.append("+");
+        }
+        regexMatchString = b.toString();
+    }
 
     /**
      * Returns a regex pattern that matches the variable.
+     *
      * @return
      */
-   public String getRegExMatchString()
-   {
-      if(regexMatchString == null)
-      {
-         initRegExMatchString();
-      }
-      return regexMatchString;
-   }
-   /**
-    * Get the value.
-    *
-    * @return the value.
-    */
-   public String getValue()
-   {
-      return value;
-   }
+    public String getRegExMatchString()
+    {
+        if (regexMatchString == null)
+        {
+            initRegExMatchString();
+        }
+        return regexMatchString;
+    }
 
-   /**
-    * Get the position.
-    *
-    * @return the position.
-    */
-   public Integer getPosition()
-   {
-      return position;
-   }
+    /**
+     * Get the value.
+     *
+     * @return the value.
+     */
+    public String getValue()
+    {
+        return value;
+    }
 
-   private void initVariableName()
-   {
-      if (modifier != Modifier.NONE)
-      {
-         if (modifier == Modifier.PREFIX)
-         {
-            String[] values = getValue().split(Modifier.PREFIX.getValue());
-            variableName = values[0];
-         }
-         else if (modifier == Modifier.EXPLODE)
-         {
-            variableName = getValue().substring(0, getValue().length() - 1);
-         }
-      }
-      else
-      {
-         variableName = getValue();
-      }
-   }
+    /**
+     * Get the position.
+     *
+     * @return the position.
+     */
+    public Integer getPosition()
+    {
+        return position;
+    }
 
-   /**
-    * FIXME Comment this
-    *
-    * @return
-    */
-   public String getVariableName()
-   {
-      if (variableName == null)
-      {
-         return getValue();
-      }
-      return variableName;
-   }
+    private void initVariableName()
+    {
+        variableName = getValue();
+        if (modifier != Modifier.NONE)
+        {
+            if (modifier == Modifier.PREFIX)
+            {
+                String[] values = getValue().split(Modifier.PREFIX.getValue());
+                variableName = values[0];
+            }
+            // Strip the '*' from the variable name if it's presnet on the variable
+            // name. Note that in the case of the UriTemplateBuilder, the VarSpec
+            // is not responsible for rendering the '*' on the generated template
+            // output as that is done in the UriTemplateBuilder
+            if (modifier == Modifier.EXPLODE && getValue().lastIndexOf('*') != -1)
+            {
+                variableName = getValue().substring(0, getValue().length() - 1);
+            }
+        }
+    }
 
-   @Override
-   public String toString()
-   {
-      return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName="
-            + variableName + "]";
-   }
-   
-   public static class Builder
-   {
-      
-      
-   }
+    /**
+     * FIXME Comment this
+     *
+     * @return
+     */
+    public String getVariableName()
+    {
+        if (variableName == null)
+        {
+            return getValue();
+        }
+        return variableName;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName="
+        + variableName + "]";
+    }
+
+    public static class Builder
+    {
+
+
+    }
 
 }
