@@ -996,13 +996,16 @@ public class UriTemplate implements Serializable
     */
    private String joinParts(final Expression expression, List<String> parts)
    {
+
+      int[] index = getIndexForPartsWithNullsFirstIfQueryOrRegularSequnceIfNot(expression, parts);
+
       List<String> replacedParts = new ArrayList<String>(parts.size());
       for(int i = 0; i < parts.size(); i++) {
          StringBuilder builder = new StringBuilder();
-         if(parts.get(i) == null)
+         if(parts.get(index[i]) == null)
          {
             builder.append('{');
-            while(i < parts.size() && parts.get(i) == null)
+            while(i < parts.size() && parts.get(index[i]) == null)
             {
                if(builder.length() == 1)
                {
@@ -1012,7 +1015,7 @@ public class UriTemplate implements Serializable
                {
                   builder.append(DEFAULT_SEPARATOR);
                }
-               builder.append(expression.getVarSpecs().get(i).getValue());
+               builder.append(expression.getVarSpecs().get(index[i]).getValue());
                i++;
             }
             i--;
@@ -1021,7 +1024,7 @@ public class UriTemplate implements Serializable
            if(expression.getOperator() != Operator.RESERVED) {
             builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
            }
-           builder.append(parts.get(i));
+           builder.append(parts.get(index[i]));
          }
          replacedParts.add(builder.toString());
       }
@@ -1049,6 +1052,42 @@ public class UriTemplate implements Serializable
       }
       return list;
    }
+   
+   /**
+    * Takes the expression and the parts and generate a index with null value parts pulled to the start and 
+    * the not null value parts pushed to the end. Ex:
+    * ["var3",null,"var1",null] will generate the following index:
+    * [1,3,0,2]
+    * @param expression
+    * @param parts
+    * @return
+    */
+   private int[] getIndexForPartsWithNullsFirstIfQueryOrRegularSequnceIfNot(final Expression expression, List<String> parts) 
+   {
+      int[] index = new int[parts.size()];
+      
+      int inverse, forward = 0, backward = parts.size() - 1;
+      for (int i = 0; i < parts.size(); i++) {
+         if (expression.getOperator() == Operator.QUERY) 
+         {
+            inverse = parts.size() - i - 1;
+            if (parts.get(i) != null) 
+            {
+               index[forward++] = i;
+            }
+            if (parts.get(inverse) == null) 
+            {
+               index[backward--] = inverse;
+            }
+         } 
+         else 
+         {
+            index[i] = i;
+         }
+      }
+      return index;
+   }
+
 
    /**
     *
