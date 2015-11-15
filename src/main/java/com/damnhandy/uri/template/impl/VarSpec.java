@@ -170,7 +170,7 @@ public final class VarSpec implements Serializable
     }
 
     /**
-     * FIXME Comment this
+     * Returns the variable name
      *
      * @return
      */
@@ -188,12 +188,6 @@ public final class VarSpec implements Serializable
     {
         return "VarSpec [modifier=" + modifier + ", value=" + value + ", position=" + position + ", variableName="
         + variableName + "]";
-    }
-
-    public static class Builder
-    {
-
-
     }
 
 }

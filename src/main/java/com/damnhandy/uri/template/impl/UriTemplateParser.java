@@ -38,9 +38,9 @@ public final class UriTemplateParser
    private static final char EXPR_END = '}';
 
    private boolean startedTemplate = false;
-   
+
    private boolean expressionCaptureOn = false;
-   
+
    private boolean literalCaptureOn = false;
 
    private LinkedList<UriTemplateComponent> components = new LinkedList<UriTemplateComponent>();
@@ -48,14 +48,14 @@ public final class UriTemplateParser
    private StringBuilder buffer;
 
    private int startPosition;
-   
+
    private char[] template;
 
    /**
     * Scans the URI template looking for literal string components and expressions.
-    * 
+    *
     * @param templateString the URI template string to scan
-    * 
+    *
     * @since 2.0
     *
     */
@@ -75,19 +75,19 @@ public final class UriTemplateParser
                endLiteral(i);
             }
             startExpression(i);
-         } 
-         
+         }
+
          if(c != EXPR_START || c != EXPR_END)
          {
             startLiteral(i);
          }
-         
+
 
          if (expressionCaptureOn || literalCaptureOn)
          {
             capture(c);
-         } 
-         
+         }
+
          if (c == EXPR_END)
          {
             endExpression(i);
@@ -117,7 +117,7 @@ public final class UriTemplateParser
    }
 
    /**
-    * Called when the {@link ExpressonScanner} has started on the template.
+    * Called when the {@link UriTemplateParser} has started on the template.
     *
     */
    private void startTemplate()
@@ -137,17 +137,17 @@ public final class UriTemplateParser
       {
          throw new MalformedUriTemplateException("The expression at position " + startPosition + " was never terminated", startPosition);
       }
-      
+
    }
 
    /**
-    * Marks the start of 
-    * 
+    * Marks the start of
+    *
     * @param position
     */
    private void startLiteral(int position) throws MalformedUriTemplateException
    {
-      
+
       if(startedTemplate)
       {
          if(!literalCaptureOn)
@@ -162,7 +162,7 @@ public final class UriTemplateParser
          throw new IllegalStateException("Cannot start a literal without beginning the template");
       }
    }
-   
+
    private void endLiteral(int position) throws MalformedUriTemplateException
    {
       if(startedTemplate)
@@ -172,22 +172,22 @@ public final class UriTemplateParser
             throw new IllegalStateException("Can't end a literal without starting it first");
          }
          // in the case that we have back to back expressions ({foo}{?bar}), we can get into a state
-         // we started capturing a literal but never actually collected anything yet. 
+         // we started capturing a literal but never actually collected anything yet.
          if(buffer != null)
          {
             components.add(new Literal(buffer.toString(), this.startPosition));
             literalCaptureOn = false;
             buffer = null;
          }
-         
+
       }
       else
       {
          throw new IllegalStateException("Cannot end a literal without beginning the template");
       }
    }
-   
-   
+
+
    /**
     * Called when the start of an expression has been encountered.
     *
