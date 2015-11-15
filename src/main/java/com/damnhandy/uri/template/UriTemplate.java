@@ -29,6 +29,12 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.damnhandy.uri.template.impl.*;
+
 /**
  * <p>
  * This is the primary class for creating and manipulating URI templates. This project implements
@@ -59,6 +65,7 @@ import java.util.regex.Pattern;
  * <pre>
  * http://example.com/search?q=cat&lang=en
  * </pre>
+ *
  *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
@@ -978,78 +985,111 @@ public class UriTemplate implements Serializable
         return builder.toString();
     }
 
-    /**
-     * Joins parts by preserving expressions without values.
-     *
-     * @param expression Expression for the given parts
-     * @param parts      Parts to join
-     * @return Joined parts
-     */
-    private String joinParts(final Expression expression, List<String> parts)
-    {
-        List<String> replacedParts = new ArrayList<String>(parts.size());
-        for (int i = 0; i < parts.size(); i++)
-        {
-            StringBuilder builder = new StringBuilder();
-            if (parts.get(i) == null)
-            {
-                builder.append('{');
-                while (i < parts.size() && parts.get(i) == null)
-                {
-                    if (builder.length() == 1)
-                    {
-                        builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
-                    }
-                    else
-                    {
-                        builder.append(DEFAULT_SEPARATOR);
-                    }
-                    builder.append(expression.getVarSpecs().get(i).getValue());
-                    i++;
-                }
-                i--;
-                builder.append('}');
-            }
-            else
-            {
-                if (expression.getOperator() != Operator.RESERVED)
-                {
-                    builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
-                }
-                builder.append(parts.get(i));
-            }
-            replacedParts.add(builder.toString());
-        }
-        return joinParts("", replacedParts);
-    }
+   /**
+    * Joins parts by preserving expressions without values.
+    * @param expression Expression for the given parts
+    * @param parts Parts to join
+    * @return Joined parts
+    */
+   private String joinParts(final Expression expression, List<String> parts)
+   {
 
-    /**
-     * Takes an array of objects and converts them to a {@link List}.
-     *
-     * @param array
-     * @return
-     */
-    private List<Object> arrayToList(Object array) throws VariableExpansionException
-    {
-        List<Object> list = new ArrayList<Object>();
-        int length = Array.getLength(array);
-        for (int i = 0; i < length; i++)
-        {
-            final Object element = Array.get(array, i);
-            if (element.getClass().isArray())
-            {
-                throw new VariableExpansionException("Multi-dimenesional arrays are not supported.");
-            }
-            list.add(element);
-        }
-        return list;
-    }
+      int[] index = getIndexForPartsWithNullsFirstIfQueryOrRegularSequnceIfNot(expression, parts);
 
-    /**
-     *
-     *
-     * @return
-     */
+      List<String> replacedParts = new ArrayList<String>(parts.size());
+      for(int i = 0; i < parts.size(); i++) {
+         StringBuilder builder = new StringBuilder();
+         if(parts.get(index[i]) == null)
+         {
+            builder.append('{');
+            while(i < parts.size() && parts.get(index[i]) == null)
+            {
+               if(builder.length() == 1)
+               {
+                  builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
+               }
+               else
+               {
+                  builder.append(DEFAULT_SEPARATOR);
+               }
+               builder.append(expression.getVarSpecs().get(index[i]).getValue());
+               i++;
+            }
+            i--;
+            builder.append('}');
+         } else {
+           if(expression.getOperator() != Operator.RESERVED) {
+            builder.append(replacedParts.size() == 0 ? expression.getOperator().getPrefix() : expression.getOperator().getSeparator());
+           }
+           builder.append(parts.get(index[i]));
+         }
+         replacedParts.add(builder.toString());
+      }
+      return joinParts("", replacedParts);
+   }
+
+   /**
+    * Takes an array of objects and converts them to a {@link List}.
+    *
+    * @param array
+    * @return
+    */
+   private List<Object> arrayToList(Object array) throws VariableExpansionException
+   {
+      List<Object> list = new ArrayList<Object>();
+      int length = Array.getLength(array);
+      for (int i = 0; i < length; i++)
+      {
+         final Object element = Array.get(array, i);
+         if (element.getClass().isArray())
+         {
+            throw new VariableExpansionException("Multi-dimenesional arrays are not supported.");
+         }
+         list.add(element);
+      }
+      return list;
+   }
+
+   /**
+    * Takes the expression and the parts and generate a index with null value parts pulled to the start and
+    * the not null value parts pushed to the end. Ex:
+    * ["var3",null,"var1",null] will generate the following index:
+    * [1,3,0,2]
+    * @param expression
+    * @param parts
+    * @return
+    */
+   private int[] getIndexForPartsWithNullsFirstIfQueryOrRegularSequnceIfNot(final Expression expression, List<String> parts)
+   {
+      int[] index = new int[parts.size()];
+
+      int inverse, forward = 0, backward = parts.size() - 1;
+      for (int i = 0; i < parts.size(); i++) {
+         if (expression.getOperator() == Operator.QUERY)
+         {
+            inverse = parts.size() - i - 1;
+            if (parts.get(i) != null)
+            {
+               index[forward++] = i;
+            }
+            if (parts.get(inverse) == null)
+            {
+               index[backward--] = inverse;
+            }
+         }
+         else
+         {
+            index[i] = i;
+         }
+      }
+      return index;
+   }
+
+   /**
+    *
+    *
+    * @return
+    */
 //   public String getRegexString()
 //   {
 //      return null;
