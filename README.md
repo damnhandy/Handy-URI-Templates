@@ -126,23 +126,26 @@ Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-g
 
 While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/UriTemplate.html) accepts any Java object, the following Java types are preferred:
 
-* primitive and Object types such as:
-  * int & Integer
-  * double & Double
-  * char & Character
-  * float & Float
-  * double & Double
-  * short & Short
-  * long & Long
-  * UUID
-  * Enums 
-* Arrays of the above types
-* java.util.List<Object>
-* java.util.Map<String, Object>
-* java.util.Date. Dates will be formatted using the template's default formatter.
+* Primitive and Object types such as:
+	* int & Integer
+	* double & Double
+	* char & Character
+	* float & Float
+	* double & Double
+	* short & Short
+	* long & Long
+	* UUID
+	* Enums 
+*  Arrays of the above types
+* `java.util.List<Object>`
+* `java.util.Map<String, Object>`
+* `java.util.Date` Dates will be formatted using the template's default formatter.
 * Anything with a `toString()` method
 
+
+
 Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings.
+
 
 ## Unsupported Value Types
 
