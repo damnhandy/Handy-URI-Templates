@@ -266,4 +266,14 @@ public class TestUriTemplateBuilder
       UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).query(var("foo",2)).build();
       Assert.assertEquals("http://example.com/{?foo:2}", template.getTemplate());
    }
+
+
+    @Test
+    public void testCreateNew() throws Exception
+    {
+        UriTemplate template = UriTemplate.createBuilder()
+                                          .literal("http://example.com")
+                                          .path("something").query(var("foo",2)).build();
+        Assert.assertEquals("http://example.com{/something}{?foo:2}", template.getTemplate());
+    }
 }
