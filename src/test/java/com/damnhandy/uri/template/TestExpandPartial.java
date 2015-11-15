@@ -98,7 +98,7 @@ public class TestExpandPartial {
          .put("anchor2", "value6")
          .build();
       String result = UriTemplate.expandPartial(TEMPLATE, values);
-      Assert.assertEquals("https://foo.com:8080/things{/thingId}/456{?param1}&param2=value2{&param3}&param4=value4{#anchor1},value6", result);
+      Assert.assertEquals("https://foo.com:8080/things{/thingId}/456?param2=value2{&param1}{&param3}&param4=value4{#anchor1},value6", result);
    }
 
    @Test
@@ -107,6 +107,16 @@ public class TestExpandPartial {
      Map<String, Object> values = ImmutableMap.<String, Object> of("path1", "abc/def", "path2", "/ghi/jkl");
      String partiallyExpanded = UriTemplate.expandPartial(template, values);
      Assert.assertEquals("/base/abc/def/ghi/jkl{a*,b*}", partiallyExpanded);
+   }
+
+   @Test
+   public void shouldExpandNullVariablesBeforeValuedVariablesForFormStyleQuery() 
+   {
+      String template = "{?var1,var2}";
+      Map<String, Object> values = ImmutableMap.<String, Object> of("var2", "value-of-var2");
+      String partiallyExpanded = UriTemplate.expandPartial(template, values);
+      Assert.assertEquals("?var2=value-of-var2{&var1}", partiallyExpanded);
+
    }
 
 }
