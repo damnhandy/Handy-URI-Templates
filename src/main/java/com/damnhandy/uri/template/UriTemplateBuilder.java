@@ -13,6 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -122,6 +123,11 @@ public final class UriTemplateBuilder
     void addComponent(UriTemplateComponent component)
     {
         this.components.add(component);
+    }
+
+    void addComponents(Collection<UriTemplateComponent> compoments)
+    {
+        this.components.addAll(compoments);
     }
 
     /**
@@ -533,6 +539,67 @@ public final class UriTemplateBuilder
     public UriTemplateBuilder query(VarSpec... var)
     {
         addComponent(Expression.query(var).build());
+        return this;
+    }
+
+    /**
+     * Parses the template and appends the parsed components
+     * to the builder. The following
+     * code:
+     * <pre>
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .template("foo/{id}{?filter}")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/foo/{id}{?filter}
+     * </pre>
+     *
+     * @param template
+     * @return
+     */
+    public UriTemplateBuilder template(UriTemplate... template) {
+        for(UriTemplate t : template) {
+            addComponents(t.getComponents());
+        }
+
+        return this;
+    }
+
+    /**
+     * Parses the template and appends the parsed components
+     * to the builder. The following
+     * code:
+     * <pre>
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .template("foo/{id}{?filter}")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/foo/{id}{?filter}
+     * </pre>
+     *
+     * @param template
+     * @return
+     */
+    public UriTemplateBuilder template(String... template) {
+        UriTemplateParser parser = new UriTemplateParser();
+        for(String t : template) {
+            addComponents(parser.scan(t));
+        }
+
         return this;
     }
 

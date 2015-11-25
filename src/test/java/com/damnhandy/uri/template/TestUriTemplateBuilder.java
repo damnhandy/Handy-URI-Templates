@@ -267,6 +267,20 @@ public class TestUriTemplateBuilder
       Assert.assertEquals("http://example.com/{?foo:2}", template.getTemplate());
    }
 
+   @Test
+   public void testTemplateExpression() throws Exception {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).template("bar/{id}{?filter}").build();
+
+      Assert.assertEquals("http://example.com/bar/{id}{?filter}", template.getTemplate());
+   }
+
+   @Test
+   public void testTemplateExpressionWithUriTemplate() throws Exception {
+      UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).template(UriTemplate.fromTemplate("bar/{id}{?filter}")).build();
+
+      Assert.assertEquals("http://example.com/bar/{id}{?filter}", template.getTemplate());
+   }
+
 
     @Test
     public void testCreateNew() throws Exception

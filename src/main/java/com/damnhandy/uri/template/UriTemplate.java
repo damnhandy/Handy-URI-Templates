@@ -29,12 +29,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import com.damnhandy.uri.template.impl.*;
-
 /**
  * <p>
  * This is the primary class for creating and manipulating URI templates. This project implements
@@ -247,6 +241,15 @@ public class UriTemplate implements Serializable
         return new UriTemplateBuilder(baseTemplate.getTemplate());
     }
 
+    /**
+     * Returns the collection of {@link UriTemplateComponent} instances
+     * found in this template.
+     *
+     * @return
+     */
+    public Collection<UriTemplateComponent> getComponents() {
+        return Collections.unmodifiableCollection(components);
+    }
 
     /**
      * Returns the number of expressions found in this template
