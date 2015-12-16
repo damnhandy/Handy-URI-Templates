@@ -246,6 +246,27 @@ public class TestUriTemplateBuilder
       Assert.assertEquals("http://example.com/{#foo:2}", template.getTemplate());
    }
 
+    @Test
+    public void testQueryContinuation() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).continuation("foo").build();
+        Assert.assertEquals("http://example.com/{&foo}", template.getTemplate());
+    }
+
+    @Test
+    public void testQueryContinuationWithExplode() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).continuation(var("foo",true)).build();
+        Assert.assertEquals("http://example.com/{&foo*}", template.getTemplate());
+    }
+
+    @Test
+    public void testQueryContinuationWithExplodeAndPre() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI).continuation(var("foo",2)).build();
+        Assert.assertEquals("http://example.com/{&foo:2}", template.getTemplate());
+    }
+
    @Test
    public void testQueryExpression() throws Exception
    {

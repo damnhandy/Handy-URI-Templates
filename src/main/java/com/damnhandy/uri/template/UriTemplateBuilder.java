@@ -543,6 +543,56 @@ public final class UriTemplateBuilder
     }
 
     /**
+     * Appends a template expression using the form-style query continuation. The following
+     * code:
+     * <pre>
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .continuation("foo")
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{&foo}
+     * </pre>
+     *
+     * @param var
+     * @return
+     */
+    public UriTemplateBuilder continuation(String... var)
+    {
+        return continuation(toVarSpec(var));
+    }
+
+    /**
+     * Appends a template expression using the form-style query continuation and
+     * and optional modifier. The following
+     * code:
+     * <pre>
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate("http://example.com/")
+     *                   .query(var("foo",1))
+     *                   .build();
+     * </pre>
+     * Will generate the following URI Template string:
+     * <pre>
+     * http://example.com/{&foo:1}
+     * </pre>
+     *
+     * @param var
+     * @return
+     */
+    public UriTemplateBuilder continuation(VarSpec... var)
+    {
+        addComponent(Expression.continuation(var).build());
+        return this;
+    }
+
+    /**
      * Parses the template and appends the parsed components
      * to the builder. The following
      * code:
