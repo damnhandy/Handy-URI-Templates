@@ -21,7 +21,7 @@
 
     <properties>
         <http.client>4.1.1</http.client>
-        <jackson.version>2.6.3</jackson.version>
+        <jackson.version>2.6.4</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <findbugs.plugin>3.0.3</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
