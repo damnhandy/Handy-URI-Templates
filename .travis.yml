@@ -1,4 +1,13 @@
 language: java
+jdk:
+  - openjdk7
+  - oraclejdk7
+  - openjdk6
+  - oraclejdk8
 sudo: false
+install: ./mvnw clean
+script: ./mvnw install
+notifications:
+  email: false
 before_install:
   - git submodule update --init --recursive
