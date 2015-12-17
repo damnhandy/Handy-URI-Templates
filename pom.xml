@@ -106,7 +106,7 @@
                 <version>0.0.4</version>
                 <inherited>false</inherited>
                 <configuration>
-                    <mavenVersion>3.3.1</mavenVersion>
+                    <mavenVersion>3.3.9</mavenVersion>
                 </configuration>
             </plugin>
             <plugin>
