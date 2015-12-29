@@ -24,6 +24,9 @@ As of version `1.1.1`, Handy URI Templates passes all tests defined by the [urit
 
 The complete [JavaDocs are here](http://damnhandy.github.io/Handy-URI-Templates/apidocs/).
 
+## API Documentation
+
+JavaDocs are available on [Javadocs.io](http://www.javadoc.io/doc/com.damnhandy/handy-uri-templates)
 
 ## Maven
 
@@ -79,7 +82,7 @@ This will result in the following URI:
 
 	"/h/houses/A%20test?query=Ask%20something&test2=someting%20else"
 
-You can find more in the [JavaDocs](http://damnhandy.github.com/Handy-URI-Templates/apidocs/index.html).
+You can find more in the [JavaDocs](http://www.javadoc.io/doc/com.damnhandy/handy-uri-templates).
 
 ## URI Template Builder API
 
