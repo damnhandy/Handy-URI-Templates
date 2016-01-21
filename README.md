@@ -30,7 +30,7 @@ JavaDocs are available on [Javadocs.io](http://www.javadoc.io/doc/com.damnhandy/
 
 ## Maven
 
-To use the latest version of Handy URI Templates, you need to add the following dependency to your pom.xml:
+To use the latest version of Handy URI Templates, you need to add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
