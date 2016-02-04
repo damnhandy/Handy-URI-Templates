@@ -84,7 +84,7 @@ public class UriTemplate implements Serializable
     /**
      *
      */
-    DateTimeFormatter defaultDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    transient DateTimeFormatter defaultDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     /**
      * @deprecated Replaced by {@link #defaultDateTimeFormatter defaultDateTimeFormatter}
@@ -931,7 +931,7 @@ public class UriTemplate implements Serializable
 
         if (operator.isNamed())
         {
-            if (expanded.isEmpty() && !operator.getSeparator().equals("&"))
+            if (expanded.isEmpty() && !"&".equals(operator.getSeparator()) )
             {
                 expanded = varSpec.getValue();
             }

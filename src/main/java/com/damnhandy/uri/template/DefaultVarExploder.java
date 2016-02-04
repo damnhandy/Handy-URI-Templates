@@ -194,7 +194,7 @@ public class DefaultVarExploder implements VarExploder
             return;
         }
 
-        if (!method.isAnnotationPresent(UriTransient.class) && !name.equals("class"))
+        if (!method.isAnnotationPresent(UriTransient.class) && !"class".equals(name))
         {
             Object value = getValue(method);
 

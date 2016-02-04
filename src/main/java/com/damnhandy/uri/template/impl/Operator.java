@@ -164,7 +164,7 @@ public enum Operator {
          {
             return op;
          }
-         else if (opCode.equalsIgnoreCase("!") || opCode.equalsIgnoreCase("="))
+         else if ("!".equals(opCode) || "=".equals(opCode))
          {
             throw new IllegalArgumentException(opCode + " is not a valid operator.");
          }
