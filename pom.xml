@@ -219,7 +219,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.5</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -476,7 +476,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>19.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -484,7 +484,7 @@
         <dependency>
             <groupId>com.ning</groupId>
             <artifactId>async-http-client</artifactId>
-            <version>1.9.31</version>
+            <version>1.9.33</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -498,7 +498,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.9.1</version>
+            <version>2.9.2</version>
         </dependency>
     </dependencies>
 </project>
