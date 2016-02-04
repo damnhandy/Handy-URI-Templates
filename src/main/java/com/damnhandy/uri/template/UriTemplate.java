@@ -957,7 +957,7 @@ public class UriTemplate implements Serializable
      */
     private String joinParts(final String joiner, List<String> parts)
     {
-        if (parts.size() == 0)
+        if (parts.isEmpty())
         {
             return null;
         }

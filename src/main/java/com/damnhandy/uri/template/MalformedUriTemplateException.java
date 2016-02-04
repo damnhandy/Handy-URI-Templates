@@ -29,14 +29,14 @@ public class MalformedUriTemplateException extends RuntimeException
    /** The serialVersionUID */
    private static final long serialVersionUID = 5883174281977078450L;
 
-   private int location;
+   private final int location;
    /**
     * Create a new UriTemplateParseException.
     *
     * @param message
     * @param cause
     */
-   public MalformedUriTemplateException(String message, int location, Throwable cause)
+   public MalformedUriTemplateException(String message, final int location, Throwable cause)
    {
       super(message, cause);
       this.location = location;
@@ -53,7 +53,7 @@ public class MalformedUriTemplateException extends RuntimeException
       this.location = location;
    }
 
-   public int getLocation() 
+   public int getLocation()
    {
       return this.location;
    }
