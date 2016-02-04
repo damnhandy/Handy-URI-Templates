@@ -109,7 +109,7 @@ public class DefaultVarExploder implements VarExploder
      * @param source
      * @throws VarExploderException
      */
-    public void setSource(Object source) throws VarExploderException
+    void setSource(Object source) throws VarExploderException
     {
         this.source = source;
         this.initValues();
@@ -132,7 +132,7 @@ public class DefaultVarExploder implements VarExploder
 
         if(source instanceof Map )
         {
-            this.pairs = (Map) source;
+            this.pairs = (Map<String,Object>) source;
             return;
         }
         Method[] methods = c.getMethods();
@@ -213,7 +213,7 @@ public class DefaultVarExploder implements VarExploder
         return (propertyName != null) && (propertyName.length() != 0);
     }
 
-    public static String decapitalize(String name)
+    static String decapitalize(String name)
     {
 
         if (name == null)
@@ -306,8 +306,7 @@ public class DefaultVarExploder implements VarExploder
     @Override
     public Collection<Object> getValues() throws VarExploderException
     {
-        Collection<Object> c = pairs.values();
-        return c;
+        return pairs.values();
     }
 
 }

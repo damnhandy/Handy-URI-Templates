@@ -41,7 +41,7 @@ public enum Modifier
     *
     * @param value
     */
-   private Modifier(String value)
+   Modifier(String value)
    {
       this.value = value;
    }

@@ -81,7 +81,7 @@ public enum Operator {
     * @param operator
     * @param separator
     */
-   private Operator(String operator, String separator, boolean named, Encoding encoding)
+   Operator(String operator, String separator, boolean named, Encoding encoding)
    {
       this.operator = operator;
       this.separator = separator;

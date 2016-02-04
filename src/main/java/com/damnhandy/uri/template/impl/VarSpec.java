@@ -31,7 +31,7 @@ public final class VarSpec implements Serializable
      */
     private static final long serialVersionUID = 5850478145190940514L;
 
-    public static enum VarFormat
+    public enum VarFormat
     {
         SINGLE, ARRAY, PAIRS;
     }

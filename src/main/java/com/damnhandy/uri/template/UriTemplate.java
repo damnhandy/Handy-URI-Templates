@@ -74,7 +74,7 @@ public class UriTemplate implements Serializable
      */
     private static final long serialVersionUID = -5245084430838445979L;
 
-    public static enum Encoding
+    public enum Encoding
     {
         U, UR;
     }
@@ -95,7 +95,7 @@ public class UriTemplate implements Serializable
     /**
      *
      */
-    static final char[] OPERATORS =
+    private static final char[] OPERATORS =
     {'+', '#', '.', '/', ';', '?', '&', '!', '='};
 
     /**
@@ -561,12 +561,9 @@ public class UriTemplate implements Serializable
      */
     public UriTemplate set(Map<String, Object> values)
     {
-        if (values != null)
+        if (values != null && !values.isEmpty())
         {
-            if (!values.isEmpty())
-            {
-                this.values.putAll(values);
-            }
+            this.values.putAll(values);
         }
         return this;
     }
@@ -591,8 +588,7 @@ public class UriTemplate implements Serializable
     {
         final Operator operator = expression.getOperator();
         final List<String> replacements = expandVariables(expression, partial);
-        String result
-        = partial ? joinParts(expression, replacements) : joinParts(operator.getSeparator(), replacements);
+        String result = partial ? joinParts(expression, replacements) : joinParts(operator.getSeparator(), replacements);
         if (result != null)
         {
             if (!partial && operator != Operator.RESERVED)
@@ -942,13 +938,13 @@ public class UriTemplate implements Serializable
 
             else
             {
-                if (varSpec.getModifier() == Modifier.EXPLODE)
-                {
-                    if (operator.useVarNameWhenExploded() && format != VarSpec.VarFormat.PAIRS)
+                if (varSpec.getModifier() == Modifier.EXPLODE &&
+                    operator.useVarNameWhenExploded() &&
+                    format != VarSpec.VarFormat.PAIRS)
                     {
                         expanded = varSpec.getVariableName() + "=" + expanded;
                     }
-                }
+
             }
         }
         return expanded;
