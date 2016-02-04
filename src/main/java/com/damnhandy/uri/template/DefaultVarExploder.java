@@ -18,10 +18,7 @@ package com.damnhandy.uri.template;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 
 /**
@@ -133,6 +130,11 @@ public class DefaultVarExploder implements VarExploder
             throw new IllegalArgumentException("The value must an object");
         }
 
+        if(source instanceof Map )
+        {
+            this.pairs = (Map) source;
+            return;
+        }
         Method[] methods = c.getMethods();
         for (Method method : methods)
         {

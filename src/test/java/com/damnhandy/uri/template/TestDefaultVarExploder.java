@@ -15,13 +15,12 @@
  */
 package com.damnhandy.uri.template;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 
 /**
@@ -35,62 +34,73 @@ import org.junit.Test;
 public class TestDefaultVarExploder
 {
 
-   /**
-    *
-    *
-    * @throws Exception
-    */
-   @Test
-   public void testBasic() throws Exception
-   {
-      Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      address.setActive(true);
-      address.setIgnored("This should be ignored");
-      VarExploder exploder = new DefaultVarExploder(address);
-      Map<String, Object> values = exploder.getNameValuePairs();
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testBasic() throws Exception
+    {
+        Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setActive(true);
+        address.setIgnored("This should be ignored");
+        VarExploder exploder = new DefaultVarExploder(address);
+        Map<String, Object> values = exploder.getNameValuePairs();
 
-      assertTrue(values.containsKey("street"));
-      assertTrue(values.containsKey("city"));
-      assertTrue(values.containsKey("zipcode"));
-      assertFalse(values.containsKey("postalCode"));
-      assertTrue(values.containsKey("state"));
-      assertTrue(values.containsKey("country"));
-      assertFalse(values.containsKey("ignored"));
-      assertTrue(values.containsKey("active"));
-      assertEquals("4 Yawkey Way", values.get("street"));
-      assertEquals("Boston", values.get("city"));
-      assertEquals("MA", values.get("state"));
-      assertEquals("02215-3496", values.get("zipcode"));
-      assertEquals("USA", values.get("country"));
+        assertTrue(values.containsKey("street"));
+        assertTrue(values.containsKey("city"));
+        assertTrue(values.containsKey("zipcode"));
+        assertFalse(values.containsKey("postalCode"));
+        assertTrue(values.containsKey("state"));
+        assertTrue(values.containsKey("country"));
+        assertFalse(values.containsKey("ignored"));
+        assertTrue(values.containsKey("active"));
+        assertEquals("4 Yawkey Way", values.get("street"));
+        assertEquals("Boston", values.get("city"));
+        assertEquals("MA", values.get("state"));
+        assertEquals("02215-3496", values.get("zipcode"));
+        assertEquals("USA", values.get("country"));
 
 
-   }
+    }
+
+    /**
+     * Test case for https://github.com/damnhandy/Handy-URI-Templates/issues/49
+     * @throws Exception
+     */
+    @Test
+    public void testWithEmptyMap() throws Exception
+    {
+        String result = UriTemplate.fromTemplate("http://example.com/{?keys*}")
+                                   .set("keys", Collections.emptyMap())
+                                   .expand();
+        assertEquals("http://example.com/", result);
+    }
 
 
-   @Test
-   public void testWithSubclass() throws Exception
-   {
-      ExtendedAddress address = new ExtendedAddress("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
-      address.setIgnored("This should be ignored");
-      address.setLabel("A label");
-      VarExploder exploder = new DefaultVarExploder(address);
-      Map<String, Object> values = exploder.getNameValuePairs();
+    @Test
+    public void testWithSubclass() throws Exception
+    {
+        ExtendedAddress address = new ExtendedAddress("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setIgnored("This should be ignored");
+        address.setLabel("A label");
+        VarExploder exploder = new DefaultVarExploder(address);
+        Map<String, Object> values = exploder.getNameValuePairs();
 
-      assertTrue(values.containsKey("street"));
-      assertTrue(values.containsKey("city"));
-      assertTrue(values.containsKey("zipcode"));
-      assertFalse(values.containsKey("postalCode"));
-      assertTrue(values.containsKey("state"));
-      assertTrue(values.containsKey("country"));
-      assertTrue(values.containsKey("label"));
-      assertFalse(values.containsKey("ignored"));
+        assertTrue(values.containsKey("street"));
+        assertTrue(values.containsKey("city"));
+        assertTrue(values.containsKey("zipcode"));
+        assertFalse(values.containsKey("postalCode"));
+        assertTrue(values.containsKey("state"));
+        assertTrue(values.containsKey("country"));
+        assertTrue(values.containsKey("label"));
+        assertFalse(values.containsKey("ignored"));
 
-      assertEquals("4 Yawkey Way", values.get("street"));
-      assertEquals("Boston", values.get("city"));
-      assertEquals("MA", values.get("state"));
-      assertEquals("02215-3496", values.get("zipcode"));
-      assertEquals("USA", values.get("country"));
-      assertEquals("A label", values.get("label"));
+        assertEquals("4 Yawkey Way", values.get("street"));
+        assertEquals("Boston", values.get("city"));
+        assertEquals("MA", values.get("state"));
+        assertEquals("02215-3496", values.get("zipcode"));
+        assertEquals("USA", values.get("country"));
+        assertEquals("A label", values.get("label"));
 
-   }
+    }
 }
