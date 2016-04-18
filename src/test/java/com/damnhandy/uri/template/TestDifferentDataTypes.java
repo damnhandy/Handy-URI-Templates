@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -127,7 +128,7 @@ public class TestDifferentDataTypes
       UriTemplate.fromTemplate(TEMPLATE_1).set("count", values).expand();
    }
 
-   @Test(expected = VariableExpansionException.class)
+   @Test
    public void testNestedCollections() throws Exception
    {
       List<List<String>> values = new ArrayList<List<String>>();
@@ -140,7 +141,7 @@ public class TestDifferentDataTypes
       two.add("Four");
       values.add(two);
       String uri = UriTemplate.fromTemplate(TEMPLATE_2).set("count", values).expand();
-      System.out.println(uri);
+       Assert.assertEquals("%5BOne%2C%20Two%5D,%5BThree%2C%20Four%5D", uri);
    }
 
    /**
@@ -148,7 +149,7 @@ public class TestDifferentDataTypes
     *
     * @throws Exception
     */
-   @Test(expected = VariableExpansionException.class)
+   @Test
    public void testMapWithNestedCollections() throws Exception
    {
       Map<String, List<String>> values = new HashMap<String,List<String>>();
@@ -161,6 +162,6 @@ public class TestDifferentDataTypes
       two.add("Four");
       values.put("two",two);
       String uri = UriTemplate.fromTemplate(TEMPLATE_2).set("count", values).expand();
-      System.out.println(uri);
+      Assert.assertEquals("one=One%2CTwo,two=Three%2CFour",uri);
    }
 }

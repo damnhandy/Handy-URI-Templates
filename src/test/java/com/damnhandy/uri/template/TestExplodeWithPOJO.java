@@ -80,6 +80,21 @@ public class TestExplodeWithPOJO
     }
 
     @Test
+    public void testExplodeWithSubclassWithNestedList() throws Exception
+    {
+        ExtendedAddressWithNestedLists address = new ExtendedAddressWithNestedLists("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");
+        address.setIgnored("This should be ignored");
+        address.addStuff("foo");
+        address.addStuff("bar");
+        address.addStuff("moo");
+        String result = UriTemplate.fromTemplate(EXPLODE_TEMPLATE).set("address", address).expand();
+
+        Assert.assertEquals(
+        "/mapper?active=false&city=Boston&country=USA&state=MA&street=4%20Yawkey%20Way&stuff=foo%2Cbar%2Cmoo&zipcode=02215-3496",
+        result);
+    }
+
+    @Test
     public void testWrappedExploder() throws Exception
     {
         Address address = new Address("4 Yawkey Way", "Boston", "MA", "02215-3496", "USA");

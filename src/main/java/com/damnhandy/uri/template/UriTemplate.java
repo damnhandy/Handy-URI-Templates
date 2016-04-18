@@ -830,12 +830,18 @@ public class UriTemplate implements Serializable
      *
      * @param obj
      */
-    private void checkValue(Object obj) throws VariableExpansionException
+    private boolean checkValue(Object obj) throws VariableExpansionException
     {
-        if (obj instanceof Collection || obj instanceof Map || obj.getClass().isArray())
+        if (obj instanceof Map)
         {
             throw new VariableExpansionException("Nested data structures are not supported.");
         }
+
+        if (obj instanceof Collection || obj.getClass().isArray())
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -867,9 +873,18 @@ public class UriTemplate implements Serializable
         {
 
             String key = entry.getKey();
-            checkValue(entry.getValue());
+            String value;
+            if(checkValue(entry.getValue()))
+            {
+                value = joinParts(",", entry.getValue());
+            }
+            else
+            {
+                value = entry.getValue().toString();
+            }
+
             String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
-            + expandStringValue(operator, varSpec, entry.getValue().toString(), VarSpec.VarFormat.PAIRS);
+            + expandStringValue(operator, varSpec, value, VarSpec.VarFormat.PAIRS);
 
             stringValues.add(pair);
         }
@@ -950,6 +965,27 @@ public class UriTemplate implements Serializable
         return expanded;
     }
 
+
+    private String joinParts(final String joiner, Object parts)
+    {
+        if(parts instanceof Collection)
+        {
+            Collection<String> values = (Collection)parts;
+            List<String> v = new ArrayList<String>();
+            for(String s : values)
+            {
+                v.add(s);
+            }
+            return joinParts(joiner,v);
+        }
+        else if (parts.getClass().isArray())
+        {
+            List<String> v = Arrays.asList((String[]) parts);
+            return joinParts(joiner,v);
+        }
+        return null;
+
+    }
     /**
      * @param joiner
      * @param parts
