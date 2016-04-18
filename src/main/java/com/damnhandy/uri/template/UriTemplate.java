@@ -125,7 +125,7 @@ public class UriTemplate implements Serializable
      * The collection of values that will be applied to the URI expression in the
      * expansion process.
      */
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> values = new LinkedHashMap<String, Object>();
 
     /**
      *
