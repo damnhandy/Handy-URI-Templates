@@ -18,7 +18,7 @@ public class TestNestedDataStructures
 {
 
     /**
-     *
+     * Nested arrays can be supported in composite objects since we can treat them like arrays in
      * @throws Exception
      */
     @Test
@@ -31,8 +31,18 @@ public class TestNestedDataStructures
         Assert.assertEquals("/test?field=a%2Cb%2Cc&user=1%2C2%2C3", result);
     }
 
+    @Test
+    public void testNestedDataStructureWithoutExplodeModifier() throws Exception
+    {
+        String result =  UriTemplate.fromTemplate("/test{?queryParams}")
+        .set("queryParams", new QueryParams(Lists.newArrayList("a","b","c"), Lists.newArrayList("1","2","3")))
+        .expand();
+
+        Assert.assertEquals("/test?queryParams=a%2Cb%2Cc,1%2C2%2C3", result);
+    }
+
     /**
-     *
+     * N
      *
      * @throws Exception
      */

@@ -146,7 +146,7 @@ public class TestDifferentDataTypes
         two.add("Four");
         values.add(two);
         String uri = UriTemplate.fromTemplate(TEMPLATE_2).set("count", values).expand();
-        Assert.assertEquals("%5BOne%2C%20Two%5D,%5BThree%2C%20Four%5D", uri);
+        Assert.assertEquals("One%2CTwo,Three%2CFour", uri);
     }
 
     /**

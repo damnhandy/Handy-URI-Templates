@@ -809,7 +809,23 @@ public class UriTemplate implements Serializable
         {
             final Object obj = i.next();
             checkValue(obj);
-            final String value = obj.toString();
+            String value;
+            if(checkValue(obj))
+            {
+                value = joinParts(",", obj);
+            }
+            else
+            {
+                if(isSimpleType(obj))
+                {
+                    value = obj.toString();
+                }
+                else
+                {
+                    throw new VariableExpansionException("Collections or other complex types are not supported in collections.");
+                }
+            }
+
             stringValues.add(expandStringValue(operator, varSpec, value, VarSpec.VarFormat.ARRAY));
         }
 
