@@ -678,37 +678,37 @@ public class UriTemplate implements Serializable
                     }
                 }
 
-            /*
-             * Format the date if we have a java.util.Date
-             */
+                /*
+                 * Format the date if we have a java.util.Date
+                 */
                 if (value instanceof Date)
                 {
                     value = defaultDateTimeFormatter.print(new DateTime((Date) value));
                 }
-            /*
-             * The variable value contains a list of values
-             */
+                /*
+                 * The variable value contains a list of values
+                 */
                 if (value instanceof Collection)
                 {
                     expanded = this.expandCollection(operator, varSpec, (Collection) value);
                 }
-            /*
-             * The variable value contains a list of key-value pairs
-             */
+                /*
+                 * The variable value contains a list of key-value pairs
+                 */
                 else if (value instanceof Map)
                 {
                     expanded = expandMap(operator, varSpec, (Map) value);
                 }
-            /*
-             * The variable value is null or has o value.
-             */
+                /*
+                 * The variable value is null or has o value.
+                 */
                 else if (value == null)
                 {
                     expanded = null;
                 }
-            /*
-             * the value hasn't been expanded yet and we should call toString() on it.
-             */
+                /*
+                 * the value hasn't been expanded yet and we should call toString() on it.
+                 */
                 else if (expanded == null)
                 {
                     expanded = this.expandStringValue(operator, varSpec, value.toString(), VarSpec.VarFormat.SINGLE);
@@ -880,7 +880,14 @@ public class UriTemplate implements Serializable
             }
             else
             {
-                value = entry.getValue().toString();
+                if(isSimpleType(entry.getValue()))
+                {
+                    value = entry.getValue().toString();
+                }
+                else
+                {
+                    throw new VariableExpansionException("Collections or other complex types are not supported in collections.");
+                }
             }
 
             String pair = expandStringValue(operator, varSpec, key, VarSpec.VarFormat.PAIRS) + pairJoiner
