@@ -3,13 +3,14 @@ package com.damnhandy.uri.template;
 import com.damnhandy.uri.template.conformance.AbstractUriTemplateConformanceTest;
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.junit.Ignore;
 import java.util.Map;
 
 /**
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * Created by ryan on 11/14/15.
  */
+ @Ignore
 public class AbstractUriTemplateBuilderTests extends AbstractUriTemplateConformanceTest
 {
 

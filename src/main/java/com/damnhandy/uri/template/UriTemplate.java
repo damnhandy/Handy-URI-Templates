@@ -609,8 +609,7 @@ public class UriTemplate implements Serializable
      * @return
      * @throws VariableExpansionException
      */
-    @SuppressWarnings(
-    {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private List<String> expandVariables(Expression expression, boolean partial) throws VariableExpansionException
     {
         final List<String> replacements = new ArrayList<String>();
@@ -927,6 +926,11 @@ public class UriTemplate implements Serializable
     }
 
     /**
+     * This method performs the expansion on the string value being applied to the output URI. The rules for exapnasion
+     * depends heavily on the {@link Operator} in use. The {@link Operator} will dictate the URI encoding rules that
+     * will be applied to the string.
+     *
+     *
      * @param operator
      * @param varSpec
      * @param variable
@@ -949,6 +953,7 @@ public class UriTemplate implements Serializable
 
         try
         {
+            // If we have a {+} or {#} operator, there are items we do not need to encode.
             if (operator.getEncoding() == Encoding.UR)
             {
                 expanded = UriUtil.encodeFragment(variable);
