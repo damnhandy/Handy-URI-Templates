@@ -83,7 +83,7 @@ public final class VarSpec implements Serializable
      */
     public VarSpec(String value, Modifier modifier)
     {
-        this(value, modifier, null);
+        this(value, modifier, -1);
     }
 
     /**
@@ -104,6 +104,8 @@ public final class VarSpec implements Serializable
         initVariableName();
         initRegExMatchString();
     }
+
+
 
     /**
      * Get the modifier.
@@ -183,6 +185,9 @@ public final class VarSpec implements Serializable
                 variableName = getValue().substring(0, getValue().length() - 1);
             }
         }
+        // Double check if the name has an explode modifier. This could happen
+        // using one of the template builder APIs. If the ends with '*'
+        // strip it and set the modifier to EXPLODE
         else if (variableName.lastIndexOf('*') != -1)
         {
             variableName = getValue().substring(0, getValue().length() - 1);
