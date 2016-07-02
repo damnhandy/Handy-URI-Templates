@@ -55,10 +55,6 @@ public class Expression extends UriTemplateComponent
     private static final long serialVersionUID = -5305648325957481840L;
 
     /**
-     * Regex to validate the variable name.
-     */
-    private static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
-    /**
      * A regex quoted string that matches the expression for replacement in the
      * expansion process. For example:
      * <pre>
@@ -325,7 +321,6 @@ public class Expression extends UriTemplateComponent
                 String[] pair = varname.split(Modifier.PREFIX.getValue());
                 try
                 {
-                    validateVarname(pair[0]);
                     Integer pos = Integer.valueOf(varname.substring(subStrPos + 1));
                     varspecs.add(new VarSpec(pair[0], Modifier.PREFIX, pos));
                 }
@@ -340,7 +335,6 @@ public class Expression extends UriTemplateComponent
           */
             else if (varname.lastIndexOf(Modifier.EXPLODE.getValue()) > 0)
             {
-                validateVarname(varname.substring(0, varname.length() - 1));
                 varspecs.add(new VarSpec(varname, Modifier.EXPLODE));
             }
          /*
@@ -348,7 +342,6 @@ public class Expression extends UriTemplateComponent
           */
             else
             {
-                validateVarname(varname);
                 varspecs.add(new VarSpec(varname, Modifier.NONE));
             }
         }
@@ -357,24 +350,7 @@ public class Expression extends UriTemplateComponent
         this.varSpecs = varspecs;
     }
 
-    /**
-     * Validates that the varname conforms to the spec.
-     *
-     * @param varname
-     */
-    private void validateVarname(String varname) throws MalformedUriTemplateException
-    {
-        Matcher matcher = VARNAME_REGEX.matcher(varname);
-        if (!matcher.matches())
-        {
-            throw new MalformedUriTemplateException("The variable name " + varname + " contains invalid characters", this.location);
-        }
 
-        if (varname.contains(" "))
-        {
-            throw new MalformedUriTemplateException("The variable name " + varname + " cannot contain spaces (leading or trailing)", this.location);
-        }
-    }
 
 
     private Pattern buildMatchingPattern()

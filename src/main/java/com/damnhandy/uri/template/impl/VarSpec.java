@@ -15,7 +15,11 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import com.damnhandy.uri.template.MalformedUriTemplateException;
+
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -31,6 +35,14 @@ public final class VarSpec implements Serializable
      */
     private static final long serialVersionUID = 5850478145190940514L;
 
+    /**
+     * Regex to validate the variable name.
+     */
+    private static final Pattern VARNAME_REGEX = Pattern.compile("([\\w\\_\\.]|%[A-Fa-f0-9]{2})+");
+
+    /**
+     *
+     */
     public enum VarFormat
     {
         SINGLE, ARRAY, PAIRS;
@@ -50,7 +62,7 @@ public final class VarSpec implements Serializable
     /**
      *
      */
-    private Integer position = null;
+    private Integer position = 0;
 
     /**
      *
@@ -85,7 +97,10 @@ public final class VarSpec implements Serializable
     {
         this.modifier = modifier;
         this.value = value;
-        this.position = position;
+        if(position != null)
+        {
+            this.position = position;
+        }
         initVariableName();
         initRegExMatchString();
     }
@@ -151,6 +166,7 @@ public final class VarSpec implements Serializable
     private void initVariableName()
     {
         variableName = getValue();
+
         if (modifier != Modifier.NONE)
         {
             if (modifier == Modifier.PREFIX)
@@ -167,7 +183,25 @@ public final class VarSpec implements Serializable
                 variableName = getValue().substring(0, getValue().length() - 1);
             }
         }
+        else if (variableName.lastIndexOf('*') != -1)
+        {
+            variableName = getValue().substring(0, getValue().length() - 1);
+            modifier = Modifier.EXPLODE;
+        }
+        // Validation needs to happen after strip out the modifier or prefix
+        Matcher matcher = VARNAME_REGEX.matcher(variableName);
+        if (!matcher.matches())
+        {
+            throw new MalformedUriTemplateException("The variable name " + variableName + " contains invalid characters", position);
+        }
+
+        if (variableName.contains(" "))
+        {
+            throw new MalformedUriTemplateException("The variable name " + variableName + " cannot contain spaces (leading or trailing)", position);
+        }
     }
+
+
 
     /**
      * Returns the variable name
