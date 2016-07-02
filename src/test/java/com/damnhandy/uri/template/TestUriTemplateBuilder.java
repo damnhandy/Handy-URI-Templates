@@ -311,4 +311,39 @@ public class TestUriTemplateBuilder
                                           .path("something").query(var("foo",2)).build();
         Assert.assertEquals("http://example.com{/something}{?foo:2}", template.getTemplate());
     }
+
+
+    @Test(expected = MalformedUriTemplateException.class)
+    public void testInvalidVariableName() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
+                                          .query("invalid-variable").build();
+        Assert.fail();
+    }
+
+    @Test(expected = MalformedUriTemplateException.class)
+    public void testInvalidVariableNameWithSpaces() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
+                                          .fragment("invalid variable").build();
+        Assert.fail();
+    }
+
+    @Test(expected = MalformedUriTemplateException.class)
+    public void testInvalidVarNameUsingExpressionSyntax() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
+                                          .query("{?invalid_variable}").build();
+        Assert.fail();
+    }
+
+    @Test(expected = MalformedUriTemplateException.class)
+    public void testInvalidVarNameWithTilde() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate(BASE_URI)
+                                          .path("~foo").build();
+        Assert.fail();
+    }
+
+
 }
