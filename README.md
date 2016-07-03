@@ -22,6 +22,8 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 As of version `1.1.1`, Handy URI Templates passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
+You can the complete view [code coverage here](https://damnhandy.github.io/Handy-URI-Templates/cobertura/).
+
 The complete [JavaDocs are here](http://damnhandy.github.io/Handy-URI-Templates/apidocs/).
 
 ## API Documentation
@@ -36,7 +38,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.5</version>
+  <version>2.1.6</version>
 </dependency>
 ```
 
@@ -46,7 +48,7 @@ The next version of Handy URI Templates includes some big changes to the API. If
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.6-SNAPSHOT</version>
+  <version>2.1.7-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -210,7 +212,7 @@ Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/
 License
 -------
 
-   Copyright 2011-2013 Ryan J. McDonough
+   Copyright 2011-2016 Ryan J. McDonough
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

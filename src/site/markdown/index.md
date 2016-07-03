@@ -38,9 +38,12 @@ To use the library in your project, simply add the following to your projects po
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.0.1</version>
+  <version>${version}</version>
 </dependency>
 ```
+
+The latest version is: [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates)
+
 
 You can also download the artifact directly at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates)
 
@@ -167,7 +170,7 @@ Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/
 License
 -------
 
-   Copyright 2011-2013 Ryan J. McDonough
+   Copyright 2011-2016 Ryan J. McDonough
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
