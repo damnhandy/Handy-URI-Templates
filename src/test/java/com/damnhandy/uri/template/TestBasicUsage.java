@@ -153,6 +153,22 @@ public class TestBasicUsage
         Assert.assertEquals("http://myhost/Hello%20World,everything%20is%20cool!",template.expand());
     }
 
+    @Test
+    public void testReservedExpansionTest1() throws Exception
+    {
+        UriTemplate t = UriTemplate.fromTemplate("{+half}");
+        t.set("half","50%25");
+        Assert.assertEquals("50%25",t.expand());
+    }
+
+    @Test
+    public void testReservedExpansionTest2() throws Exception
+    {
+        UriTemplate t = UriTemplate.fromTemplate("{+half}");
+        t.set("half","50%");
+        Assert.assertEquals("50%25",t.expand());
+    }
+
 
     //@Test
     public void testRegEx() throws Exception
