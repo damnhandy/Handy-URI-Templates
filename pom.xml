@@ -25,6 +25,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <findbugs.plugin>3.0.3</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
+        <javadoc.plugin>2.10.4</javadoc.plugin>
     </properties>
 
     <url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -294,7 +295,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>${javadoc.plugin}</version>
                 <configuration>
                     <aggregate>true</aggregate>
                     <source>1.6</source>
@@ -387,7 +388,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
+                <version>${javadoc.plugin}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
