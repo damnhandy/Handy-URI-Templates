@@ -7,7 +7,7 @@
     </parent>
     <groupId>com.damnhandy</groupId>
     <artifactId>handy-uri-templates</artifactId>
-    <version>2.1.6-SNAPSHOT</version>
+    <version>2.1.5-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Handy URI Templates</name>
     <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to
@@ -21,7 +21,7 @@
 
     <properties>
         <http.client>4.5.2</http.client>
-        <jackson.version>2.7.5</jackson.version>
+        <jackson.version>2.7.3</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <findbugs.plugin>3.0.3</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
@@ -32,8 +32,7 @@
         <url>https://github.com/damnhandy/Handy-URI-Templates.git</url>
         <connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
         <developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+    </scm>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -131,7 +130,7 @@
             <plugin>
                 <groupId>com.rimerosolutions.maven.plugins</groupId>
                 <artifactId>wrapper-maven-plugin</artifactId>
-                <version>0.0.5</version>
+                <version>0.0.4</version>
                 <inherited>false</inherited>
                 <configuration>
                     <mavenVersion>3.3.9</mavenVersion>
@@ -175,7 +174,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>1.4.0</version>
                 <executions>
                     <execution>
                         <phase>initialize</phase>
@@ -261,7 +260,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -276,7 +275,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>2.6</version>
                 <configuration>
                     <archive>
                         <index>true</index>
@@ -294,7 +293,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
                 <configuration>
                     <aggregate>true</aggregate>
                     <source>1.6</source>
@@ -526,7 +524,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.9.4</version>
+            <version>2.9.3</version>
         </dependency>
     </dependencies>
 </project>
