@@ -5,7 +5,7 @@ jdk:
   - oraclejdk8
 sudo: false
 install: ./mvnw clean
-script: ./mvnw install
+script: ./mvnw install site
 notifications:
   email: false
 before_install:
