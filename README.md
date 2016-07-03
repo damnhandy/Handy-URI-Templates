@@ -22,7 +22,7 @@ Handy URI Templates is a uritemplate processor implementing [RFC6570](http://too
 
 As of version `1.1.1`, Handy URI Templates passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
 
-You can the complete view [code coverage here](https://damnhandy.github.io/Handy-URI-Templates/cobertura/).
+You can view [code coverage here](https://damnhandy.github.io/Handy-URI-Templates/cobertura/).
 
 The complete [JavaDocs are here](http://damnhandy.github.io/Handy-URI-Templates/apidocs/).
 
