@@ -30,7 +30,7 @@
 			<brand>
 				<!-- Brand text in top-left part of the site -->
 				<name> <![CDATA[
-          		<span class="color-highlight">Handy URI Templates</span> 
+          		<span class="color-highlight">Handy URI Templates</span>
           ]]></name>
 				<href>http://damnhandy.github.io/Handy-URI-Templates/</href>
 			</brand>
@@ -41,7 +41,7 @@
 			<!-- Use Table of Contents at the top of the page (max 6 elements) -->
 			<toc>top</toc>
 			<tocTopMax>6</tocTopMax>
-			<!-- Include the documentation and tools in the top navigation (in addition 
+			<!-- Include the documentation and tools in the top navigation (in addition
 				to links) -->
 			<topNav>Documentation|Tools|Contribute</topNav>
 			<!-- Split menus in the bottom navigation -->
@@ -53,10 +53,10 @@
 			</bottomNav>
 			<bottomDescription>
         <![CDATA[
-         Handy URI Templates is a <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> compliant URI 
-         template processor. The library allows clients to 
-         utilize templatized URIs and inject replacement variables to expand the template into a URI. 
-         The library sports a fluent API, ability to plugin custom object renderers, and supports all 
+         Handy URI Templates is a <a href="http://tools.ietf.org/html/rfc6570">RFC6570</a> compliant URI
+         template processor. The library allows clients to
+         utilize templatized URIs and inject replacement variables to expand the template into a URI.
+         The library sports a fluent API, ability to plugin custom object renderers, and supports all
          levels of URI templates.
         ]]>
 			</bottomDescription>
@@ -104,9 +104,9 @@
 
 	<body>
 		<!-- Add a link to Twitter profile for all pages -->
-		<head>
-			<link rel="author" href="http://twitter.com/damnhandy" />
-		</head>
+		<!--<head>-->
+			<!--<link rel="author" href="http://twitter.com/damnhandy" />-->
+		<!--</head>-->
 
 		<links>
 			<item name="Download" href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates" />
@@ -132,7 +132,7 @@
             <item name="URI Template Builder" href="uri_template_builder.html" />
 			<!--item name="JaCoCo Reports" href="./jacoco/index.html"/-->
 		</menu>
-		
+
 		<menu name="Contribute" inherit="bottom">
 			<item name="Issues"
 				href="http://github.com/damnhandy/Handy-URI-Templates/issues/" />
