@@ -15,8 +15,13 @@
  */
 package com.damnhandy.uri.template;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,9 +51,9 @@ public class TestBasicUsage
 
    /**
     * Test that validates issue #12
-    * 
+    *
     * https://github.com/damnhandy/Handy-URI-Templates/issues/12
-    * 
+    *
     * @throws Exception
     */
    @Test
@@ -100,4 +105,82 @@ public class TestBasicUsage
       Assert.assertEquals("http://myhost{/version}{/myId}/things/{thingId}", template.getTemplate());
       Assert.assertEquals("http://myhost/v1/damnhandy/things/12345", template.expand());
    }
+
+
+    @Test
+    public void testFragmentWithPrecentEncodedValues() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate("http://myhost")
+                                          .fragment("message")
+                                          .build().set("message","Hello%20World");
+
+        Assert.assertEquals("http://myhost{#message}",template.getTemplate());
+        Assert.assertEquals("http://myhost#Hello%20World",template.expand());
+
+    }
+
+    @Test
+    public void testReservedWithPrecentEncodedValues() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate("http://myhost/")
+                                            .reserved("message")
+                                            .build().set("message","Hello%20World");
+
+        Assert.assertEquals("http://myhost/{+message}",template.getTemplate());
+        Assert.assertEquals("http://myhost/Hello%20World",template.expand());
+
+    }
+
+    @Test
+    public void testFragmentWithMixedPrecentEncodedValues() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate("http://myhost")
+                                          .fragment("message")
+                                          .build().set("message","Hello%20World,everything is cool!");
+
+        Assert.assertEquals("http://myhost{#message}",template.getTemplate());
+        Assert.assertEquals("http://myhost#Hello%20World,everything%20is%20cool!",template.expand());
+    }
+
+    @Test
+    public void testReservedWithMixedPrecentEncodedValues() throws Exception
+    {
+        UriTemplate template = UriTemplate.buildFromTemplate("http://myhost/")
+                                           .reserved("message")
+                                           .build().set("message","Hello%20World,everything is cool!");
+
+        Assert.assertEquals("http://myhost/{+message}",template.getTemplate());
+        Assert.assertEquals("http://myhost/Hello%20World,everything%20is%20cool!",template.expand());
+    }
+
+
+    //@Test
+    public void testRegEx() throws Exception
+    {
+
+        String sourceValue = "This%20is a%30test";
+        Pattern p = Pattern.compile("%[0-9A-Fa-f]{2}");
+        Matcher m = p.matcher(sourceValue);
+
+
+        if(m.find())
+        {
+            List<int[]> positions = new ArrayList<int[]>();
+            while (m.find())
+            {
+                positions.add(new int[] {m.start(), m.end()});
+            }
+            StringBuilder b = new StringBuilder();
+            int offset = 0;
+            for(int[] pos : positions)
+            {
+                b.append(UriUtil.encodeFragment(sourceValue.substring(offset,pos[0])));
+                b.append(sourceValue.substring(pos[0],pos[1]));
+                offset = pos[1];
+            }
+            b.append(UriUtil.encodeFragment(sourceValue.substring(offset,sourceValue.length())));
+            System.out.println(b.toString());
+        }
+
+    }
 }
