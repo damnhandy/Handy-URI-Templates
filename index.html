@@ -235,9 +235,10 @@
 <div class="source"><pre class="prettyprint">&lt;dependency&gt;
   &lt;groupId&gt;com.damnhandy&lt;/groupId&gt;
   &lt;artifactId&gt;handy-uri-templates&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;${version}&lt;/version&gt;
 &lt;/dependency&gt;
 </pre></div></div>
+<p>The latest version is: <a class="externalLink" href="https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates"><img src="https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates/badge.svg" alt="Maven Central" /></a></p>
 <p>You can also download the artifact directly at <a class="externalLink" href="http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates">http://search.maven.org</a></p></div>
 <div class="section">
 <h3><a name="Using_the_API"></a>Using the API</h3>
@@ -374,7 +375,7 @@ String result = UriTemplate.fromTemplate(&quot;/mapper{?address*}&quot;)
 <p>Note: All <a class="externalLink" href="http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html">VarExploder</a> implementations are ONLY invoked when the explode modifier &#x201c;*&#x201d; is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.</p></div></div>
 <div class="section">
 <h2><a name="License"></a>License</h2>
-<p>Copyright 2011-2013 Ryan J. McDonough</p>
+<p>Copyright 2011-2016 Ryan J. McDonough</p>
 <p>Licensed under the Apache License, Version 2.0 (the &#x201c;License&#x201d;);  you may not use this file except in compliance with the License.  You may obtain a copy of the License at</p>
 
 <div class="source">
