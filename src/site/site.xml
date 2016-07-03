@@ -14,11 +14,15 @@
 	<googleAnalyticsAccountId>UA-1402675-6</googleAnalyticsAccountId>
 
 	<skin>
-		<groupId>lt.velykis.maven.skins</groupId>
-		<artifactId>reflow-maven-skin</artifactId>
-		<version>1.0.0</version>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.5</version>
 	</skin>
 	<custom>
+        <fluidoSkin>
+            <topBarEnabled>true</topBarEnabled>
+            <sideBarEnabled>false</sideBarEnabled>
+        </fluidoSkin>
 		<reflowSkin>
 			<!-- Make this to 'false' for local development, i.e. file:// URLs -->
 			<protocolRelativeURLs>false</protocolRelativeURLs>
