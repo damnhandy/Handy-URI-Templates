@@ -356,10 +356,51 @@ public class Expression extends UriTemplateComponent
     private Pattern buildMatchingPattern()
     {
         StringBuilder b = new StringBuilder();
-        for (VarSpec v : getVarSpecs())
+
+        if(getOperator() != Operator.RESERVED) //todo expression prefix vs expansion prefix
         {
-            b.append("(?<").append(v.getVariableName()).append(">[^\\/]+)");
+            final String prefix = getOperator().getPrefix();
+            if(prefix.length() > 0){
+                b.append('\\').append(getOperator().getPrefix());
+            }
         }
+
+        String unreserved = "[\\w-\\d.~]";
+        String reserved = "[:\\/?#\\[\\]@!$&'()*+;=]"; //todo removing , for now
+        String encoded = "%[A-Fa-f\\d]{2}";
+
+
+        for(VarSpec v : getVarSpecs()){
+
+            if(getOperator() == Operator.MATRIX
+            || getOperator() == Operator.CONTINUATION
+            || getOperator() == Operator.QUERY)
+                b.append(v.getVariableName())
+                .append('=');
+
+            b
+            .append("(?<")
+            .append(v.getVariableName())
+            .append('>');
+
+            if(getOperator().getEncoding() == UriTemplate.Encoding.U)
+                b.append("(?:" + unreserved + "|" + encoded + ')');
+            else
+                b
+                .append("(?:")
+                .append(unreserved)
+                .append('|')
+                .append(reserved)
+                .append('|')
+                .append(encoded)
+                .append(')');
+            b.append('*'); //todo this needs to look at the varspec to check for prefix modifier
+            b
+            .append(')')
+            .append(getOperator().getSeparator())
+            .append('?');
+        }
+
         return Pattern.compile(b.toString());
     }
 
