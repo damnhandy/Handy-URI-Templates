@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -338,7 +339,7 @@ public class UriTemplate implements Serializable
         StringBuilder b = new StringBuilder();
         for (UriTemplateComponent c : components)
         {
-            b.append("(").append(c.getMatchPattern()).append(")");
+            b.append('(').append(c.getMatchPattern()).append(')');
         }
         this.reverseMatchPattern = Pattern.compile(b.toString());
     }
@@ -548,6 +549,18 @@ public class UriTemplate implements Serializable
     public UriTemplate set(String variableName, Date value)
     {
         values.put(variableName, value);
+        return this;
+    }
+
+    public UriTemplate setFrom(String uri){
+        Pattern pattern = getReverseMatchPattern();
+        Matcher matcher = pattern.matcher(uri);
+        matcher.find();
+        for(Expression expression :expressions){
+            String part = matcher.group(expression.getGroupName());
+            expression.variables(part).forEach(
+                (k, v) -> this.set(k, v.get()));
+        }
         return this;
     }
 
@@ -1148,16 +1161,8 @@ public class UriTemplate implements Serializable
       return index;
    }
 
+    public String toString(){
+        return this.expand();
+    }
 
-
-
-   /**
-    *
-    *
-    * @return
-    */
-//   public String getRegexString()
-//   {
-//      return null;
-//   }
 }

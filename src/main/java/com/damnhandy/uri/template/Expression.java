@@ -20,10 +20,13 @@ import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.VarSpec;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.security.SecureRandom;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.damnhandy.uri.template.Either.*;
+import static java.util.stream.Collectors.toList;
 
 /**
  * <p>
@@ -82,6 +85,14 @@ public class Expression extends UriTemplateComponent
      */
     private Pattern matchPattern;
 
+    private String groupName = uid();
+
+    private static Random RANDOM = new SecureRandom();
+    private static String uid(){
+        byte[] b = new byte[12];
+        RANDOM.nextBytes(b);
+        return 'x'+Base64.getUrlEncoder().encodeToString(b).replace('-', '0').replace('_', '9');
+    }
 
     /**
      * Creates a new {@link Builder} to create a simple expression according
@@ -350,57 +361,101 @@ public class Expression extends UriTemplateComponent
         this.varSpecs = varspecs;
     }
 
+    public Map<String, Either<String, List<String>>> variables(String uriPart){
+        if(getOperator().isNamed()){
+            return matchParameters(uriPart);
+        }else{
+            return matchSegments(uriPart);
+        }
+    }
 
+    private Map<String, Either<String, List<String>>> matchParameters(String part){
+        final String separator = getOperator().getSeparator();
+        List<String> varNames = getVarSpecs().stream() // todo use the varspecs to account for explosions and prefix mods
+                                    .map(VarSpec::getVariableName)
+                                    .collect(toList());
 
+        StringBuilder regex;
+        Map<String, List<String>> results = new HashMap<>();
 
+        StringBuilder varNameRex = new StringBuilder("(?<key>");
+        for(String varName:varNames){
+            varNameRex.append(Pattern.quote(varName)).append('|');
+        }
+        varNameRex.deleteCharAt(varNameRex.length()-1);
+        varNameRex.append(')');
+
+        regex = new StringBuilder()
+        .append(varNameRex)
+        .append('=')
+        .append("(?<value>[^")
+        .append(separator) // todo replace this with character classes based on allowed encoding
+        .append("]*)");
+
+        Pattern pattern = Pattern.compile(regex.toString());
+        Matcher matcher = pattern.matcher(part);
+
+        while(matcher.find()){
+            String key = matcher.group(1);
+            String value = matcher.group(2);
+
+            List<String> values = results.getOrDefault(key, new ArrayList<>());
+            values.add(value);
+
+            results.put(key, values);
+        }
+
+        Map<String, Either<String, List<String>>> ret = new HashMap<>();
+        results.forEach((k,v) -> ret.put(k, v.size() == 1 ? left(v.get(0)) : right(v)));
+
+        return ret;
+    }
+
+    private Map<String, Either<String, List<String>>> matchSegments(String part){
+        final String prefix = getOperator().getPrefix();
+        final String separator = getOperator().getSeparator();
+        List<String> varNames = getVarSpecs().stream()
+        .map(VarSpec::getVariableName)
+        .collect(toList());
+
+        StringBuilder regex = prefix == null || prefix.isEmpty() ? new StringBuilder() : new StringBuilder('\\').append(prefix);
+        Map<String, Either<String, List<String>>> results = new HashMap<>();
+
+        for(String varName:varNames){
+            regex.append("(?<").append(Pattern.quote(varName)).append(">[^").append(separator).append("]*)").append(separator);
+        }
+
+        regex.deleteCharAt(regex.length() -1);
+
+        Pattern pattern = Pattern.compile(regex.toString());
+        Matcher matcher = pattern.matcher(part);
+
+        if (!matcher.matches())
+            throw new RuntimeException("doesn't match");
+
+        for(String varName:varNames){
+            results.put(varName, left(matcher.group(varName)));
+        }
+
+        return results;
+    }
+
+    public String getGroupName(){
+        return this.groupName;
+    }
+
+    // todo improve this
     private Pattern buildMatchingPattern()
     {
-        StringBuilder b = new StringBuilder();
-
-        if(getOperator() != Operator.RESERVED) //todo expression prefix vs expansion prefix
-        {
-            final String prefix = getOperator().getPrefix();
-            if(prefix.length() > 0){
-                b.append('\\').append(getOperator().getPrefix());
-            }
-        }
-
-        String unreserved = "[\\w-\\d.~]";
-        String reserved = "[:\\/?#\\[\\]@!$&'()*+;=]"; //todo removing , for now
-        String encoded = "%[A-Fa-f\\d]{2}";
-
-
-        for(VarSpec v : getVarSpecs()){
-
-            if(getOperator() == Operator.MATRIX
-            || getOperator() == Operator.CONTINUATION
-            || getOperator() == Operator.QUERY)
-                b.append(v.getVariableName())
-                .append('=');
-
-            b
-            .append("(?<")
-            .append(v.getVariableName())
-            .append('>');
-
-            if(getOperator().getEncoding() == UriTemplate.Encoding.U)
-                b.append("(?:" + unreserved + "|" + encoded + ')');
-            else
-                b
-                .append("(?:")
-                .append(unreserved)
-                .append('|')
-                .append(reserved)
-                .append('|')
-                .append(encoded)
-                .append(')');
-            b.append('*'); //todo this needs to look at the varspec to check for prefix modifier
-            b
-            .append(')')
-            .append(getOperator().getSeparator())
-            .append('?');
-        }
-
+        String prefix = getOperator().getPrefix();
+        prefix = prefix.equals("+") ? "" : prefix;
+        StringBuilder b = new StringBuilder("(?<")
+        .append(groupName)
+        .append('>')
+        .append('\\')
+        .append(prefix)
+        .append(".{1,9001}")
+        .append(')');
         return Pattern.compile(b.toString());
     }
 
