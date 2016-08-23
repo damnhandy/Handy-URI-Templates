@@ -105,6 +105,17 @@ This will yield the following URL template string:
 
 This API is still a work in progress an feedback is appreciated.
 
+## Reverse Variable Matching
+
+A `UriTemplate` can also be used to extract variables from a URI like this:
+
+```java
+UriTemplate template = UriTemplate.fromTemplate("https://example.com/collection{/id}{?orderBy}");
+template.setFrom("https://example.com/collection/9?orderBy=age");
+System.out.println(template.get("id")); // 9
+System.out.println(template.get("orderBy")); // age
+```
+
 ## Using with HTTP Clients
 
 The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
