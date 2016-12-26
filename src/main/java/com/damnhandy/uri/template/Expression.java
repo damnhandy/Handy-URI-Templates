@@ -32,11 +32,11 @@ import java.util.regex.Pattern;
  * </p>
  * <pre>
  * http://www.example.com/foo{?query,number}
- * \___________/
- * ^
- * |
- * |
- * The expression
+ *                            \___________/
+ *                                  ^
+ *                                  |
+ *                                  |
+ *                            The expression
  * </pre>
  * <p>
  * This class models this representation and adds helper functions for replacement and reverse matching.
