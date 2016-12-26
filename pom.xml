@@ -21,11 +21,12 @@
 
     <properties>
         <http.client>4.5.2</http.client>
-        <jackson.version>2.7.5</jackson.version>
+        <jackson.version>2.8.5</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <findbugs.plugin>3.0.3</findbugs.plugin>
+        <findbugs.plugin>3.0.4</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
         <javadoc.plugin>2.10.4</javadoc.plugin>
+        <joda.version>2.9.7</joda.version>
     </properties>
 
     <url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -505,7 +506,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>20.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -513,7 +514,7 @@
         <dependency>
             <groupId>com.ning</groupId>
             <artifactId>async-http-client</artifactId>
-            <version>1.9.38</version>
+            <version>1.9.40</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -527,7 +528,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.9.4</version>
+            <version>${joda.version}</version>
         </dependency>
     </dependencies>
 </project>
