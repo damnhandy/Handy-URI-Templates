@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 /**
  * A {@link JsonDeserializer} that deserializes a string into a {@link UriTemplate}.
- * 
+ *
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @see JsonDeserializer
  * @since 2.0
@@ -29,7 +29,7 @@ public class UriTemplateDeserializer extends JsonDeserializer<UriTemplate>
    public UriTemplate deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException,
          JsonProcessingException
    {
-      
+
       String value = parser.getText();
       try
       {
@@ -37,7 +37,7 @@ public class UriTemplateDeserializer extends JsonDeserializer<UriTemplate>
       }
       catch (MalformedUriTemplateException e)
       {
-         throw new JsonParseException("Error parsing the URI Template", parser.getCurrentLocation(), e);
+         throw new JsonParseException(parser,"Error parsing the URI Template", e);
       }
    }
 
