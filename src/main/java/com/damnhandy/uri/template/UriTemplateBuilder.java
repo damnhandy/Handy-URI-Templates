@@ -39,7 +39,7 @@ import java.util.Map;
  * @author <a href="ryan@damnhandy.com">Ryan J. McDonough</a>
  * @version $Revision: 1.1 $
  */
-public final class UriTemplateBuilder
+public class UriTemplateBuilder
 {
 
     /**
