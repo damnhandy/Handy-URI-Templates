@@ -20,8 +20,8 @@ import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.VarSpec;
 
-import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,13 +85,11 @@ public class Expression extends UriTemplateComponent
      */
     private Pattern matchPattern;
 
-    private String groupName = uid();
+    private String groupName = count();
 
-    private static Random RANDOM = new SecureRandom();
-    private static String uid(){
-        byte[] b = new byte[12];
-        RANDOM.nextBytes(b);
-        return 'x'+Base64.getUrlEncoder().encodeToString(b).replace('-', '0').replace('_', '9');
+    private static final AtomicLong CTR = new AtomicLong(Long.MIN_VALUE);
+    private static String count(){
+        return "grp" +String.valueOf(CTR.getAndIncrement()).replace('-', 'n');
     }
 
     /**
@@ -369,31 +367,35 @@ public class Expression extends UriTemplateComponent
         }
     }
 
-    private Map<String, Either<String, List<String>>> matchParameters(String part){
+    private Pattern parameterPattern;
+    private Map<String, Either<String, List<String>>> matchParameters(String part) {
         final String separator = getOperator().getSeparator();
-        List<String> varNames = getVarSpecs().stream() // todo use the varspecs to account for explosions and prefix mods
-                                    .map(VarSpec::getVariableName)
-                                    .collect(toList());
 
         StringBuilder regex;
         Map<String, List<String>> results = new HashMap<>();
 
-        StringBuilder varNameRex = new StringBuilder("(?<key>");
-        for(String varName:varNames){
-            varNameRex.append(Pattern.quote(varName)).append('|');
+        if(parameterPattern == null){
+            List<String> varNames = getVarSpecs().stream() // todo use the varspecs to account for explosions and prefix mods
+            .map(VarSpec::getVariableName)
+            .collect(toList());
+
+            StringBuilder varNameRex = new StringBuilder("(?<key>");
+            for (String varName : varNames) {
+                varNameRex.append(Pattern.quote(varName)).append('|');
+            }
+            varNameRex.deleteCharAt(varNameRex.length() - 1);
+            varNameRex.append(')');
+
+            regex = new StringBuilder()
+            .append(varNameRex)
+            .append('=')
+            .append("(?<value>[^")
+            .append(separator) // todo replace this with character classes based on allowed encoding
+            .append("]*)");
+
+            parameterPattern = Pattern.compile(regex.toString());
         }
-        varNameRex.deleteCharAt(varNameRex.length()-1);
-        varNameRex.append(')');
-
-        regex = new StringBuilder()
-        .append(varNameRex)
-        .append('=')
-        .append("(?<value>[^")
-        .append(separator) // todo replace this with character classes based on allowed encoding
-        .append("]*)");
-
-        Pattern pattern = Pattern.compile(regex.toString());
-        Matcher matcher = pattern.matcher(part);
+        Matcher matcher = parameterPattern.matcher(part);
 
         while(matcher.find()){
             String key = matcher.group(1);
@@ -411,29 +413,38 @@ public class Expression extends UriTemplateComponent
         return ret;
     }
 
+    private Pattern segmentPattern;
     private Map<String, Either<String, List<String>>> matchSegments(String part){
-        final String prefix = getOperator().getPrefix();
-        final String separator = getOperator().getSeparator();
-        List<String> varNames = getVarSpecs().stream()
-        .map(VarSpec::getVariableName)
-        .collect(toList());
+        final Map<String, Either<String, List<String>>> results = new HashMap<>();
+        final List<String> varNames = getVarSpecs().stream()
+            .map(VarSpec::getVariableName)
+            .collect(toList());
 
-        StringBuilder regex = prefix == null || prefix.isEmpty() ? new StringBuilder() : new StringBuilder('\\').append(prefix);
-        Map<String, Either<String, List<String>>> results = new HashMap<>();
+        if(segmentPattern == null) {
+            final String prefix = getOperator().getPrefix();
+            final String separator = getOperator().getSeparator();
 
-        for(String varName:varNames){
-            regex.append("(?<").append(Pattern.quote(varName)).append(">[^").append(separator).append("]*)").append(separator);
+            StringBuilder regex =
+            prefix == null || prefix.isEmpty() || prefix.equals("+")
+            ? new StringBuilder()
+            : new StringBuilder('\\').append(prefix);
+
+            for (String varName : varNames) {
+                regex.append("(?<").append(Pattern.quote(varName)).append(">[^").append(separator).append("]*)").append(separator);
+            }
+
+            regex.deleteCharAt(regex.length() - 1);
+
+            segmentPattern = Pattern.compile(regex.toString());
         }
 
-        regex.deleteCharAt(regex.length() -1);
-
-        Pattern pattern = Pattern.compile(regex.toString());
-        Matcher matcher = pattern.matcher(part);
+        Matcher matcher = segmentPattern.matcher(part);
 
         if (!matcher.matches())
             throw new RuntimeException("doesn't match");
 
         for(String varName:varNames){
+            // todo decode string based on operator
             results.put(varName, left(matcher.group(varName)));
         }
 
@@ -450,12 +461,16 @@ public class Expression extends UriTemplateComponent
         String prefix = getOperator().getPrefix();
         prefix = prefix.equals("+") ? "" : prefix;
         StringBuilder b = new StringBuilder("(?<")
-        .append(groupName)
-        .append('>')
-        .append('\\')
-        .append(prefix)
-        .append(".{1,9001}")
-        .append(')');
+            .append(groupName)
+            .append('>');
+        if(!prefix.isEmpty()) {
+            b
+                .append('\\')
+                .append(prefix);
+        }
+        b
+            .append(".{1,9001}")
+            .append(')');
         return Pattern.compile(b.toString());
     }
 
