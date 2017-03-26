@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -17,16 +19,57 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestMatching {
 
+    final String hello = "Hello World!";
+    final String x = "1024";
+    final String y = "768";
+    final String empty = "";
+
+    @Test
+    public void simpleExpansion(){
+        UriTemplate temp = UriTemplate.buildFromTemplate("{hello}").build();
+        temp.setFrom("Hello%20World%21");
+        //assertEquals(hello, temp.get("hello")); todo decode
+        assertEquals("Hello%20World%21", temp.get("hello"));
+    }
+
+    @Test
+    public void reservedExpansion(){
+        UriTemplate temp = UriTemplate.buildFromTemplate("{+hello}").build();
+        temp.setFrom("Hello%20World!");
+        //assertEquals(hello, temp.get("hello")); todo decode
+        assertEquals("Hello%20World!", temp.get("hello"));
+    }
+
+    @Test
+    public void fragmentExpansion(){
+        UriTemplate temp = UriTemplate.buildFromTemplate("{#x,hello,y}").build();
+        temp.setFrom("#1024,Hello%20World!,768");
+        assertEquals(x, temp.get("x"));
+        assertEquals(y, temp.get("y"));
+        //assertEquals(hello, temp.get("hello")); todo decode
+    }
+
+    @Test
+    public void queryExpansion(){
+        UriTemplate temp = UriTemplate.buildFromTemplate("{?x,y,empty}").build();
+        temp.setFrom("?x=1024&y=768&empty=");
+        assertEquals(x, temp.get("x"));
+        assertEquals(y, temp.get("y"));
+        assertEquals(empty, temp.get("empty"));
+    }
+
+
     public void test(){
         Pattern temp1 = UriTemplate.buildFromTemplate("{hello}").build().getReverseMatchPattern();
         String val1 = "Hello World!";
         String exp1 = "Hello%20World%21";
 
+        System.out.println(temp1);
         Matcher m = temp1.matcher(exp1);
         m.find();
 
-        assertEquals(exp1, m.group("hello"));
-        System.out.println(m.group("hello"));
+        assertEquals(exp1, m.group(0));
+        System.out.println(m.group(0));
 
         Pattern temp2 = UriTemplate.buildFromTemplate("{+hello}").build().getReverseMatchPattern();
         String val2 = "Hello World!";
@@ -35,7 +78,7 @@ public class TestMatching {
 
         Matcher m2 = temp2.matcher(exp2);
         m2.find();
-        System.out.println(m2.group("hello"));
+        System.out.println(m2.group(0));
         assertEquals(exp2, m2.group("hello"));
 
         Pattern temp3 = UriTemplate.buildFromTemplate("{#x,hello,y}").build().getReverseMatchPattern();
@@ -90,16 +133,23 @@ public class TestMatching {
         .set("path", "pathVal")
         .set("query", "queryVal")
         .set("extensions", "extensionsVal");
+        System.out.println(template.getReverseMatchPattern());
         System.out.println(expanded.getValues());
 
         template.setFrom("mysite.com/some/pathVal/stuff?query=queryVal&parts=too&extensions=extensionsVal");
         System.out.println(template.getValues());
 
-        template = UriTemplate.fromTemplate("https://example.com/collection{/id}{?orderBy}");
-        template.setFrom("\"https://example.com/collection/9?orderBy=age");
-        System.out.println(template.get("id")); // 9
-        System.out.println(template.get("orderBy")); // age
+        assertEquals(expanded.getValues(), template.getValues());
+
+        UriTemplate template2 = UriTemplate.fromTemplate("https://example.com/collection{/id}{?orderBy}");
+        template2.setFrom("\"https://example.com/collection/9?orderBy=age");
+
+        assertEquals("9", template2.get("id"));
+        assertEquals("age", template2.get("orderBy"));
+        System.out.println(template2.get("id")); // 9
+        System.out.println(template2.get("orderBy")); // age
         System.out.println(template);
+
     }
 
     void print(Map<String, String[]> multi){

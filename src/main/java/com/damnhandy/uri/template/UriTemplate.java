@@ -339,7 +339,7 @@ public class UriTemplate implements Serializable
         StringBuilder b = new StringBuilder();
         for (UriTemplateComponent c : components)
         {
-            b.append('(').append(c.getMatchPattern()).append(')');
+            b.append(c.getMatchPattern());
         }
         this.reverseMatchPattern = Pattern.compile(b.toString());
     }
