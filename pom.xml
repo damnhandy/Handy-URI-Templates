@@ -20,13 +20,13 @@
     </prerequisites>
 
     <properties>
-        <http.client>4.5.2</http.client>
-        <jackson.version>2.8.5</jackson.version>
+        <http.client>4.5.3</http.client>
+        <jackson.version>2.9.2</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <findbugs.plugin>3.0.4</findbugs.plugin>
+        <findbugs.plugin>3.0.5</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
-        <javadoc.plugin>2.10.4</javadoc.plugin>
-        <joda.version>2.9.7</joda.version>
+        <javadoc.plugin>3.0.0-M1</javadoc.plugin>
+        <joda.version>2.9.9</joda.version>
     </properties>
 
     <url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -111,7 +111,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>2.2.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -136,7 +136,7 @@
                 <version>0.0.5</version>
                 <inherited>false</inherited>
                 <configuration>
-                    <mavenVersion>3.3.9</mavenVersion>
+                    <mavenVersion>3.5.0</mavenVersion>
                 </configuration>
             </plugin>
             <plugin>
@@ -177,7 +177,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <phase>initialize</phase>
@@ -197,7 +197,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -248,7 +248,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
@@ -375,7 +375,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.7</version>
+                <version>3.8</version>
                 <configuration>
                     <rulesets>
                         <!-- Two rule sets that come bundled with PMD -->
@@ -399,7 +399,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>2.20.1</version>
 
             </plugin>
             <plugin>
