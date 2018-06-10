@@ -210,7 +210,9 @@ public class UriTemplate implements Serializable
     }
 
     /**
-     * Creates a new {@link UriTemplate} from the template.
+     * <p>
+     * Creates a new {@link UriTemplate} from the template string.
+     * </p>
      *
      * @param templateString
      * @return
@@ -223,29 +225,26 @@ public class UriTemplate implements Serializable
 
     /**
      * <p>
-     * Creates a new {@link UriTemplate} from a root {@link UriTemplate}. This
-     * method will create a new {@link UriTemplate} from the base and copy the variables
-     * from the base template to the new {@link UriTemplate}.
-     * </p>
-     * <p>
-     * This method is useful when the base template is less volatile than the child
-     * expression and you want to merge the two.
+     *   This method is now deprecated. Use {@link UriTemplate#buildFromTemplate(UriTemplate)} instead.
      * </p>
      *
+     * @deprecated use {@link #buildFromTemplate(UriTemplate)}
      * @param baseTemplate
      * @return
      * @since 1.0
      */
+    @Deprecated
     public static UriTemplateBuilder fromTemplate(UriTemplate baseTemplate) throws MalformedUriTemplateException
     {
-        return new UriTemplateBuilder(baseTemplate.getTemplate());
+        return new UriTemplateBuilder(baseTemplate);
     }
 
     /**
+     * <p>
      * Returns the collection of {@link UriTemplateComponent} instances
      * found in this template.
-     *
-     * @return
+     * </p>
+     * @return the collection of {@link UriTemplateComponent}s
      */
     public Collection<UriTemplateComponent> getComponents() {
         return Collections.unmodifiableCollection(components);
