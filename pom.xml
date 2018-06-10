@@ -457,7 +457,7 @@
         <profile>
             <id>buildWithJava8</id>
             <activation>
-                <jdk>(1.8,)</jdk>
+                <jdk>[1.8,)</jdk>
             </activation>
             <build>
                 <plugins>
@@ -474,6 +474,17 @@
                                 <link>http://docs.oracle.com/javase/7/docs/api/</link>
                             </links>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration> <!-- add this to disable checking -->
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
