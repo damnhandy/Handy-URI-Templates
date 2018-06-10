@@ -18,13 +18,13 @@ package com.damnhandy.uri.template;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Simple tests to validate the UriTemplate API.
@@ -165,6 +165,32 @@ public class TestBasicUsage
         UriTemplate t = UriTemplate.fromTemplate("{+half}");
         t.set("half","50%");
         Assert.assertEquals("50%25",t.expand());
+    }
+
+    /**
+     * <p>
+     *     Test case to verify issue #60 with the undesired result
+     * </p>
+     */
+    @Test
+    public void testWithCommadelimitedListEscaped() {
+        String actual = UriTemplate.fromTemplate("http://localhost/thing{?things}")
+            .set("things", "1,2,3")
+            .expand();
+        assertThat(actual, equalTo("http://localhost/thing?things=1%2C2%2C3"));
+    }
+
+    /**
+     * <p>
+     *     Test case to verify issue #60 with the desired result
+     * </p>
+     */
+    @Test
+    public void testWithCommadelimitedListNoteEscaped() {
+        String actual = UriTemplate.fromTemplate("http://localhost/thing{?things}")
+        .set("things", "1,2,3".split(","))
+        .expand();
+        assertThat(actual, equalTo("http://localhost/thing?things=1,2,3"));
     }
 
 
