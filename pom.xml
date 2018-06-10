@@ -20,13 +20,13 @@
     </prerequisites>
 
     <properties>
-        <http.client>4.5.3</http.client>
-        <jackson.version>2.9.2</jackson.version>
+        <http.client>4.5.5</http.client>
+        <jackson.version>2.9.5</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <findbugs.plugin>3.0.5</findbugs.plugin>
         <cobertura.plugin>2.7</cobertura.plugin>
         <javadoc.plugin>3.0.0-M1</javadoc.plugin>
-        <joda.version>2.9.9</joda.version>
+        <joda.version>2.10</joda.version>
     </properties>
 
     <url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -250,8 +250,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
 
@@ -298,8 +298,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${javadoc.plugin}</version>
                 <configuration>
-                    <aggregate>true</aggregate>
-                    <source>1.6</source>
+                    <source>1.7</source>
                     <encoding>UTF-8</encoding>
                     <maxmemory>1g</maxmemory>
                     <links>
@@ -506,7 +505,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>20.0</version>
+            <version>25.1-jre</version>
             <scope>test</scope>
         </dependency>
 
