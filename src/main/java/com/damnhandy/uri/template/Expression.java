@@ -204,7 +204,7 @@ public class Expression extends UriTemplateComponent
      * {;var}
      * </pre>
      *
-     * @return
+     * @return the builder
      */
     public static Builder matrix(VarSpec... varSpec)
     {
@@ -243,7 +243,7 @@ public class Expression extends UriTemplateComponent
      * Will return the following expression:
      * </p>
      * <pre>
-     * {&var}
+     * {&amp;var}
      * </pre>
      *
      * @return

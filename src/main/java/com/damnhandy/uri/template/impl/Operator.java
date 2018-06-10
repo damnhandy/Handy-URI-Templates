@@ -25,10 +25,10 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
  * </p>
  * <pre>
  *  .------------------------------------------------------------------.
- *  |          NUL     +      .       /       ;      ?      &      #   |
+ *  |          NUL     +      .       /       ;      ?      &amp;      #   |
  *  |------------------------------------------------------------------|
- *  | first |  ""     ""     "."     "/"     ";"    "?"    "&"    "#"  |
- *  | sep   |  ","    ","    "."     "/"     ";"    "&"    "&"    ","  |
+ *  | first |  ""     ""     "."     "/"     ";"    "?"    "&amp;"    "#"  |
+ *  | sep   |  ","    ","    "."     "/"     ";"    "&amp;"    "&amp;"    ","  |
  *  | named | false  false  false   false   true   true   true   false |
  *  | ifemp |  ""     ""     ""      ""      ""     "="    "="    ""   |
  *  | allow |   U     U+R     U       U       U      U      U     U+R  |

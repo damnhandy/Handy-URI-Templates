@@ -131,10 +131,9 @@ public class TestUriTemplateBuilder
       cal.set(Calendar.MILLISECOND, 0);
       Date date = cal.getTime();
 
-      DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
       UriTemplate template = UriTemplate.buildFromTemplate("http://example.com")
-                                        .withDefaultDateFormat(dateFormat)
+                                        .withDefaultDateFormat("yyyy-MM-dd")
                                         .literal("/foo")
                                         .path("date")
                                         .build();

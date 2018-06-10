@@ -553,7 +553,7 @@ public final class UriTemplateBuilder
      * </pre>
      * Will generate the following URI Template string:
      * <pre>
-     * http://example.com/{&foo}
+     * http://example.com/{&amp;foo}
      * </pre>
      *
      * @param var the varspec name
@@ -580,7 +580,7 @@ public final class UriTemplateBuilder
      * </pre>
      * Will generate the following URI Template string:
      * <pre>
-     * http://example.com/{&foo:1}
+     * http://example.com/{&amp;foo:1}
      * </pre>
      *
      * @param var the varspec
