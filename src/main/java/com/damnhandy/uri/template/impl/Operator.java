@@ -25,10 +25,10 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
  * </p>
  * <pre>
  *  .------------------------------------------------------------------.
- *  |          NUL     +      .       /       ;      ?      &      #   |
+ *  |          NUL     +      .       /       ;      ?      &amp;      #   |
  *  |------------------------------------------------------------------|
- *  | first |  ""     ""     "."     "/"     ";"    "?"    "&"    "#"  |
- *  | sep   |  ","    ","    "."     "/"     ";"    "&"    "&"    ","  |
+ *  | first |  ""     ""     "."     "/"     ";"    "?"    "&amp;"    "#"  |
+ *  | sep   |  ","    ","    "."     "/"     ";"    "&amp;"    "&amp;"    ","  |
  *  | named | false  false  false   false   true   true   true   false |
  *  | ifemp |  ""     ""     ""      ""      ""     "="    "="    ""   |
  *  | allow |   U     U+R     U       U       U      U      U     U+R  |
@@ -78,8 +78,8 @@ public enum Operator {
     *
     * Create a new Operator.
     *
-    * @param operator
-    * @param separator
+    * @param operator the operator
+    * @param separator the separatator
     */
    Operator(String operator, String separator, boolean named, Encoding encoding)
    {
@@ -102,7 +102,7 @@ public enum Operator {
    /**
     *
     *
-    * @return
+    * @return the encoding to be used
     */
    public Encoding getEncoding() {
       return encoding;
@@ -110,7 +110,7 @@ public enum Operator {
    /**
     *
     *
-    * @return
+    * @return tbd
     */
    public boolean isNamed()
    {
@@ -129,11 +129,11 @@ public enum Operator {
     * When the variable is a Collection, this flag determines if we use
     * the VarSpec name to prefix values. For example:
     *
-    * {&list} return false
+    * {&apm;list} return false
     *
-    * {&list*} will return true
+    * {&apm;list*} will return true
     *
-    * @return
+    * @return tbd
     */
    public boolean useVarNameWhenExploded()
    {
@@ -143,7 +143,7 @@ public enum Operator {
    /**
     *
     *
-    * @return
+    * @return the prefix
     */
    public String getPrefix()
    {
@@ -153,8 +153,8 @@ public enum Operator {
    /**
     * FIXME Comment this
     *
-    * @param opCode
-    * @return
+    * @param opCode the opertator code
+    * @return the Operator
     */
    public static Operator fromOpCode(String opCode) throws IllegalArgumentException
    {

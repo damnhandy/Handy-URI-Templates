@@ -35,11 +35,11 @@ import static java.util.stream.Collectors.toList;
  * </p>
  * <pre>
  * http://www.example.com/foo{?query,number}
- * \___________/
- * ^
- * |
- * |
- * The expression
+ *                            \___________/
+ *                                  ^
+ *                                  |
+ *                                  |
+ *                            The expression
  * </pre>
  * <p>
  * This class models this representation and adds helper functions for replacement and reverse matching.
@@ -213,7 +213,7 @@ public class Expression extends UriTemplateComponent
      * {;var}
      * </pre>
      *
-     * @return
+     * @return the builder
      */
     public static Builder matrix(VarSpec... varSpec)
     {
@@ -252,7 +252,7 @@ public class Expression extends UriTemplateComponent
      * Will return the following expression:
      * </p>
      * <pre>
-     * {&var}
+     * {&amp;var}
      * </pre>
      *
      * @return

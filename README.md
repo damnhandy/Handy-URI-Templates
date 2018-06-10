@@ -4,11 +4,9 @@
 
 [![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
 
-[![Dependency Status](https://www.versioneye.com/user/projects/5499a5516b1b8171590000b5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5499a5516b1b8171590000b5)
-
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates)
 
-Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on the final realease of the uri template spec. The template processor supports the following features:
+Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on the final release of the uri template spec. The template processor supports the following features:
 
 * Fluent Java API for manipulating uritemplates
 * Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
@@ -38,7 +36,7 @@ To use the latest version of Handy URI Templates, you need to add the following 
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.6</version>
+  <version>2.1.7</version>
 </dependency>
 ```
 
@@ -48,7 +46,7 @@ The next version of Handy URI Templates includes some big changes to the API. If
 <dependency>
   <groupId>com.damnhandy</groupId>
   <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.7-SNAPSHOT</version>
+  <version>2.1.8-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -167,7 +165,7 @@ Values that are not strings are rendered into the URI by calling its `toString()
 
 The template processor will not accept the following types of value combinations:
 
-* with the exception of character arrays, multi dimensional arrays are not supported.
+* With the exception of character arrays, multi dimensional arrays are not supported.
 * Collections of Collections
 * Maps that have values of type array, Collection, or Map.
 

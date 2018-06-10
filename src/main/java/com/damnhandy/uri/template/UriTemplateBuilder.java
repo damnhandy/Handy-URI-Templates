@@ -64,7 +64,7 @@ public final class UriTemplateBuilder
     /**
      * Create a new UriTemplateBuilder.
      *
-     * @param templateString
+     * @param templateString the initial URI template string
      */
     UriTemplateBuilder(String templateString) throws MalformedUriTemplateException
     {
@@ -75,7 +75,7 @@ public final class UriTemplateBuilder
     /**
      * Create a new UriTemplateBuilder.
      *
-     * @param template
+     * @param template the initial UriTemplate
      */
     UriTemplateBuilder(UriTemplate template) throws MalformedUriTemplateException
     {
@@ -86,8 +86,8 @@ public final class UriTemplateBuilder
 
 
     /**
-     * @param dateFormatString
-     * @return
+     * @param dateFormatString the date format to use internally
+     * @return the UriTemplateBuilder
      * @since 2.0
      */
     public UriTemplateBuilder withDefaultDateFormat(String dateFormatString)
@@ -102,8 +102,8 @@ public final class UriTemplateBuilder
     }
 
     /**
-     * @param dateFormat
-     * @return
+     * @param dateFormat the date format to use internally
+     * @return the UriTemplateBuilder
      * @since 2.0
      * @deprecated replaced by {@link #withDefaultDateFormat(String) withDefaultDateFormat}
      */
@@ -148,7 +148,7 @@ public final class UriTemplateBuilder
      * <p>
      * Note that this particular example has no expressions, so it's not a valid URI template.
      *
-     * @param string
+     * @param string the literal string
      * @return
      */
     public UriTemplateBuilder literal(String string)
@@ -162,8 +162,8 @@ public final class UriTemplateBuilder
     }
 
     /**
-     * @param varSpec
-     * @return
+     * @param varSpec the varspec name
+     * @return the array of varspecs
      */
     private static VarSpec[] toVarSpec(String... varSpec)
     {
@@ -189,8 +189,8 @@ public final class UriTemplateBuilder
      * http://example.com/{foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the name of the variable
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder simple(String... var)
     {
@@ -216,8 +216,8 @@ public final class UriTemplateBuilder
      * http://example.com/{foo*}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder simple(VarSpec... var)
     {
@@ -239,8 +239,8 @@ public final class UriTemplateBuilder
      * http://example.com/{+foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder reserved(String... var)
     {
@@ -266,8 +266,8 @@ public final class UriTemplateBuilder
      * http://example.com/{+foo:1}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder reserved(VarSpec... var)
     {
@@ -289,8 +289,8 @@ public final class UriTemplateBuilder
      * http://example.com/{#foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
      */
     public UriTemplateBuilder fragment(String... var) throws UriTemplateBuilderException
@@ -317,8 +317,8 @@ public final class UriTemplateBuilder
      * http://example.com/{#foo:1}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
      */
     public UriTemplateBuilder fragment(VarSpec... var) throws UriTemplateBuilderException
@@ -367,8 +367,8 @@ public final class UriTemplateBuilder
      * http://example.com/{.foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder label(String... var)
     {
@@ -390,8 +390,8 @@ public final class UriTemplateBuilder
      * http://example.com/{.foo*}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder label(VarSpec... var)
     {
@@ -413,8 +413,8 @@ public final class UriTemplateBuilder
      * http://example.com/{;foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder matrix(String... var)
     {
@@ -436,8 +436,8 @@ public final class UriTemplateBuilder
      * http://example.com/{;foo*}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder matrix(VarSpec... var)
     {
@@ -459,8 +459,8 @@ public final class UriTemplateBuilder
      * http://example.com{/foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder path(String... var)
     {
@@ -482,8 +482,8 @@ public final class UriTemplateBuilder
      * http://example.com{/foo:1}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder path(VarSpec... var)
     {
@@ -505,8 +505,8 @@ public final class UriTemplateBuilder
      * http://example.com/{?foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder query(String... var)
     {
@@ -533,8 +533,8 @@ public final class UriTemplateBuilder
      * http://example.com/{?foo:1}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder query(VarSpec... var)
     {
@@ -553,11 +553,11 @@ public final class UriTemplateBuilder
      * </pre>
      * Will generate the following URI Template string:
      * <pre>
-     * http://example.com/{&foo}
+     * http://example.com/{&amp;foo}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder continuation(String... var)
     {
@@ -580,11 +580,11 @@ public final class UriTemplateBuilder
      * </pre>
      * Will generate the following URI Template string:
      * <pre>
-     * http://example.com/{&foo:1}
+     * http://example.com/{&amp;foo:1}
      * </pre>
      *
-     * @param var
-     * @return
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder continuation(VarSpec... var)
     {
@@ -611,8 +611,8 @@ public final class UriTemplateBuilder
      * http://example.com/foo/{id}{?filter}
      * </pre>
      *
-     * @param template
-     * @return
+     * @param template the uri template
+     * @return the UriTemplateBuilder
      */
     public UriTemplateBuilder template(UriTemplate... template) {
         for(UriTemplate t : template) {
@@ -641,8 +641,8 @@ public final class UriTemplateBuilder
      * http://example.com/foo/{id}{?filter}
      * </pre>
      *
-     * @param template
-     * @return
+     * @param template the uri template string
+     * @return the uri template builder
      */
     public UriTemplateBuilder template(String... template) {
         UriTemplateParser parser = new UriTemplateParser();
@@ -655,7 +655,7 @@ public final class UriTemplateBuilder
 
     /**
      * Returns an array of the components in the Builder.
-     * @return
+     * @return array of the components in the Builder
      */
     public UriTemplateComponent[] getComponents()
     {
@@ -698,7 +698,7 @@ public final class UriTemplateBuilder
      * {foo}
      * </pre>
      *
-     * @param varName
+     * @param varName the varspec name
      * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
      */
     public static VarSpec var(String varName)
@@ -718,8 +718,8 @@ public final class UriTemplateBuilder
      * {foo*}
      * </pre>
      *
-     * @param varName
-     * @param explode
+     * @param varName the varspec name
+     * @param explode boolean to indicate that this VarSpec should use the explode modifer
      * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
      */
     public static VarSpec var(String varName, boolean explode)
@@ -743,8 +743,8 @@ public final class UriTemplateBuilder
      * {foo:2}
      * </pre>
      *
-     * @param varName
-     * @param prefix
+     * @param varName the varspec name
+     * @param prefix the prefix position
      * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
      */
     public static VarSpec var(String varName, int prefix)
@@ -753,9 +753,9 @@ public final class UriTemplateBuilder
     }
 
     /**
-     * @param varName
-     * @param modifier
-     * @param position
+     * @param varName the varspec name
+     * @param modifier the modifier
+     * @param position the prefix position
      * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
      */
     private static VarSpec var(String varName, Modifier modifier, Integer position)

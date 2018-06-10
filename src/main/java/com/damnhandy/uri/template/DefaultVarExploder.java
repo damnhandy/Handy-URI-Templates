@@ -42,7 +42,7 @@ import java.util.*;
  * The expanded URI will be:
  * </p>
  * <pre>
- * /mapper?city=Newport%20Beach&state=CA
+ * /mapper?city=Newport%20Beach&amp;state=CA
  * </pre>
  * <p>
  * <p>
