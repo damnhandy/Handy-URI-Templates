@@ -15,9 +15,6 @@
         a fluent API, ability to plugin custom object renderers, and supports all levels of URI templates.
     </description>
 
-    <prerequisites>
-        <maven>3.3.9</maven>
-    </prerequisites>
 
     <properties>
         <http.client>4.5.5</http.client>
