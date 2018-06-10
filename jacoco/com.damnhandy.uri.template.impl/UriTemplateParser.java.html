@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UriTemplateParser.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">UriTemplateParser.java</span></div><h1>UriTemplateParser.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UriTemplateParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">UriTemplateParser.java</span></div><h1>UriTemplateParser.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2012, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -15,228 +15,220 @@
  */
 package com.damnhandy.uri.template.impl;
 
-import java.util.LinkedList;
-
 import com.damnhandy.uri.template.Expression;
 import com.damnhandy.uri.template.Literal;
 import com.damnhandy.uri.template.MalformedUriTemplateException;
 import com.damnhandy.uri.template.UriTemplateComponent;
 
+import java.util.LinkedList;
+
 /**
- *
  * Utility class used to parse the URI template string into a series of components
  *
  * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
  * @version $Revision: 1.1 $
  * @since 2.0
  */
-<span class="fc" id="L33">public final class UriTemplateParser</span>
+<span class="fc" id="L32">public final class UriTemplateParser</span>
 {
 
-   private static final char EXPR_START = '{';
+    private static final char EXPR_START = '{';
 
-   private static final char EXPR_END = '}';
+    private static final char EXPR_END = '}';
 
-<span class="fc" id="L40">   private boolean startedTemplate = false;</span>
-   
-<span class="fc" id="L42">   private boolean expressionCaptureOn = false;</span>
-   
-<span class="fc" id="L44">   private boolean literalCaptureOn = false;</span>
+<span class="fc" id="L39">    private boolean startedTemplate = false;</span>
 
-<span class="fc" id="L46">   private LinkedList&lt;UriTemplateComponent&gt; components = new LinkedList&lt;UriTemplateComponent&gt;();</span>
+<span class="fc" id="L41">    private boolean expressionCaptureOn = false;</span>
 
-   private StringBuilder buffer;
+<span class="fc" id="L43">    private boolean literalCaptureOn = false;</span>
 
-   private int startPosition;
-   
-   private char[] template;
+<span class="fc" id="L45">    private LinkedList&lt;UriTemplateComponent&gt; components = new LinkedList&lt;UriTemplateComponent&gt;();</span>
 
-   /**
-    * Scans the URI template looking for literal string components and expressions.
-    * 
-    * @param templateString the URI template string to scan
-    * 
-    * @since 2.0
-    *
-    */
-   public LinkedList&lt;UriTemplateComponent&gt; scan(String templateString) throws MalformedUriTemplateException
-   {
-<span class="fc" id="L64">      this.template = templateString.toCharArray();</span>
-<span class="fc" id="L65">      startTemplate();</span>
-      int i;
-<span class="fc bfc" id="L67" title="All 2 branches covered.">      for (i = 0; i &lt; template.length; i++)</span>
-      {
-<span class="fc" id="L69">         char c = template[i];</span>
+    private StringBuilder buffer;
 
-<span class="fc bfc" id="L71" title="All 2 branches covered.">         if (c == EXPR_START)</span>
-         {
-<span class="fc bfc" id="L73" title="All 2 branches covered.">            if(literalCaptureOn)</span>
+    private int startPosition;
+
+
+    /**
+     * Scans the URI template looking for literal string components and expressions.
+     *
+     * @param templateString the URI template string to scan
+     * @since 2.0
+     */
+    public LinkedList&lt;UriTemplateComponent&gt; scan(String templateString) throws MalformedUriTemplateException
+    {
+<span class="fc" id="L60">        char[] template = templateString.toCharArray();</span>
+<span class="fc" id="L61">        startTemplate();</span>
+        int i;
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        for (i = 0; i &lt; template.length; i++)</span>
+        {
+<span class="fc" id="L65">            char c = template[i];</span>
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">            if (c == EXPR_START)</span>
             {
-<span class="fc" id="L75">               endLiteral(i);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                if (literalCaptureOn)</span>
+                {
+<span class="fc" id="L71">                    endLiteral(i);</span>
+                }
+<span class="fc" id="L73">                startExpression(i);</span>
             }
-<span class="fc" id="L77">            startExpression(i);</span>
-         } 
-         
-<span class="pc bpc" id="L80" title="1 of 4 branches missed.">         if(c != EXPR_START || c != EXPR_END)</span>
-         {
-<span class="fc" id="L82">            startLiteral(i);</span>
-         }
-         
 
-<span class="pc bpc" id="L86" title="1 of 4 branches missed.">         if (expressionCaptureOn || literalCaptureOn)</span>
-         {
-<span class="fc" id="L88">            capture(c);</span>
-         } 
-         
-<span class="fc bfc" id="L91" title="All 2 branches covered.">         if (c == EXPR_END)</span>
-         {
-<span class="fc" id="L93">            endExpression(i);</span>
-<span class="fc" id="L94">            startLiteral(i);</span>
-         }
-      }
-<span class="pc bpc" id="L97" title="1 of 2 branches missed.">      if (literalCaptureOn)</span>
-      {
-<span class="fc" id="L99">         endLiteral(i);</span>
-      }
-<span class="fc" id="L101">      endTemplate(i);</span>
-<span class="fc" id="L102">      return components;</span>
-   }
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (c != EXPR_START)</span>
+            {
+<span class="fc" id="L78">                startLiteral(i);</span>
+            }
 
-   /**
-    * If capture is active, collect the characters into the buffer
-    *
-    * @param currentChar
-    */
-   private void capture(char currentChar)
-   {
-<span class="fc bfc" id="L112" title="All 2 branches covered.">      if(buffer == null)</span>
-      {
-<span class="fc" id="L114">         buffer = new StringBuilder();</span>
-      }
-<span class="fc" id="L116">      buffer.append(currentChar);</span>
-<span class="fc" id="L117">   }</span>
 
-   /**
-    * Called when the {@link ExpressonScanner} has started on the template.
-    *
-    */
-   private void startTemplate()
-   {
-<span class="fc" id="L125">      startedTemplate = true;</span>
-<span class="fc" id="L126">   }</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">            if (expressionCaptureOn || literalCaptureOn)</span>
+            {
+<span class="fc" id="L84">                capture(c);</span>
+            }
 
-   /**
-    * Called when the end of the template is reached. If an expression has
-    * not been closed, an exception will be raised.
-    *
-    */
-   private void endTemplate(int position) throws MalformedUriTemplateException
-   {
-<span class="fc" id="L135">      startedTemplate = false;</span>
-<span class="fc bfc" id="L136" title="All 2 branches covered.">      if (expressionCaptureOn)</span>
-      {
-<span class="fc" id="L138">         throw new MalformedUriTemplateException(&quot;The expression at position &quot; + startPosition + &quot; was never terminated&quot;, startPosition);</span>
-      }
-      
-<span class="fc" id="L141">   }</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            if (c == EXPR_END)</span>
+            {
+<span class="fc" id="L89">                endExpression(i);</span>
+<span class="fc" id="L90">                startLiteral(i);</span>
+            }
+        }
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (literalCaptureOn)</span>
+        {
+<span class="fc" id="L95">            endLiteral(i);</span>
+        }
+<span class="fc" id="L97">        endTemplate(i);</span>
+<span class="fc" id="L98">        return components;</span>
+    }
 
-   /**
-    * Marks the start of 
-    * 
-    * @param position
-    */
-   private void startLiteral(int position) throws MalformedUriTemplateException
-   {
-      
-<span class="pc bpc" id="L151" title="1 of 2 branches missed.">      if(startedTemplate)</span>
-      {
-<span class="fc bfc" id="L153" title="All 2 branches covered.">         if(!literalCaptureOn)</span>
-         {
-            //throw new IllegalStateException(&quot;Literal capture already started at character &quot;+template[position]);
-<span class="fc" id="L156">            literalCaptureOn = true;</span>
-<span class="fc" id="L157">            startPosition = position;</span>
-         }
-      }
-      else
-      {
-<span class="nc" id="L162">         throw new IllegalStateException(&quot;Cannot start a literal without beginning the template&quot;);</span>
-      }
-<span class="fc" id="L164">   }</span>
-   
-   private void endLiteral(int position) throws MalformedUriTemplateException
-   {
-<span class="pc bpc" id="L168" title="1 of 2 branches missed.">      if(startedTemplate)</span>
-      {
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">         if(!literalCaptureOn)</span>
-         {
-<span class="nc" id="L172">            throw new IllegalStateException(&quot;Can't end a literal without starting it first&quot;);</span>
-         }
-         // in the case that we have back to back expressions ({foo}{?bar}), we can get into a state
-         // we started capturing a literal but never actually collected anything yet. 
-<span class="fc bfc" id="L176" title="All 2 branches covered.">         if(buffer != null)</span>
-         {
-<span class="fc" id="L178">            components.add(new Literal(buffer.toString(), this.startPosition));</span>
-<span class="fc" id="L179">            literalCaptureOn = false;</span>
-<span class="fc" id="L180">            buffer = null;</span>
-         }
-         
-      }
-      else
-      {
-<span class="nc" id="L186">         throw new IllegalStateException(&quot;Cannot end a literal without beginning the template&quot;);</span>
-      }
-<span class="fc" id="L188">   }</span>
-   
-   
-   /**
-    * Called when the start of an expression has been encountered.
-    *
-    */
-   private void startExpression(int position) throws MalformedUriTemplateException
-   {
+    /**
+     * If capture is active, collect the characters into the buffer
+     *
+     * @param currentChar
+     */
+    private void capture(char currentChar)
+    {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (buffer == null)</span>
+        {
+<span class="fc" id="L110">            buffer = new StringBuilder();</span>
+        }
+<span class="fc" id="L112">        buffer.append(currentChar);</span>
+<span class="fc" id="L113">    }</span>
 
-<span class="pc bpc" id="L198" title="1 of 2 branches missed.">      if (startedTemplate)</span>
-      {
-<span class="fc bfc" id="L200" title="All 2 branches covered.">         if (expressionCaptureOn)</span>
+    /**
+     * Called when the {@link UriTemplateParser} has started on the template.
+     */
+    private void startTemplate()
+    {
+<span class="fc" id="L120">        startedTemplate = true;</span>
+<span class="fc" id="L121">    }</span>
 
-         {
-<span class="fc" id="L203">            throw new MalformedUriTemplateException(&quot;A new expression start brace found at &quot; + position</span>
-                  + &quot; but another unclosed expression was found at &quot; + startPosition, position);
-         }
-<span class="fc" id="L206">         literalCaptureOn = false;</span>
-<span class="fc" id="L207">         expressionCaptureOn = true;</span>
-<span class="fc" id="L208">         startPosition = position;</span>
-      }
-      else
-      {
-<span class="nc" id="L212">         throw new IllegalStateException(&quot;Cannot start an expression without beginning the template&quot;);</span>
-      }
-<span class="fc" id="L214">   }</span>
+    /**
+     * Called when the end of the template is reached. If an expression has
+     * not been closed, an exception will be raised.
+     */
+    private void endTemplate(int position) throws MalformedUriTemplateException
+    {
+<span class="fc" id="L129">        startedTemplate = false;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (expressionCaptureOn)</span>
+        {
+<span class="fc" id="L132">            throw new MalformedUriTemplateException(&quot;The expression at position &quot; + startPosition + &quot; was never terminated&quot;, startPosition);</span>
+        }
 
-   /**
-    * Called when the end of an expression has been encountered.
-    *
-    */
-   private void endExpression(int position) throws MalformedUriTemplateException
-   {
+<span class="fc" id="L135">    }</span>
 
-      // an expression close brace is found without a start
-<span class="pc bpc" id="L224" title="1 of 2 branches missed.">      if (startedTemplate)</span>
-      {
-<span class="fc bfc" id="L226" title="All 2 branches covered.">         if (!expressionCaptureOn)</span>
+    /**
+     * Marks the start of
+     *
+     * @param position
+     */
+    private void startLiteral(int position) throws MalformedUriTemplateException
+    {
 
-         {
-<span class="fc" id="L229">            throw new MalformedUriTemplateException(&quot;Expression close brace was found at position &quot; + position</span>
-                  + &quot; yet there was no start brace.&quot;, position);
-         }
-<span class="fc" id="L232">         expressionCaptureOn = false;</span>
-<span class="fc" id="L233">         components.add(new Expression(buffer.toString(), this.startPosition));</span>
-<span class="fc" id="L234">         buffer = null;</span>
-      }
-      else
-      {
-<span class="nc" id="L238">         throw new IllegalStateException(&quot;Cannot end an expression without beginning the template&quot;);</span>
-      }
-<span class="fc" id="L240">   }</span>
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (startedTemplate)</span>
+        {
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            if (!literalCaptureOn)</span>
+            {
+                //throw new IllegalStateException(&quot;Literal capture already started at character &quot;+template[position]);
+<span class="fc" id="L150">                literalCaptureOn = true;</span>
+<span class="fc" id="L151">                startPosition = position;</span>
+            }
+        }
+        else
+        {
+<span class="nc" id="L156">            throw new IllegalStateException(&quot;Cannot start a literal without beginning the template&quot;);</span>
+        }
+<span class="fc" id="L158">    }</span>
+
+    private void endLiteral(int position) throws MalformedUriTemplateException
+    {
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (startedTemplate)</span>
+        {
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">            if (!literalCaptureOn)</span>
+            {
+<span class="nc" id="L166">                throw new IllegalStateException(&quot;Can't end a literal without starting it first&quot;);</span>
+            }
+            // in the case that we have back to back expressions ({foo}{?bar}), we can get into a state
+            // we started capturing a literal but never actually collected anything yet.
+<span class="fc bfc" id="L170" title="All 2 branches covered.">            if (buffer != null)</span>
+            {
+<span class="fc" id="L172">                components.add(new Literal(buffer.toString(), this.startPosition));</span>
+<span class="fc" id="L173">                literalCaptureOn = false;</span>
+<span class="fc" id="L174">                buffer = null;</span>
+            }
+
+        }
+        else
+        {
+<span class="nc" id="L180">            throw new IllegalStateException(&quot;Cannot end a literal without beginning the template&quot;);</span>
+        }
+<span class="fc" id="L182">    }</span>
+
+
+    /**
+     * Called when the start of an expression has been encountered.
+     */
+    private void startExpression(int position) throws MalformedUriTemplateException
+    {
+
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (startedTemplate)</span>
+        {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            if (expressionCaptureOn)</span>
+
+            {
+<span class="fc" id="L196">                throw new MalformedUriTemplateException(&quot;A new expression start brace found at &quot; + position</span>
+                + &quot; but another unclosed expression was found at &quot; + startPosition, position);
+            }
+<span class="fc" id="L199">            literalCaptureOn = false;</span>
+<span class="fc" id="L200">            expressionCaptureOn = true;</span>
+<span class="fc" id="L201">            startPosition = position;</span>
+        }
+        else
+        {
+<span class="nc" id="L205">            throw new IllegalStateException(&quot;Cannot start an expression without beginning the template&quot;);</span>
+        }
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Called when the end of an expression has been encountered.
+     */
+    private void endExpression(int position) throws MalformedUriTemplateException
+    {
+
+        // an expression close brace is found without a start
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        if (startedTemplate)</span>
+        {
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            if (!expressionCaptureOn)</span>
+
+            {
+<span class="fc" id="L221">                throw new MalformedUriTemplateException(&quot;Expression close brace was found at position &quot; + position</span>
+                + &quot; yet there was no start brace.&quot;, position);
+            }
+<span class="fc" id="L224">            expressionCaptureOn = false;</span>
+<span class="fc" id="L225">            components.add(new Expression(buffer.toString(), this.startPosition));</span>
+<span class="fc" id="L226">            buffer = null;</span>
+        }
+        else
+        {
+<span class="nc" id="L230">            throw new IllegalStateException(&quot;Cannot end an expression without beginning the template&quot;);</span>
+        }
+<span class="fc" id="L232">    }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

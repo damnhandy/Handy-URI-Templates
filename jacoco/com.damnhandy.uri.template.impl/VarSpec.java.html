@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>VarSpec.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">VarSpec.java</span></div><h1>VarSpec.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VarSpec.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">VarSpec.java</span></div><h1>VarSpec.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2012, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -15,7 +15,11 @@
  */
 package com.damnhandy.uri.template.impl;
 
+import com.damnhandy.uri.template.MalformedUriTemplateException;
+
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -26,169 +30,204 @@ import java.io.Serializable;
  */
 public final class VarSpec implements Serializable
 {
-   /** The serialVersionUID */
-   private static final long serialVersionUID = 5850478145190940514L;
+    /**
+     * The serialVersionUID
+     */
+    private static final long serialVersionUID = 5850478145190940514L;
 
-<span class="pc" id="L32">   public static enum VarFormat {</span>
-<span class="fc" id="L33">      SINGLE, ARRAY, PAIRS;</span>
-   }
+    /**
+     * Regex to validate the variable name.
+     */
+<span class="fc" id="L41">    private static final Pattern VARNAME_REGEX = Pattern.compile(&quot;([\\w\\_\\.]|%[A-Fa-f0-9]{2})+&quot;);</span>
 
-   private static final String BASE_PATTERN = &quot;([\\w.~\\-\\_]|%[A-Fa-f0-9]{2})&quot;;
-   /**
-    *
-    */
-<span class="fc" id="L40">   private Modifier modifier = Modifier.NONE;</span>
+    /**
+     *
+     */
+<span class="fc" id="L46">    public enum VarFormat</span>
+    {
+<span class="fc" id="L48">        SINGLE, ARRAY, PAIRS;</span>
+    }
 
-   /**
-    *
-    */
-   private String value;
+    private static final String BASE_PATTERN = &quot;([\\w.~\\-\\_]|%[A-Fa-f0-9]{2})&quot;;
+    /**
+     *
+     */
+<span class="fc" id="L55">    private Modifier modifier = Modifier.NONE;</span>
 
-   /**
-    *
-    */
-<span class="fc" id="L50">   private Integer position = null;</span>
+    /**
+     *
+     */
+    private String value;
 
-   /**
-    *
-    */
-   private String variableName;
+    /**
+     *
+     */
+<span class="fc" id="L65">    private Integer position = 0;</span>
 
-   /**
-    *
-    */
-   private String regexMatchString;
+    /**
+     *
+     */
+    private String variableName;
+
+    /**
+     *
+     */
+    private String regexMatchString;
 
 
-   /**
-    * Create a new VarSpec.
-    *
-    * @param modifier
-    * @param value
-    */
-   public VarSpec(String value, Modifier modifier)
-   {
-<span class="fc" id="L71">      this(value, modifier, null);</span>
-<span class="fc" id="L72">   }</span>
+    /**
+     * Create a new VarSpec.
+     *
+     * @param modifier
+     * @param value
+     */
+    public VarSpec(String value, Modifier modifier)
+    {
+<span class="fc" id="L86">        this(value, modifier, -1);</span>
+<span class="fc" id="L87">    }</span>
 
-   /**
-    * Create a new VarSpec.
-    *
-    * @param modifier
-    * @param value
-    * @param position
-    */
-   public VarSpec(String value, Modifier modifier, Integer position)
-<span class="fc" id="L82">   {</span>
-<span class="fc" id="L83">      this.modifier = modifier;</span>
-<span class="fc" id="L84">      this.value = value;</span>
-<span class="fc" id="L85">      this.position = position;</span>
-<span class="fc" id="L86">      initVariableName();</span>
-<span class="fc" id="L87">      initRegExMatchString();</span>
-<span class="fc" id="L88">   }</span>
+    /**
+     * Create a new VarSpec.
+     *
+     * @param modifier
+     * @param value
+     * @param position
+     */
+    public VarSpec(String value, Modifier modifier, Integer position)
+<span class="fc" id="L97">    {</span>
+<span class="fc" id="L98">        this.modifier = modifier;</span>
+<span class="fc" id="L99">        this.value = value;</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if(position != null)</span>
+        {
+<span class="fc" id="L102">            this.position = position;</span>
+        }
+<span class="fc" id="L104">        initVariableName();</span>
+<span class="fc" id="L105">        initRegExMatchString();</span>
+<span class="fc" id="L106">    }</span>
 
-   /**
-    * Get the modifier.
-    *
-    * @return the modifier.
-    */
-   public Modifier getModifier()
-   {
-<span class="fc" id="L97">      return modifier;</span>
-   }
 
-   private void initRegExMatchString()
-   {
-<span class="fc" id="L102">      StringBuilder b = new StringBuilder(BASE_PATTERN);</span>
-<span class="fc bfc" id="L103" title="All 2 branches covered.">      if (modifier == Modifier.PREFIX)</span>
-      {
-<span class="fc" id="L105">         b.append(&quot;{&quot;).append(getPosition()).append(&quot;}&quot;);</span>
-      }
-      else
-      {
-<span class="fc" id="L109">         b.append(&quot;+&quot;);</span>
-      }
-<span class="fc" id="L111">      regexMatchString = b.toString();</span>
-<span class="fc" id="L112">   }</span>
+
+    /**
+     * Get the modifier.
+     *
+     * @return the modifier.
+     */
+    public Modifier getModifier()
+    {
+<span class="fc" id="L117">        return modifier;</span>
+    }
+
+    private void initRegExMatchString()
+    {
+<span class="fc" id="L122">        StringBuilder b = new StringBuilder(BASE_PATTERN);</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (modifier == Modifier.PREFIX)</span>
+        {
+<span class="fc" id="L125">            b.append(&quot;{&quot;).append(getPosition()).append(&quot;}&quot;);</span>
+        }
+        else
+        {
+<span class="fc" id="L129">            b.append(&quot;+&quot;);</span>
+        }
+<span class="fc" id="L131">        regexMatchString = b.toString();</span>
+<span class="fc" id="L132">    }</span>
 
     /**
      * Returns a regex pattern that matches the variable.
+     *
      * @return
      */
-   public String getRegExMatchString()
-   {
-<span class="nc bnc" id="L120" title="All 2 branches missed.">      if(regexMatchString == null)</span>
-      {
-<span class="nc" id="L122">         initRegExMatchString();</span>
-      }
-<span class="nc" id="L124">      return regexMatchString;</span>
-   }
-   /**
-    * Get the value.
-    *
-    * @return the value.
-    */
-   public String getValue()
-   {
-<span class="fc" id="L133">      return value;</span>
-   }
+    public String getRegExMatchString()
+    {
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (regexMatchString == null)</span>
+        {
+<span class="nc" id="L143">            initRegExMatchString();</span>
+        }
+<span class="nc" id="L145">        return regexMatchString;</span>
+    }
 
-   /**
-    * Get the position.
-    *
-    * @return the position.
-    */
-   public Integer getPosition()
-   {
-<span class="fc" id="L143">      return position;</span>
-   }
+    /**
+     * Get the value.
+     *
+     * @return the value.
+     */
+    public String getValue()
+    {
+<span class="fc" id="L155">        return value;</span>
+    }
 
-   private void initVariableName()
-   {
-<span class="fc bfc" id="L148" title="All 2 branches covered.">      if (modifier != Modifier.NONE)</span>
-      {
-<span class="fc bfc" id="L150" title="All 2 branches covered.">         if (modifier == Modifier.PREFIX)</span>
-         {
-<span class="fc" id="L152">            String[] values = getValue().split(Modifier.PREFIX.getValue());</span>
-<span class="fc" id="L153">            variableName = values[0];</span>
-<span class="fc" id="L154">         }</span>
-<span class="pc bpc" id="L155" title="1 of 2 branches missed.">         else if (modifier == Modifier.EXPLODE)</span>
-         {
-<span class="fc" id="L157">            variableName = getValue().substring(0, getValue().length() - 1);</span>
-         }
-      }
-      else
-      {
-<span class="fc" id="L162">         variableName = getValue();</span>
-      }
-<span class="fc" id="L164">   }</span>
+    /**
+     * Get the position.
+     *
+     * @return the position.
+     */
+    public Integer getPosition()
+    {
+<span class="fc" id="L165">        return position;</span>
+    }
 
-   /**
-    * FIXME Comment this
-    *
-    * @return
-    */
-   public String getVariableName()
-   {
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">      if (variableName == null)</span>
-      {
-<span class="nc" id="L175">         return getValue();</span>
-      }
-<span class="fc" id="L177">      return variableName;</span>
-   }
+    private void initVariableName()
+    {
+<span class="fc" id="L170">        variableName = getValue();</span>
 
-   @Override
-   public String toString()
-   {
-<span class="nc" id="L183">      return &quot;VarSpec [modifier=&quot; + modifier + &quot;, value=&quot; + value + &quot;, position=&quot; + position + &quot;, variableName=&quot;</span>
-            + variableName + &quot;]&quot;;
-   }
-   
-<span class="nc" id="L187">   public static class Builder</span>
-   {
-      
-      
-   }
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        if (modifier != Modifier.NONE)</span>
+        {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            if (modifier == Modifier.PREFIX)</span>
+            {
+<span class="fc" id="L176">                String[] values = getValue().split(Modifier.PREFIX.getValue());</span>
+<span class="fc" id="L177">                variableName = values[0];</span>
+            }
+            // Strip the '*' from the variable name if it's presnet on the variable
+            // name. Note that in the case of the UriTemplateBuilder, the VarSpec
+            // is not responsible for rendering the '*' on the generated template
+            // output as that is done in the UriTemplateBuilder
+<span class="fc bfc" id="L183" title="All 4 branches covered.">            if (modifier == Modifier.EXPLODE &amp;&amp; getValue().lastIndexOf('*') != -1)</span>
+            {
+<span class="fc" id="L185">                variableName = getValue().substring(0, getValue().length() - 1);</span>
+            }
+        }
+        // Double check if the name has an explode modifier. This could happen
+        // using one of the template builder APIs. If the ends with '*'
+        // strip it and set the modifier to EXPLODE
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        else if (variableName.lastIndexOf('*') != -1)</span>
+        {
+<span class="fc" id="L193">            variableName = getValue().substring(0, getValue().length() - 1);</span>
+<span class="fc" id="L194">            modifier = Modifier.EXPLODE;</span>
+        }
+        // Validation needs to happen after strip out the modifier or prefix
+<span class="fc" id="L197">        Matcher matcher = VARNAME_REGEX.matcher(variableName);</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">        if (!matcher.matches())</span>
+        {
+<span class="fc" id="L200">            throw new MalformedUriTemplateException(&quot;The variable name &quot; + variableName + &quot; contains invalid characters&quot;, position);</span>
+        }
+
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (variableName.contains(&quot; &quot;))</span>
+        {
+<span class="nc" id="L205">            throw new MalformedUriTemplateException(&quot;The variable name &quot; + variableName + &quot; cannot contain spaces (leading or trailing)&quot;, position);</span>
+        }
+<span class="fc" id="L207">    }</span>
+
+
+
+    /**
+     * Returns the variable name
+     *
+     * @return
+     */
+    public String getVariableName()
+    {
+<span class="pc bpc" id="L218" title="1 of 2 branches missed.">        if (variableName == null)</span>
+        {
+<span class="nc" id="L220">            return getValue();</span>
+        }
+<span class="fc" id="L222">        return variableName;</span>
+    }
+
+    @Override
+    public String toString()
+    {
+<span class="nc" id="L228">        return &quot;VarSpec [modifier=&quot; + modifier + &quot;, value=&quot; + value + &quot;, position=&quot; + position + &quot;, variableName=&quot;</span>
+        + variableName + &quot;]&quot;;
+    }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

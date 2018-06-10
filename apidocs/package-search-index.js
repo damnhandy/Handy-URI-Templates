@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.damnhandy.uri.template"},{"l":"com.damnhandy.uri.template.impl"},{"l":"com.damnhandy.uri.template.jackson.datatype"}]

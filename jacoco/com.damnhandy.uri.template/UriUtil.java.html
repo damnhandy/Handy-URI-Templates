@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UriUtil.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">UriUtil.java</span></div><h1>UriUtil.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UriUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">UriUtil.java</span></div><h1>UriUtil.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2012, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -18,7 +18,11 @@ package com.damnhandy.uri.template;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -32,105 +36,131 @@ import java.util.BitSet;
  */
 public final class UriUtil
 {
-<span class="fc" id="L35">   static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};</span>
+<span class="fc" id="L39">    static final Pattern PCT_ENCODDED_STRING = Pattern.compile(&quot;%[0-9A-Fa-f]{2}&quot;);</span>
 
-<span class="fc" id="L37">   static final char[] SUB_DELIMS_CHARS = {'!', '$', '&amp;', '\'', '(', ')', '*', '+', ',', ';', '=', '&lt;', '&gt;', '{','}'};</span>
+<span class="fc" id="L41">    static final char[] GENERAL_DELIM_CHARS = {':', '/', ',', '?', '#', '[', ']', '@'};</span>
 
-   private static final BitSet RESERVED;
+<span class="fc" id="L43">    static final char[] SUB_DELIMS_CHARS = {'!', '$', '&amp;', '\'', '(', ')', '*', '+', ',', ';', '=', '&lt;', '&gt;', '{', '}'};</span>
 
-   private static final BitSet ESCAPE_CHARS;
+    private static final BitSet RESERVED;
 
-   static
-   {
+    private static final BitSet ESCAPE_CHARS;
 
-<span class="fc" id="L46">      RESERVED = new BitSet();</span>
-<span class="fc bfc" id="L47" title="All 2 branches covered.">      for (int i = 0; i &lt; GENERAL_DELIM_CHARS.length; i++)</span>
-      {
-<span class="fc" id="L49">         RESERVED.set(GENERAL_DELIM_CHARS[i]);</span>
-      }
-<span class="fc" id="L51">      RESERVED.set(' ');</span>
-<span class="fc" id="L52">      RESERVED.set('%');</span>
-<span class="fc" id="L53">      RESERVED.set('|');</span>
-<span class="fc" id="L54">      RESERVED.set('\\');</span>
+    static
+    {
 
-<span class="fc bfc" id="L56" title="All 2 branches covered.">       for (int i = 0; i &lt; SUB_DELIMS_CHARS.length; i++)</span>
-      {
-<span class="fc" id="L58">         RESERVED.set(SUB_DELIMS_CHARS[i]);</span>
-      }
+<span class="fc" id="L52">        RESERVED = new BitSet();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        for (int i = 0; i &lt; GENERAL_DELIM_CHARS.length; i++)</span>
+        {
+<span class="fc" id="L55">            RESERVED.set(GENERAL_DELIM_CHARS[i]);</span>
+        }
+<span class="fc" id="L57">        RESERVED.set(' ');</span>
+<span class="fc" id="L58">        RESERVED.set('%');</span>
+<span class="fc" id="L59">        RESERVED.set('|');</span>
+<span class="fc" id="L60">        RESERVED.set('\\');</span>
+<span class="fc" id="L61">        RESERVED.set('`');</span>
+<span class="fc" id="L62">        RESERVED.set('&quot;');</span>
+<span class="fc" id="L63">        RESERVED.set('^');</span>
 
-<span class="fc" id="L61">      ESCAPE_CHARS = new BitSet();</span>
-<span class="fc" id="L62">      ESCAPE_CHARS.set('&lt;');</span>
-<span class="fc" id="L63">      ESCAPE_CHARS.set('&gt;');</span>
-<span class="fc" id="L64">      ESCAPE_CHARS.set('%');</span>
-<span class="fc" id="L65">      ESCAPE_CHARS.set('\&quot;');</span>
-<span class="fc" id="L66">      ESCAPE_CHARS.set('{');</span>
-<span class="fc" id="L67">      ESCAPE_CHARS.set('}');</span>
-<span class="fc" id="L68">      ESCAPE_CHARS.set('|');</span>
-<span class="fc" id="L69">      ESCAPE_CHARS.set('\\');</span>
-<span class="fc" id="L70">      ESCAPE_CHARS.set('^');</span>
-<span class="fc" id="L71">      ESCAPE_CHARS.set('[');</span>
-<span class="fc" id="L72">      ESCAPE_CHARS.set(']');</span>
-<span class="fc" id="L73">      ESCAPE_CHARS.set('`');</span>
-<span class="fc" id="L74">   }</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (int i = 0; i &lt; SUB_DELIMS_CHARS.length; i++)</span>
+        {
+<span class="fc" id="L67">            RESERVED.set(SUB_DELIMS_CHARS[i]);</span>
+        }
 
-   private UriUtil()
-<span class="nc" id="L77">   {</span>
+<span class="fc" id="L70">        ESCAPE_CHARS = new BitSet();</span>
+<span class="fc" id="L71">        ESCAPE_CHARS.set('&lt;');</span>
+<span class="fc" id="L72">        ESCAPE_CHARS.set('&gt;');</span>
+<span class="fc" id="L73">        ESCAPE_CHARS.set('%');</span>
+<span class="fc" id="L74">        ESCAPE_CHARS.set('\&quot;');</span>
+<span class="fc" id="L75">        ESCAPE_CHARS.set('{');</span>
+<span class="fc" id="L76">        ESCAPE_CHARS.set('}');</span>
+<span class="fc" id="L77">        ESCAPE_CHARS.set('|');</span>
+<span class="fc" id="L78">        ESCAPE_CHARS.set('\\');</span>
+<span class="fc" id="L79">        ESCAPE_CHARS.set('^');</span>
+<span class="fc" id="L80">        ESCAPE_CHARS.set('[');</span>
+<span class="fc" id="L81">        ESCAPE_CHARS.set(']');</span>
+<span class="fc" id="L82">        ESCAPE_CHARS.set('`');</span>
+<span class="fc" id="L83">    }</span>
 
-<span class="nc" id="L79">   }</span>
+    private UriUtil()
+    {
 
-   /**
-    *
-    *
-    * @param source
-    * @return
-    */
-   public static String encodeFragment(String sourceValue) throws UnsupportedEncodingException
-   {
-<span class="fc" id="L89">      return encode(sourceValue, ESCAPE_CHARS);</span>
-   }
+    }
 
-   /**
-    *
-    *
-    * @param source
-    * @return
-    */
-   public static String encode(String sourceValue) throws UnsupportedEncodingException
-   {
-<span class="fc" id="L100">      return encode(sourceValue, RESERVED);</span>
-   }
+    /**
+     * @param sourceValue
+     * @return the encoded string
+     */
+    public static String encodeFragment(String sourceValue) throws UnsupportedEncodingException
+    {
+        // Check if the string has %-encoded values already.
+        // if it does, rebuild the string and encode the non-encoded bit
+        // but don't re-encode the already encoded strings.
+        //
+        // There's probably a cleaner way to do this.
+<span class="fc" id="L101">        Matcher m = PCT_ENCODDED_STRING.matcher(sourceValue);</span>
+<span class="fc" id="L102">        List&lt;int[]&gt; positions = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        while (m.find())</span>
+        {
+<span class="fc" id="L105">            positions.add(new int[]{m.start(), m.end()});</span>
+        }
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if(!positions.isEmpty())</span>
+        {
+<span class="fc" id="L109">            StringBuilder b = new StringBuilder();</span>
+<span class="fc" id="L110">            int offset = 0;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            for (int[] pos : positions)</span>
+            {
+                // encode the non-encoded portion of the string
+<span class="fc" id="L114">                b.append(UriUtil.encode(sourceValue.substring(offset, pos[0]),ESCAPE_CHARS));</span>
+                // the already encodede string does not get encoded twice
+<span class="fc" id="L116">                b.append(sourceValue.substring(pos[0], pos[1]));</span>
+<span class="fc" id="L117">                offset = pos[1];</span>
+<span class="fc" id="L118">            }</span>
+<span class="fc" id="L119">            b.append(encode(sourceValue.substring(offset, sourceValue.length()),ESCAPE_CHARS));</span>
+<span class="fc" id="L120">            return b.toString();</span>
+        }
+        // If there's
+<span class="fc" id="L123">        return encode(sourceValue, ESCAPE_CHARS);</span>
+    }
 
-   /**
-    *
-    *
-    * @param soureValue
-    * @param chars
-    * @return
-    * @throws UriEncodingException
-    */
-   private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException
-   {
-<span class="fc" id="L113">      ByteArrayOutputStream out = new ByteArrayOutputStream();</span>
-<span class="fc" id="L114">      byte[] source = sourceValue.getBytes(Charset.forName(&quot;UTF-8&quot;));</span>
-<span class="fc bfc" id="L115" title="All 2 branches covered.">      for (int i = 0; i &lt; source.length; i++)</span>
-      {
-<span class="fc" id="L117">         byte c = source[i];</span>
-         // fixed unsigned problem
-<span class="fc bfc" id="L119" title="All 4 branches covered.">         if (chars.get(c &amp; 0xff) || c &lt;= 0x20)</span>
-         {
-<span class="fc" id="L121">            out.write('%');</span>
-<span class="fc" id="L122">            char hex1 = Character.toUpperCase(Character.forDigit((c &gt;&gt; 4) &amp; 0xF, 16));</span>
-<span class="fc" id="L123">            char hex2 = Character.toUpperCase(Character.forDigit(c &amp; 0xF, 16));</span>
-<span class="fc" id="L124">            out.write(hex1);</span>
-<span class="fc" id="L125">            out.write(hex2);</span>
-<span class="fc" id="L126">         }</span>
-         else
-         {
-<span class="fc" id="L129">            out.write(c);</span>
-         }
-      }
-<span class="fc" id="L132">      return new String(out.toByteArray(), &quot;UTF-8&quot;);</span>
-   }
+    /**
+     * @param sourceValue
+     * @return the encoded string
+     */
+    public static String encode(String sourceValue) throws UnsupportedEncodingException
+    {
+<span class="fc" id="L132">        return encode(sourceValue, RESERVED);</span>
+    }
+
+    /**
+     * @param sourceValue
+     * @param chars
+     * @return the encoded string
+     * @throws UnsupportedEncodingException
+     */
+    private static String encode(String sourceValue, BitSet chars) throws UnsupportedEncodingException
+    {
+<span class="fc" id="L143">        ByteArrayOutputStream out = new ByteArrayOutputStream();</span>
+<span class="fc" id="L144">        byte[] source = sourceValue.getBytes(Charset.forName(&quot;UTF-8&quot;));</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        for (int i = 0; i &lt; source.length; i++)</span>
+        {
+<span class="fc" id="L147">            byte c = source[i];</span>
+            // fixed unsigned problem
+<span class="fc bfc" id="L149" title="All 4 branches covered.">            if (chars.get(c &amp; 0xff) || c &lt;= 0x20)</span>
+            {
+<span class="fc" id="L151">                out.write('%');</span>
+<span class="fc" id="L152">                char hex1 = Character.toUpperCase(Character.forDigit((c &gt;&gt; 4) &amp; 0xF, 16));</span>
+<span class="fc" id="L153">                char hex2 = Character.toUpperCase(Character.forDigit(c &amp; 0xF, 16));</span>
+<span class="fc" id="L154">                out.write(hex1);</span>
+<span class="fc" id="L155">                out.write(hex2);</span>
+<span class="fc" id="L156">            }</span>
+            else
+            {
+<span class="fc" id="L159">                out.write(c);</span>
+            }
+        }
+<span class="fc" id="L162">        return new String(out.toByteArray(), &quot;UTF-8&quot;);</span>
+    }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultVarExploder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">DefaultVarExploder.java</span></div><h1>DefaultVarExploder.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultVarExploder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">DefaultVarExploder.java</span></div><h1>DefaultVarExploder.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2012, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -15,16 +15,10 @@
  */
 package com.damnhandy.uri.template;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -48,180 +42,272 @@ import java.util.Map;
  * The expanded URI will be:
  * &lt;/p&gt;
  * &lt;pre&gt;
- * /mapper?city=Newport%20Beach&amp;state=CA
+ * /mapper?city=Newport%20Beach&amp;amp;state=CA
  * &lt;/pre&gt;
- *
+ * &lt;p&gt;
  * &lt;p&gt;
  * The {@link DefaultVarExploder} breaks down the object properties as follows:
  * &lt;ul&gt;
- *  &lt;li&gt;All properties that contain a non-null return value will be included&lt;/li&gt;
- *  &lt;li&gt;Getters or fields annotated with {@link UriTransient} will &lt;b&gt;NOT&lt;/b&gt; included in the list&lt;/li&gt;
- *  &lt;li&gt;By default, the property name is used as the label in the URI. This can be overridden by
- *      placing the {@link VarName} annotation on the field or getter method and specifying a name.&lt;/li&gt;
- *  &lt;li&gt;Field level annotation take priority of getter annotations&lt;/li&gt;
+ * &lt;li&gt;All properties that contain a non-null return value will be included&lt;/li&gt;
+ * &lt;li&gt;Getters or fields annotated with {@link UriTransient} will &lt;b&gt;NOT&lt;/b&gt; included in the list&lt;/li&gt;
+ * &lt;li&gt;By default, the property name is used as the label in the URI. This can be overridden by
+ * placing the {@link VarName} annotation on the field or getter method and specifying a name.&lt;/li&gt;
+ * &lt;li&gt;Field level annotation take priority of getter annotations&lt;/li&gt;
  * &lt;/ul&gt;
  *
+ * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
+ * @version $Revision: 1.1 $
  * @see VarName
  * @see UriTransient
  * @see VarExploder
- * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
- * @version $Revision: 1.1 $
  * @since 1.0
  */
 public class DefaultVarExploder implements VarExploder
 {
-   /**
-    * The original object.
-    */
-   private Object source;
 
-   /**
-    * The objects properties that have been extracted to a {@link Map}
-    */
-<span class="fc" id="L81">   private Map&lt;String, Object&gt; pairs = new LinkedHashMap&lt;String, Object&gt;();</span>
+    /**
+     *
+     */
+    private static final String GET_PREFIX = &quot;get&quot;;
 
-   /**
-    *
-    *
-    *
-    * @param source the Object to explode
-    */
-   public DefaultVarExploder(Object source) throws VarExploderException
-<span class="fc" id="L90">   {</span>
-<span class="fc" id="L91">      this.setSource(source);</span>
-<span class="fc" id="L92">   }</span>
-
-   /**
-    *
-    *
-    * @return
-    */
-   @Override
-   public Map&lt;String, Object&gt; getNameValuePairs()
-   {
-<span class="fc" id="L102">      return pairs;</span>
-   }
+    /**
+     *
+     */
+    private static final String IS_PREIX = &quot;is&quot;;
 
 
-   public void setSource(Object source) throws VarExploderException
-   {
-<span class="fc" id="L108">      this.source = source;</span>
-<span class="fc" id="L109">      this.initValues();</span>
-<span class="fc" id="L110">   }</span>
+    /**
+     * The original object.
+     */
+    private Object source;
 
-   /**
-    *
-    *
-    */
-   private void initValues() throws VarExploderException
-   {
+    /**
+     * The objects properties that have been extracted to a {@link Map}
+     */
+<span class="fc" id="L87">    private Map&lt;String, Object&gt; pairs = new TreeMap&lt;String, Object&gt;();</span>
 
-<span class="fc" id="L119">      Class&lt;?&gt; c = source.getClass();</span>
-<span class="pc bpc" id="L120" title="4 of 8 branches missed.">      if (c.isAnnotation() || c.isArray() || c.isEnum() || c.isPrimitive())</span>
-      {
-<span class="nc" id="L122">         throw new IllegalArgumentException(&quot;The value must an object&quot;);</span>
-      }
-      BeanInfo beanInfo;
-      try
-      {
-<span class="fc" id="L127">         beanInfo = Introspector.getBeanInfo(c);</span>
-      }
-<span class="nc" id="L129">      catch (IntrospectionException e)</span>
-      {
-<span class="nc" id="L131">         throw new RuntimeException(e);</span>
-<span class="fc" id="L132">      }</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">      for (PropertyDescriptor p : beanInfo.getPropertyDescriptors())</span>
-      {
-<span class="fc" id="L135">         Method readMethod = p.getReadMethod();</span>
-<span class="pc bpc" id="L136" title="1 of 4 branches missed.">         if (!readMethod.isAnnotationPresent(UriTransient.class) &amp;&amp; !p.getName().equals(&quot;class&quot;))</span>
-         {
-<span class="fc" id="L138">            Object value = getValue(readMethod);</span>
-<span class="fc" id="L139">            String name = p.getName();</span>
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">            if (readMethod.isAnnotationPresent(VarName.class))</span>
+    /**
+     * @param source the Object to explode
+     */
+    public DefaultVarExploder(Object source) throws VarExploderException
+<span class="fc" id="L93">    {</span>
+<span class="fc" id="L94">        this.setSource(source);</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * @return the name value pairs of the input
+     */
+    @Override
+    public Map&lt;String, Object&gt; getNameValuePairs()
+    {
+<span class="fc" id="L103">        return pairs;</span>
+    }
+
+
+    /**
+     *
+     * @param source
+     * @throws VarExploderException
+     */
+    void setSource(Object source) throws VarExploderException
+    {
+<span class="fc" id="L114">        this.source = source;</span>
+<span class="fc" id="L115">        this.initValues();</span>
+<span class="fc" id="L116">    }</span>
+
+    /**
+     * Initializes the values from the object properties and constructs a
+     * map from those values.
+     *
+     * @throws VarExploderException
+     */
+    private void initValues() throws VarExploderException
+    {
+
+<span class="fc" id="L127">        Class&lt;?&gt; c = source.getClass();</span>
+<span class="pc bpc" id="L128" title="4 of 8 branches missed.">        if (c.isAnnotation() || c.isArray() || c.isEnum() || c.isPrimitive())</span>
+        {
+<span class="nc" id="L130">            throw new IllegalArgumentException(&quot;The value must an object&quot;);</span>
+        }
+
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if(source instanceof Map )</span>
+        {
+<span class="fc" id="L135">            this.pairs = (Map&lt;String,Object&gt;) source;</span>
+<span class="fc" id="L136">            return;</span>
+        }
+<span class="fc" id="L138">        Method[] methods = c.getMethods();</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for (Method method : methods)</span>
+        {
+<span class="fc" id="L141">            inspectGetters(method);</span>
+        }
+<span class="fc" id="L143">        scanFields(c);</span>
+<span class="fc" id="L144">    }</span>
+
+    /**
+     * A lite version of the introspection logic performed by the BeanInfo introspector.
+     * @param method
+     */
+    private void inspectGetters(Method method)
+    {
+<span class="fc" id="L152">        String methodName = method.getName();</span>
+<span class="fc" id="L153">        int prefixLength = 0;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (methodName.startsWith(GET_PREFIX)) {</span>
+<span class="fc" id="L155">            prefixLength = GET_PREFIX.length();</span>
+        }
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (methodName.startsWith(IS_PREIX)) {</span>
+<span class="fc" id="L159">            prefixLength = IS_PREIX.length();</span>
+        }
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if(prefixLength == 0)</span>
+        {
+<span class="fc" id="L163">            return;</span>
+        }
+
+<span class="fc" id="L166">        String name = decapitalize(methodName.substring(prefixLength));</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if(!isValidProperty(name))</span>
+        {
+<span class="fc" id="L169">            return;</span>
+        }
+
+        // Check that the return type is not null or void
+<span class="fc" id="L173">        Class propertyType = method.getReturnType();</span>
+
+<span class="pc bpc" id="L175" title="2 of 4 branches missed.">        if (propertyType == null || propertyType == void.class)</span>
+        {
+<span class="nc" id="L177">            return;</span>
+        }
+
+        // isXXX return boolean
+<span class="fc bfc" id="L181" title="All 2 branches covered.">        if (prefixLength == 2)</span>
+        {
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (!(propertyType == boolean.class))</span>
             {
-<span class="nc" id="L142">               name = readMethod.getAnnotation(VarName.class).value();</span>
+<span class="nc" id="L185">                return;</span>
             }
-<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (value != null)</span>
+        }
+
+        // validate parameter types
+<span class="fc" id="L190">        Class[] paramTypes = method.getParameterTypes();</span>
+<span class="pc bpc" id="L191" title="4 of 6 branches missed.">        if (paramTypes.length &gt; 1 ||</span>
+           (paramTypes.length == 1 &amp;&amp; paramTypes[0] != int.class))
+        {
+<span class="nc" id="L194">            return;</span>
+        }
+
+<span class="pc bpc" id="L197" title="1 of 4 branches missed.">        if (!method.isAnnotationPresent(UriTransient.class) &amp;&amp; !&quot;class&quot;.equals(name))</span>
+        {
+<span class="fc" id="L199">            Object value = getValue(method);</span>
+
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">            if (method.isAnnotationPresent(VarName.class))</span>
             {
-<span class="fc" id="L146">               pairs.put(name, value);</span>
+<span class="nc" id="L203">                name = method.getAnnotation(VarName.class).value();</span>
             }
-         }
-
-      }
-<span class="fc" id="L151">      scanFields(c);</span>
-<span class="fc" id="L152">   }</span>
-
-   /**
-    * Scans the fields on the class or super classes to look for
-    * annotations on the fields.
-    *
-    * @param c
-    */
-   private void scanFields(Class&lt;?&gt; c)
-   {
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">      if (!c.isInterface())</span>
-      {
-<span class="fc" id="L164">         Field[] fields = c.getDeclaredFields();</span>
-<span class="fc bfc" id="L165" title="All 2 branches covered.">         for (Field field : fields)</span>
-         {
-<span class="fc" id="L167">            String fieldName = field.getName();</span>
-
-<span class="fc bfc" id="L169" title="All 2 branches covered.">            if (pairs.containsKey(fieldName))</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">            if (value != null)</span>
             {
-<span class="fc bfc" id="L171" title="All 2 branches covered.">               if (field.isAnnotationPresent(UriTransient.class))</span>
-               {
-<span class="fc" id="L173">                  pairs.remove(fieldName);</span>
-               }
-<span class="fc bfc" id="L175" title="All 2 branches covered.">               else if (field.isAnnotationPresent(VarName.class))</span>
-               {
-<span class="fc" id="L177">                  String name = field.getAnnotation(VarName.class).value();</span>
-<span class="fc" id="L178">                  pairs.put(name, pairs.get(fieldName));</span>
-<span class="fc" id="L179">                  pairs.remove(fieldName);</span>
-               }
+<span class="fc" id="L207">                pairs.put(name, value);</span>
             }
-         }
-      }
+        }
+<span class="fc" id="L210">    }</span>
+
+    private static boolean isValidProperty(String propertyName) {
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">        return (propertyName != null) &amp;&amp; (propertyName.length() != 0);</span>
+    }
+
+    static String decapitalize(String name)
+    {
+
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">        if (name == null)</span>
+<span class="nc" id="L220">            return null;</span>
+        // The rule for decapitalize is that:
+        // If the first letter of the string is Upper Case, make it lower case
+        // UNLESS the second letter of the string is also Upper Case, in which case no
+        // changes are made.
+<span class="pc bpc" id="L225" title="2 of 6 branches missed.">        if (name.length() == 0 || (name.length() &gt; 1 &amp;&amp; Character.isUpperCase(name.charAt(1)))) {</span>
+<span class="fc" id="L226">            return name;</span>
+        }
+
+<span class="fc" id="L229">        char[] chars = name.toCharArray();</span>
+<span class="fc" id="L230">        chars[0] = Character.toLowerCase(chars[0]);</span>
+<span class="fc" id="L231">        return new String(chars);</span>
+    }
+
+    /**
+     * Scans the fields on the class or super classes to look for
+     * field-level annotations.
+     *
+     * @param c
+     */
+    private void scanFields(Class&lt;?&gt; c)
+    {
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (!c.isInterface())</span>
+        {
+<span class="fc" id="L244">            Field[] fields = c.getDeclaredFields();</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">            for (Field field : fields)</span>
+            {
+<span class="fc" id="L247">                String fieldName = field.getName();</span>
+
+<span class="fc bfc" id="L249" title="All 2 branches covered.">                if (pairs.containsKey(fieldName))</span>
+                {
+<span class="fc bfc" id="L251" title="All 2 branches covered.">                    if (field.isAnnotationPresent(UriTransient.class))</span>
+                    {
+<span class="fc" id="L253">                        pairs.remove(fieldName);</span>
+                    }
+<span class="fc bfc" id="L255" title="All 2 branches covered.">                    else if (field.isAnnotationPresent(VarName.class))</span>
+                    {
+<span class="fc" id="L257">                        String name = field.getAnnotation(VarName.class).value();</span>
+<span class="fc" id="L258">                        pairs.put(name, pairs.get(fieldName));</span>
+<span class="fc" id="L259">                        pairs.remove(fieldName);</span>
+                    }
+                }
+            }
+        }
       /*
        * We still need to scan the fields of the super class if its
        * not Object to check for annotations. There might be a better
        * way to do this.
        */
-<span class="fc bfc" id="L189" title="All 2 branches covered.">      if (!c.getSuperclass().equals(Object.class))</span>
-      {
-<span class="fc" id="L191">         scanFields(c.getSuperclass());</span>
-      }
-<span class="fc" id="L193">   }</span>
+<span class="fc bfc" id="L269" title="All 2 branches covered.">        if (!c.getSuperclass().equals(Object.class))</span>
+        {
+<span class="fc" id="L271">            scanFields(c.getSuperclass());</span>
+        }
+<span class="fc" id="L273">    }</span>
 
-   private Object getValue(Method method) throws VarExploderException
-   {
-      try
-      {
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">         if (method == null)</span>
-         {
-<span class="nc" id="L201">            return null;</span>
-         }
-<span class="fc" id="L203">         return method.invoke(source);</span>
-      }
-<span class="nc" id="L205">      catch (IllegalArgumentException e)</span>
-      {
-<span class="nc" id="L207">         throw new VarExploderException(e);</span>
-      }
-<span class="nc" id="L209">      catch (IllegalAccessException e)</span>
-      {
-<span class="nc" id="L211">         throw new VarExploderException(e);</span>
-      }
-<span class="nc" id="L213">      catch (InvocationTargetException e)</span>
-      {
-<span class="nc" id="L215">         throw new VarExploderException(e);</span>
-      }
-   }
+    /**
+     * Return the value of the property.
+     *
+     * @param method
+     * @return
+     * @throws VarExploderException
+     */
+    private Object getValue(Method method) throws VarExploderException
+    {
+        try
+        {
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">            if (method == null)</span>
+            {
+<span class="nc" id="L288">                return null;</span>
+            }
+<span class="fc" id="L290">            return method.invoke(source);</span>
+        }
+<span class="nc" id="L292">        catch (IllegalArgumentException e)</span>
+        {
+<span class="nc" id="L294">            throw new VarExploderException(e);</span>
+        }
+<span class="nc" id="L296">        catch (IllegalAccessException e)</span>
+        {
+<span class="nc" id="L298">            throw new VarExploderException(e);</span>
+        }
+<span class="nc" id="L300">        catch (InvocationTargetException e)</span>
+        {
+<span class="nc" id="L302">            throw new VarExploderException(e);</span>
+        }
+    }
 
-   @Override
-   public Collection&lt;Object&gt; getValues() throws VarExploderException
-   {
-<span class="fc" id="L222">      Collection&lt;Object&gt; c = pairs.values();</span>
-<span class="fc" id="L223">      return c;</span>
-   }
+    @Override
+    public Collection&lt;Object&gt; getValues() throws VarExploderException
+    {
+<span class="fc" id="L309">        return pairs.values();</span>
+    }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

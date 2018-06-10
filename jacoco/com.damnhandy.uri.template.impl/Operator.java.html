@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Operator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">Operator.java</span></div><h1>Operator.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Operator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template.impl</a> &gt; <span class="el_source">Operator.java</span></div><h1>Operator.java</h1><pre class="source lang-java linenums">/*
  * Copyright 2012, Ryan J. McDonough
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -25,10 +25,10 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
  * &lt;/p&gt;
  * &lt;pre&gt;
  *  .------------------------------------------------------------------.
- *  |          NUL     +      .       /       ;      ?      &amp;      #   |
+ *  |          NUL     +      .       /       ;      ?      &amp;amp;      #   |
  *  |------------------------------------------------------------------|
- *  | first |  &quot;&quot;     &quot;&quot;     &quot;.&quot;     &quot;/&quot;     &quot;;&quot;    &quot;?&quot;    &quot;&amp;&quot;    &quot;#&quot;  |
- *  | sep   |  &quot;,&quot;    &quot;,&quot;    &quot;.&quot;     &quot;/&quot;     &quot;;&quot;    &quot;&amp;&quot;    &quot;&amp;&quot;    &quot;,&quot;  |
+ *  | first |  &quot;&quot;     &quot;&quot;     &quot;.&quot;     &quot;/&quot;     &quot;;&quot;    &quot;?&quot;    &quot;&amp;amp;&quot;    &quot;#&quot;  |
+ *  | sep   |  &quot;,&quot;    &quot;,&quot;    &quot;.&quot;     &quot;/&quot;     &quot;;&quot;    &quot;&amp;amp;&quot;    &quot;&amp;amp;&quot;    &quot;,&quot;  |
  *  | named | false  false  false   false   true   true   true   false |
  *  | ifemp |  &quot;&quot;     &quot;&quot;     &quot;&quot;      &quot;&quot;      &quot;&quot;     &quot;=&quot;    &quot;=&quot;    &quot;&quot;   |
  *  | allow |   U     U+R     U       U       U      U      U     U+R  |
@@ -39,7 +39,7 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
  * @version $Revision: 1.1 $
  */
 
-<span class="pc" id="L42">public enum Operator {</span>
+<span class="fc" id="L42">public enum Operator {</span>
 
 
 
@@ -78,10 +78,10 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
     *
     * Create a new Operator.
     *
-    * @param operator
-    * @param separator
+    * @param operator the operator
+    * @param separator the separatator
     */
-   private Operator(String operator, String separator, boolean named, Encoding encoding)
+   Operator(String operator, String separator, boolean named, Encoding encoding)
 <span class="fc" id="L85">   {</span>
 <span class="fc" id="L86">      this.operator = operator;</span>
 <span class="fc" id="L87">      this.separator = separator;</span>
@@ -102,7 +102,7 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
    /**
     *
     *
-    * @return
+    * @return the encoding to be used
     */
    public Encoding getEncoding() {
 <span class="fc" id="L108">      return encoding;</span>
@@ -110,7 +110,7 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
    /**
     *
     *
-    * @return
+    * @return tbd
     */
    public boolean isNamed()
    {
@@ -129,11 +129,11 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
     * When the variable is a Collection, this flag determines if we use
     * the VarSpec name to prefix values. For example:
     *
-    * {&amp;list} return false
+    * {&amp;apm;list} return false
     *
-    * {&amp;list*} will return true
+    * {&amp;apm;list*} will return true
     *
-    * @return
+    * @return tbd
     */
    public boolean useVarNameWhenExploded()
    {
@@ -143,7 +143,7 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
    /**
     *
     *
-    * @return
+    * @return the prefix
     */
    public String getPrefix()
    {
@@ -153,8 +153,8 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
    /**
     * FIXME Comment this
     *
-    * @param opCode
-    * @return
+    * @param opCode the opertator code
+    * @return the Operator
     */
    public static Operator fromOpCode(String opCode) throws IllegalArgumentException
    {
@@ -164,7 +164,7 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
          {
 <span class="fc" id="L165">            return op;</span>
          }
-<span class="fc bfc" id="L167" title="All 4 branches covered.">         else if (opCode.equalsIgnoreCase(&quot;!&quot;) || opCode.equalsIgnoreCase(&quot;=&quot;))</span>
+<span class="fc bfc" id="L167" title="All 4 branches covered.">         else if (&quot;!&quot;.equals(opCode) || &quot;=&quot;.equals(opCode))</span>
          {
 <span class="fc" id="L169">            throw new IllegalArgumentException(opCode + &quot; is not a valid operator.&quot;);</span>
          }
@@ -172,4 +172,4 @@ import com.damnhandy.uri.template.UriTemplate.Encoding;
 <span class="nc" id="L172">      return null;</span>
    }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

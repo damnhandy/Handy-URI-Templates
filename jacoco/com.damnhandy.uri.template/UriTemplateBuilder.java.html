@@ -1,18 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>UriTemplateBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">UriTemplateBuilder.java</span></div><h1>UriTemplateBuilder.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UriTemplateBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Handy URI Templates</a> &gt; <a href="index.source.html" class="el_package">com.damnhandy.uri.template</a> &gt; <span class="el_source">UriTemplateBuilder.java</span></div><h1>UriTemplateBuilder.java</h1><pre class="source lang-java linenums">/*
  *
  *
  */
 package com.damnhandy.uri.template;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.Map;
-
 import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
 import com.damnhandy.uri.template.impl.VarSpec;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * &lt;p&gt;
@@ -32,130 +35,145 @@ import com.damnhandy.uri.template.impl.VarSpec;
  * &lt;pre&gt;
  * http://example.com/foo{/thing1,explodedThing*}{#prefix:2}
  * &lt;/pre&gt;
- * 
+ *
  * @author &lt;a href=&quot;ryan@damnhandy.com&quot;&gt;Ryan J. McDonough&lt;/a&gt;
  * @version $Revision: 1.1 $
  */
 public final class UriTemplateBuilder
 {
 
-   /**
-    * The URI expression
-    */
-<span class="fc" id="L45">   private LinkedList&lt;UriTemplateComponent&gt; components = new LinkedList&lt;UriTemplateComponent&gt;();</span>
-
-   /**
-    *
-    */
-<span class="fc" id="L50">   private DateFormat defaultDateFormat = null;</span>
-
-   /**
-    *
-    */
-<span class="fc" id="L55">   private Map&lt;String, Object&gt; values = null;</span>
-
-   /**
-    *
-    * Create a new UriTemplateBuilder.
-    *
-    * @param templateString
-    */
-   UriTemplateBuilder(String templateString) throws MalformedUriTemplateException
-<span class="fc" id="L64">   {</span>
-<span class="fc" id="L65">      this.components = new UriTemplateParser().scan(templateString);</span>
-<span class="fc" id="L66">   }</span>
-   
-   
-   
-
-   /**
-    *
-    * Create a new UriTemplateBuilder.
-    *
-    * @param template
-    */
-   UriTemplateBuilder(UriTemplate template) throws MalformedUriTemplateException
-   {
-<span class="fc" id="L79">      this(template.getTemplate());</span>
-<span class="fc" id="L80">      this.values = template.getValues();</span>
-<span class="fc" id="L81">      this.defaultDateFormat = template.defaultDateFormat;</span>
-<span class="fc" id="L82">   }</span>
-
-
-
-   /**
-   *
-   * @param dateFormatString
-   * @return
-   * @since 2.0
-   */
-   public UriTemplateBuilder withDefaultDateFormat(String dateFormatString)
-   {
-<span class="fc" id="L94">      return this.withDefaultDateFormat(new SimpleDateFormat(dateFormatString));</span>
-   }
-
-   /**
-    *
-    * @param dateFormat
-    * @return
-    * @since 2.0
-    */
-   public UriTemplateBuilder withDefaultDateFormat(DateFormat dateFormat)
-   {
-<span class="fc" id="L105">      defaultDateFormat = dateFormat;</span>
-<span class="fc" id="L106">      return this;</span>
-   }
-
-   
-   private void addComponent(UriTemplateComponent component)
-   {
-<span class="fc" id="L112">      this.components.add(component);</span>
-<span class="fc" id="L113">   }</span>
-
-   /**
-    * Appends a {@link Literal} value to the {@link UriTemplate}. The following 
-    * code:
-    * 
-    * &lt;pre&gt;
-    * UriTemplate template = UriTemplate.buildFromTemplate(&quot;http://example.com&quot;)
-    *                                   .literal(&quot;/foo&quot;)
-    *                                   .build();
-    * &lt;/pre&gt;
-    * 
-    * Will generate the following template:
-    * 
-    * &lt;pre&gt;
-    * http://example.com/foo
-    * &lt;/pre&gt;
-    * 
-    * Note that this particular example has no expressions, so it's not a valid URI template.
-    * @param string
-    * @return
-    */
-   public UriTemplateBuilder literal(String string)
-   {
-<span class="fc bfc" id="L137" title="All 2 branches covered.">      if (string == null)</span>
-      {
-<span class="fc" id="L139">         return this;</span>
-      }
-<span class="fc" id="L141">      addComponent(new Literal(string, 0));</span>
-<span class="fc" id="L142">      return this;</span>
-   }
+    /**
+     * The URI expression
+     */
+<span class="fc" id="L48">    private LinkedList&lt;UriTemplateComponent&gt; components = new LinkedList&lt;UriTemplateComponent&gt;();</span>
 
     /**
      *
-     * @param varSpec
+     */
+<span class="fc" id="L53">    private DateTimeFormatter defaultDateTimeFormatter = null;</span>
+
+    /**
+     *
+     */
+<span class="fc" id="L58">    private Map&lt;String, Object&gt; values = null;</span>
+
+
+<span class="fc" id="L61">    UriTemplateBuilder() {</span>
+<span class="fc" id="L62">        this.components = new LinkedList&lt;UriTemplateComponent&gt;();</span>
+<span class="fc" id="L63">    }</span>
+    /**
+     * Create a new UriTemplateBuilder.
+     *
+     * @param templateString the initial URI template string
+     */
+    UriTemplateBuilder(String templateString) throws MalformedUriTemplateException
+<span class="fc" id="L70">    {</span>
+<span class="fc" id="L71">        this.components = new UriTemplateParser().scan(templateString);</span>
+<span class="fc" id="L72">    }</span>
+
+
+    /**
+     * Create a new UriTemplateBuilder.
+     *
+     * @param template the initial UriTemplate
+     */
+    UriTemplateBuilder(UriTemplate template) throws MalformedUriTemplateException
+    {
+<span class="fc" id="L82">        this(template.getTemplate());</span>
+<span class="fc" id="L83">        this.values = template.getValues();</span>
+<span class="fc" id="L84">        this.defaultDateTimeFormatter = template.defaultDateTimeFormatter;</span>
+<span class="fc" id="L85">    }</span>
+
+
+    /**
+     * @param dateFormatString the date format to use internally
+     * @return the UriTemplateBuilder
+     * @since 2.0
+     */
+    public UriTemplateBuilder withDefaultDateFormat(String dateFormatString)
+    {
+<span class="fc" id="L95">        return this.withDefaultDateFormat(DateTimeFormat.forPattern(dateFormatString));</span>
+    }
+
+    private UriTemplateBuilder withDefaultDateFormat(DateTimeFormatter dateTimeFormatter)
+    {
+<span class="fc" id="L100">        defaultDateTimeFormatter = dateTimeFormatter;</span>
+<span class="fc" id="L101">        return this;</span>
+    }
+
+    /**
+     * @param dateFormat the date format to use internally
+     * @return the UriTemplateBuilder
+     * @since 2.0
+     * @deprecated replaced by {@link #withDefaultDateFormat(String) withDefaultDateFormat}
+     */
+    @Deprecated
+    public UriTemplateBuilder withDefaultDateFormat(DateFormat dateFormat)
+    {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (!(dateFormat instanceof SimpleDateFormat))</span>
+        {
+<span class="nc" id="L115">            throw new IllegalArgumentException(</span>
+            &quot;The only supported subclass of java.text.DateFormat is java.text.SimpleDateFormat&quot;);
+        }
+<span class="nc" id="L118">        defaultDateTimeFormatter = DateTimeFormat.forPattern(((SimpleDateFormat) dateFormat).toPattern());</span>
+<span class="nc" id="L119">        return this;</span>
+    }
+
+
+    void addComponent(UriTemplateComponent component)
+    {
+<span class="fc" id="L125">        this.components.add(component);</span>
+<span class="fc" id="L126">    }</span>
+
+    void addComponents(Collection&lt;UriTemplateComponent&gt; compoments)
+    {
+<span class="fc" id="L130">        this.components.addAll(compoments);</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Appends a {@link Literal} value to the {@link UriTemplate}. The following
+     * code:
+     * &lt;p&gt;
+     * &lt;pre&gt;
+     * UriTemplate template = UriTemplate.buildFromTemplate(&quot;http://example.com&quot;)
+     *                                   .literal(&quot;/foo&quot;)
+     *                                   .build();
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * Will generate the following template:
+     * &lt;p&gt;
+     * &lt;pre&gt;
+     * http://example.com/foo
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * Note that this particular example has no expressions, so it's not a valid URI template.
+     *
+     * @param string the literal string
      * @return
      */
-   private static VarSpec[] toVarSpec(String...varSpec)
-   {
-<span class="fc" id="L152">      VarSpec[] vars = new VarSpec[varSpec.length];</span>
-<span class="fc bfc" id="L153" title="All 2 branches covered.">      for(int i = 0; i &lt; varSpec.length; i++)</span>
-      {
-<span class="fc" id="L155">         vars[i] = var(varSpec[i]);</span>
-      }
-<span class="fc" id="L157">      return vars;</span>
-   }
+    public UriTemplateBuilder literal(String string)
+    {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (string == null)</span>
+        {
+<span class="fc" id="L158">            return this;</span>
+        }
+<span class="fc" id="L160">        addComponent(new Literal(string, 0));</span>
+<span class="fc" id="L161">        return this;</span>
+    }
+
+    /**
+     * @param varSpec the varspec name
+     * @return the array of varspecs
+     */
+    private static VarSpec[] toVarSpec(String... varSpec)
+    {
+<span class="fc" id="L170">        VarSpec[] vars = new VarSpec[varSpec.length];</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        for (int i = 0; i &lt; varSpec.length; i++)</span>
+        {
+<span class="fc" id="L173">            vars[i] = var(varSpec[i]);</span>
+        }
+<span class="fc" id="L175">        return vars;</span>
+    }
 
     /**
      * Appends a template expression using no operator. The following
@@ -170,14 +188,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{foo}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the name of the variable
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder simple(String...var)
-   {
-<span class="fc" id="L178">      simple(toVarSpec(var));</span>
-<span class="fc" id="L179">      return this;</span>
-   }
+    public UriTemplateBuilder simple(String... var)
+    {
+<span class="fc" id="L197">        simple(toVarSpec(var));</span>
+<span class="fc" id="L198">        return this;</span>
+    }
 
     /**
      * Appends a template expression using no operator but with an optional
@@ -196,138 +215,144 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{foo*}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder simple(VarSpec...var)
-   {
-<span class="fc" id="L204">      addComponent(Expression.simple(var).build());</span>
-<span class="fc" id="L205">      return this;</span>
-   }
-   /**
-    * Appends a template expression using the reserved operator (+). The following 
-    * code:
-    * &lt;pre&gt;
-    * UriTemplate template = 
-    *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
-    *                   .reserved(&quot;foo&quot;)
-    *                   .build();
-    * &lt;/pre&gt;
-    * Will generate the following URI Template string:
-    * &lt;pre&gt;
-    * http://example.com/{+foo}
-    * &lt;/pre&gt;
-    * @param var
-    * @return
-    */
-   public UriTemplateBuilder reserved(String...var)
-   {
-<span class="fc" id="L225">      reserved(toVarSpec(var));</span>
-<span class="fc" id="L226">      return this;</span>
-   }
+    public UriTemplateBuilder simple(VarSpec... var)
+    {
+<span class="fc" id="L224">        addComponent(Expression.simple(var).build());</span>
+<span class="fc" id="L225">        return this;</span>
+    }
 
-   /**
-    * Appends a template expression using the reserved operator (+) along
-    * with an optional modifier. The following code:
-    * &lt;pre&gt;
-    * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
-    *
-    * ...
-    *
-    * UriTemplate template =
-    *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
-    *                   .reserved(var(&quot;foo&quot;,1))
-    *                   .build();
-    * &lt;/pre&gt;
-    * Will generate the following URI Template string:
-    * &lt;pre&gt;
-    * http://example.com/{+foo:1}
-    * &lt;/pre&gt;
-    * @param var
-    * @return
-    */
-   public UriTemplateBuilder reserved(VarSpec...var)
-   {
-<span class="fc" id="L251">      addComponent(Expression.reserved(var).build());</span>
-<span class="fc" id="L252">      return this;</span>
-   }
-   
-   /**
-    * Appends a template expression using the fragment operator (#). The 
-    * following code:
-    * &lt;pre&gt;
-    * UriTemplate template = 
-    *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
-    *                   .fragement(&quot;foo&quot;)
-    *                   .build();
-    * &lt;/pre&gt;
-    * Will generate the following URI Template string:
-    * &lt;pre&gt;
-    * http://example.com/{#foo}
-    * &lt;/pre&gt;
-    * 
-    * @param var
-    * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
-    * @return
-    */
-   public UriTemplateBuilder fragment(String...var) throws UriTemplateBuilderException
-   {
-<span class="fc" id="L275">      fragment(toVarSpec(var));</span>
-<span class="fc" id="L276">      return this;</span>
-   }
+    /**
+     * Appends a template expression using the reserved operator (+). The following
+     * code:
+     * &lt;pre&gt;
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .reserved(&quot;foo&quot;)
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{+foo}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
+     */
+    public UriTemplateBuilder reserved(String... var)
+    {
+<span class="fc" id="L247">        reserved(toVarSpec(var));</span>
+<span class="fc" id="L248">        return this;</span>
+    }
 
-   /**
-    * Appends a template expression using the fragment operator (#) with a
-    * modifier. The following code:
-    * &lt;pre&gt;
-    * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
-    *
-    * ...
-    *
-    * UriTemplate template = 
-    *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
-    *                   .fragement(var(&quot;foo&quot;, 1))
-    *                   .build();
-    * &lt;/pre&gt;
-    * Will generate the following URI Template string:
-    * &lt;pre&gt;
-    * http://example.com/{#foo:1}
-    * &lt;/pre&gt;
-    * 
-    * @param var
-    * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
-    * @return
-    */
-   public UriTemplateBuilder fragment(VarSpec...var) throws UriTemplateBuilderException
-   {
-<span class="fc bfc" id="L303" title="All 2 branches covered.">      if(hasExpressionWithOperator(Operator.FRAGMENT))</span>
-      {
-<span class="fc" id="L305">         throw new UriTemplateBuilderException(&quot;The template already has a fragment expression and this would not result in a valid URI&quot;);</span>
-      }
-<span class="fc" id="L307">      addComponent(Expression.fragment(var).build());</span>
-<span class="fc" id="L308">      return this;</span>
-   }
+    /**
+     * Appends a template expression using the reserved operator (+) along
+     * with an optional modifier. The following code:
+     * &lt;pre&gt;
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .reserved(var(&quot;foo&quot;,1))
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{+foo:1}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
+     */
+    public UriTemplateBuilder reserved(VarSpec... var)
+    {
+<span class="fc" id="L274">        addComponent(Expression.reserved(var).build());</span>
+<span class="fc" id="L275">        return this;</span>
+    }
+
+    /**
+     * Appends a template expression using the fragment operator (#). The
+     * following code:
+     * &lt;pre&gt;
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .fragement(&quot;foo&quot;)
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{#foo}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
+     * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
+     */
+    public UriTemplateBuilder fragment(String... var) throws UriTemplateBuilderException
+    {
+<span class="fc" id="L298">        fragment(toVarSpec(var));</span>
+<span class="fc" id="L299">        return this;</span>
+    }
+
+    /**
+     * Appends a template expression using the fragment operator (#) with a
+     * modifier. The following code:
+     * &lt;pre&gt;
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .fragement(var(&quot;foo&quot;, 1))
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{#foo:1}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
+     * @throws UriTemplateBuilderException if you attempt to add more than one fragment expression, a UriTemplateBuilderException will be raised
+     */
+    public UriTemplateBuilder fragment(VarSpec... var) throws UriTemplateBuilderException
+    {
+<span class="fc bfc" id="L326" title="All 2 branches covered.">        if (hasExpressionWithOperator(Operator.FRAGMENT))</span>
+        {
+<span class="fc" id="L328">            throw new UriTemplateBuilderException(&quot;The template already has a fragment expression and this would not result in a valid URI&quot;);</span>
+        }
+<span class="fc" id="L330">        addComponent(Expression.fragment(var).build());</span>
+<span class="fc" id="L331">        return this;</span>
+    }
 
     /**
      * Scans the components for an expression with the specified operator.
+     *
      * @param op
      * @return
      */
-   private boolean hasExpressionWithOperator(Operator op)
-   {
-<span class="fc bfc" id="L318" title="All 2 branches covered.">      for(UriTemplateComponent c : components)</span>
-      {
-<span class="fc bfc" id="L320" title="All 2 branches covered.">         if(Expression.class.isInstance(c))</span>
-         {
-<span class="fc" id="L322">            Expression e = (Expression) c;</span>
-<span class="fc bfc" id="L323" title="All 2 branches covered.">            if(e.getOperator() == op)</span>
+    private boolean hasExpressionWithOperator(Operator op)
+    {
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        for (UriTemplateComponent c : components)</span>
+        {
+<span class="fc bfc" id="L344" title="All 2 branches covered.">            if (Expression.class.isInstance(c))</span>
             {
-<span class="fc" id="L325">               return true;</span>
+<span class="fc" id="L346">                Expression e = (Expression) c;</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">                if (e.getOperator() == op)</span>
+                {
+<span class="fc" id="L349">                    return true;</span>
+                }
             }
-         }
-<span class="fc" id="L328">      }</span>
-<span class="fc" id="L329">      return false;</span>
-   }
+<span class="fc" id="L352">        }</span>
+<span class="fc" id="L353">        return false;</span>
+    }
+
     /**
      * Appends a template expression using the label (.) operator. The following
      * code:
@@ -341,14 +366,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{.foo}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder label(String...var)
-   {
-<span class="fc" id="L349">      label(toVarSpec(var));</span>
-<span class="fc" id="L350">      return this;</span>
-   }
+    public UriTemplateBuilder label(String... var)
+    {
+<span class="fc" id="L375">        label(toVarSpec(var));</span>
+<span class="fc" id="L376">        return this;</span>
+    }
 
     /**
      * Appends a template expression using the label (.) operator and modifier.
@@ -363,14 +389,16 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{.foo*}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder label(VarSpec...var)
-   {
-<span class="fc" id="L371">      addComponent(Expression.label(var).build());</span>
-<span class="fc" id="L372">      return this;</span>
-   }
+    public UriTemplateBuilder label(VarSpec... var)
+    {
+<span class="fc" id="L398">        addComponent(Expression.label(var).build());</span>
+<span class="fc" id="L399">        return this;</span>
+    }
+
     /**
      * Appends a template expression using the matrix (;) operator. The following
      * code:
@@ -384,14 +412,16 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{;foo}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder matrix(String...var)
-   {
-<span class="fc" id="L392">      matrix(toVarSpec(var));</span>
-<span class="fc" id="L393">      return this;</span>
-   }
+    public UriTemplateBuilder matrix(String... var)
+    {
+<span class="fc" id="L421">        matrix(toVarSpec(var));</span>
+<span class="fc" id="L422">        return this;</span>
+    }
+
     /**
      * Appends a template expression using the matrix (;) operator and modifier.
      * The following code:
@@ -405,14 +435,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{;foo*}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder matrix(VarSpec...var)
-   {
-<span class="fc" id="L413">      addComponent(Expression.matrix(var).build());</span>
-<span class="fc" id="L414">      return this;</span>
-   }
+    public UriTemplateBuilder matrix(VarSpec... var)
+    {
+<span class="fc" id="L444">        addComponent(Expression.matrix(var).build());</span>
+<span class="fc" id="L445">        return this;</span>
+    }
 
     /**
      * Appends a template expression using the path (/) operator. The following
@@ -427,14 +458,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com{/foo}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder path(String...var)
-   {
-<span class="fc" id="L435">      path(toVarSpec(var));</span>
-<span class="fc" id="L436">      return this;</span>
-   }
+    public UriTemplateBuilder path(String... var)
+    {
+<span class="fc" id="L467">        path(toVarSpec(var));</span>
+<span class="fc" id="L468">        return this;</span>
+    }
 
     /**
      * Appends a template expression using the path (/) operator and modifier.
@@ -449,14 +481,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com{/foo:1}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder path(VarSpec...var)
-   {
-<span class="fc" id="L457">      addComponent(Expression.path(var).build());</span>
-<span class="fc" id="L458">      return this;</span>
-   }
+    public UriTemplateBuilder path(VarSpec... var)
+    {
+<span class="fc" id="L490">        addComponent(Expression.path(var).build());</span>
+<span class="fc" id="L491">        return this;</span>
+    }
 
     /**
      * Appends a template expression using the query (?) operator. The following
@@ -471,14 +504,15 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{?foo}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder query(String...var)
-   {
-<span class="fc" id="L479">      query(toVarSpec(var));</span>
-<span class="fc" id="L480">      return this;</span>
-   }
+    public UriTemplateBuilder query(String... var)
+    {
+<span class="fc" id="L513">        query(toVarSpec(var));</span>
+<span class="fc" id="L514">        return this;</span>
+    }
 
     /**
      * Appends a template expression using the query (?) operator and
@@ -498,117 +532,236 @@ public final class UriTemplateBuilder
      * &lt;pre&gt;
      * http://example.com/{?foo:1}
      * &lt;/pre&gt;
-     * @param var
-     * @return
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
      */
-   public UriTemplateBuilder query(VarSpec...var)
-   {
-<span class="fc" id="L506">      addComponent(Expression.query(var).build());</span>
-<span class="fc" id="L507">      return this;</span>
-   }
-   
-   
+    public UriTemplateBuilder query(VarSpec... var)
+    {
+<span class="fc" id="L541">        addComponent(Expression.query(var).build());</span>
+<span class="fc" id="L542">        return this;</span>
+    }
 
-   /**
-    * &lt;p&gt;
-    * Generates a {@link UriTemplate} instance from the builder.
-    * &lt;/p&gt;
-    *
-    * @return
-    * @since 2.0
-    */
-   public UriTemplate build() throws MalformedUriTemplateException
-   {
-<span class="fc" id="L522">      UriTemplate template = new UriTemplate(this.components);</span>
-<span class="fc bfc" id="L523" title="All 2 branches covered.">      if(this.values != null)</span>
-      {
-<span class="fc" id="L525">         template.set(values);</span>
-      }
-      
-<span class="fc bfc" id="L528" title="All 2 branches covered.">      if (defaultDateFormat != null)</span>
-      {
-<span class="fc" id="L530">         template.defaultDateFormat = defaultDateFormat;</span>
-      }
-<span class="fc" id="L532">      return template;</span>
-   }
-   
-   /**
-    * Adds a variable name to the expression.
-    *
-    * &lt;pre&gt;
-    * var(&quot;foo&quot;);
-    * &lt;/pre&gt;
-    *
-    * Will yield the following expression:
-    * &lt;pre&gt;
-    * {foo}
-    * &lt;/pre&gt;
-    *
-    * @param varName
-    * @return
-    */
-   public static VarSpec var(String varName)
-   {
-<span class="fc" id="L552">      return var(varName, Modifier.NONE, null);</span>
-   }
+    /**
+     * Appends a template expression using the form-style query continuation. The following
+     * code:
+     * &lt;pre&gt;
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .continuation(&quot;foo&quot;)
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{&amp;amp;foo}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec name
+     * @return the UriTemplateBuilder
+     */
+    public UriTemplateBuilder continuation(String... var)
+    {
+<span class="fc" id="L564">        return continuation(toVarSpec(var));</span>
+    }
 
-   /**
-    * Adds a variable name to the expression with an explode modifier.
-    *
-    * &lt;pre&gt;
-    * var(&quot;foo&quot;,true);
-    * &lt;/pre&gt;
-    *
-    * Will yield the following expression:
-    * &lt;pre&gt;
-    * {foo*}
-    * &lt;/pre&gt;
-    *
-    * @param varName
-    * @param explode
-    * @return
-    */
-   public static VarSpec var(String varName, boolean explode)
-   {
-<span class="pc bpc" id="L573" title="1 of 2 branches missed.">      if (explode)</span>
-      {
-<span class="fc" id="L575">         return var(varName, Modifier.EXPLODE, null);</span>
-      }
-<span class="nc" id="L577">      return var(varName, Modifier.NONE, null);</span>
-   }
+    /**
+     * Appends a template expression using the form-style query continuation and
+     * and optional modifier. The following
+     * code:
+     * &lt;pre&gt;
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .query(var(&quot;foo&quot;,1))
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/{&amp;amp;foo:1}
+     * &lt;/pre&gt;
+     *
+     * @param var the varspec
+     * @return the UriTemplateBuilder
+     */
+    public UriTemplateBuilder continuation(VarSpec... var)
+    {
+<span class="fc" id="L591">        addComponent(Expression.continuation(var).build());</span>
+<span class="fc" id="L592">        return this;</span>
+    }
 
-   /**
-    * Adds a variable name to the expression with a prefix modifier.
-    *
-    * &lt;pre&gt;
-    * var(&quot;foo&quot;,2);
-    * &lt;/pre&gt;
-    *
-    * Will yield the following expression:
-    * &lt;pre&gt;
-    * {foo:2}
-    * &lt;/pre&gt;
-    * @param varName
-    * @param prefix
-    * @return
-    */
-   public static VarSpec var(String varName, int prefix)
-   {
-<span class="fc" id="L597">      return var(varName, Modifier.PREFIX, prefix);</span>
-   }
+    /**
+     * Parses the template and appends the parsed components
+     * to the builder. The following
+     * code:
+     * &lt;pre&gt;
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .template(&quot;foo/{id}{?filter}&quot;)
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/foo/{id}{?filter}
+     * &lt;/pre&gt;
+     *
+     * @param template the uri template
+     * @return the UriTemplateBuilder
+     */
+    public UriTemplateBuilder template(UriTemplate... template) {
+<span class="fc bfc" id="L618" title="All 2 branches covered.">        for(UriTemplate t : template) {</span>
+<span class="fc" id="L619">            addComponents(t.getComponents());</span>
+        }
 
-   /**
-    *
-    *
-    * @param varName
-    * @param modifier
-    * @param position
-    * @return
-    */
-   private static VarSpec var(String varName, Modifier modifier, Integer position)
-   {
-<span class="fc" id="L610">      return new VarSpec(varName, modifier, position);</span>
-   }
+<span class="fc" id="L622">        return this;</span>
+    }
+
+    /**
+     * Parses the template and appends the parsed components
+     * to the builder. The following
+     * code:
+     * &lt;pre&gt;
+     * import static com.damnhandy.uri.template.UriTemplateBuilder.var;
+     *
+     * ...
+     *
+     * UriTemplate template =
+     *        UriTemplate.buildFromTemplate(&quot;http://example.com/&quot;)
+     *                   .template(&quot;foo/{id}{?filter}&quot;)
+     *                   .build();
+     * &lt;/pre&gt;
+     * Will generate the following URI Template string:
+     * &lt;pre&gt;
+     * http://example.com/foo/{id}{?filter}
+     * &lt;/pre&gt;
+     *
+     * @param template the uri template string
+     * @return the uri template builder
+     */
+    public UriTemplateBuilder template(String... template) {
+<span class="fc" id="L648">        UriTemplateParser parser = new UriTemplateParser();</span>
+<span class="fc bfc" id="L649" title="All 2 branches covered.">        for(String t : template) {</span>
+<span class="fc" id="L650">            addComponents(parser.scan(t));</span>
+        }
+
+<span class="fc" id="L653">        return this;</span>
+    }
+
+    /**
+     * Returns an array of the components in the Builder.
+     * @return array of the components in the Builder
+     */
+    public UriTemplateComponent[] getComponents()
+    {
+<span class="fc" id="L662">        return this.components.toArray(new UriTemplateComponent[components.size()]);</span>
+    }
+
+
+    /**
+     * &lt;p&gt;
+     * Generates a {@link UriTemplate} instance from the builder.
+     * &lt;/p&gt;
+     *
+     * @return the UriTemplate
+     * @since 2.0
+     */
+    public UriTemplate build() throws MalformedUriTemplateException
+    {
+<span class="fc" id="L676">        UriTemplate template = new UriTemplate(this.components);</span>
+<span class="fc bfc" id="L677" title="All 2 branches covered.">        if (this.values != null)</span>
+        {
+<span class="fc" id="L679">            template.set(values);</span>
+        }
+
+<span class="fc bfc" id="L682" title="All 2 branches covered.">        if (defaultDateTimeFormatter != null)</span>
+        {
+<span class="fc" id="L684">            template.defaultDateTimeFormatter = defaultDateTimeFormatter;</span>
+        }
+<span class="fc" id="L686">        return template;</span>
+    }
+
+    /**
+     * Adds a variable name to the expression.
+     * &lt;p&gt;
+     * &lt;pre&gt;
+     * var(&quot;foo&quot;);
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * Will yield the following expression:
+     * &lt;pre&gt;
+     * {foo}
+     * &lt;/pre&gt;
+     *
+     * @param varName the varspec name
+     * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
+     */
+    public static VarSpec var(String varName)
+    {
+<span class="fc" id="L706">        return var(varName, Modifier.NONE, null);</span>
+    }
+
+    /**
+     * Adds a variable name to the expression with an explode modifier.
+     * &lt;p&gt;
+     * &lt;pre&gt;
+     * var(&quot;foo&quot;,true);
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * Will yield the following expression:
+     * &lt;pre&gt;
+     * {foo*}
+     * &lt;/pre&gt;
+     *
+     * @param varName the varspec name
+     * @param explode boolean to indicate that this VarSpec should use the explode modifer
+     * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
+     */
+    public static VarSpec var(String varName, boolean explode)
+    {
+<span class="pc bpc" id="L727" title="1 of 2 branches missed.">        if (explode)</span>
+        {
+<span class="fc" id="L729">            return var(varName, Modifier.EXPLODE, null);</span>
+        }
+<span class="nc" id="L731">        return var(varName, Modifier.NONE, null);</span>
+    }
+
+    /**
+     * Adds a variable name to the expression with a prefix modifier.
+     * &lt;p&gt;
+     * &lt;pre&gt;
+     * var(&quot;foo&quot;,2);
+     * &lt;/pre&gt;
+     * &lt;p&gt;
+     * Will yield the following expression:
+     * &lt;pre&gt;
+     * {foo:2}
+     * &lt;/pre&gt;
+     *
+     * @param varName the varspec name
+     * @param prefix the prefix position
+     * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
+     */
+    public static VarSpec var(String varName, int prefix)
+    {
+<span class="fc" id="L752">        return var(varName, Modifier.PREFIX, prefix);</span>
+    }
+
+    /**
+     * @param varName the varspec name
+     * @param modifier the modifier
+     * @param position the prefix position
+     * @return the {@link com.damnhandy.uri.template.impl.VarSpec} for the specified name
+     */
+    private static VarSpec var(String varName, Modifier modifier, Integer position)
+    {
+<span class="fc" id="L763">        return new VarSpec(varName, modifier, position);</span>
+    }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>
