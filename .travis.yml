@@ -4,6 +4,7 @@ jdk:
   - openjdk7
 #  - oraclejdk7 disabling due to the container not being able to set JAVA_HOME correctly
   - oraclejdk8
+  - openjdk8
   - oraclejdk9
 sudo: false
 install: ./mvnw clean
