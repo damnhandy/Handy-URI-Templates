@@ -559,12 +559,12 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>25.1-jre</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>25.1-jre</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
 
         <!-- Async HTTP Client -->
         <dependency>

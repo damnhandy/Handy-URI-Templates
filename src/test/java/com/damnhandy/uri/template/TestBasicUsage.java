@@ -15,6 +15,9 @@
  */
 package com.damnhandy.uri.template;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Simple tests to validate the UriTemplate API.
@@ -58,7 +56,7 @@ public class TestBasicUsage
     */
    @Test
    public void testNoExpressionAndNoVars() throws Exception {
-       String result = UriTemplate.expand("https://foo.com:8080", ImmutableMap.<String, Object>of());
+       String result = UriTemplate.expand("https://foo.com:8080", new HashMap<String, Object>());
        Assert.assertEquals("https://foo.com:8080", result);
    }
 

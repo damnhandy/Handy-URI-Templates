@@ -1,11 +1,11 @@
 package com.damnhandy.uri.template;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class TestNestedDataStructures
     public void testNestedDataStructure() throws Exception
     {
        String result =  UriTemplate.fromTemplate("/test{?queryParams*}")
-                                    .set("queryParams", new QueryParams(Lists.newArrayList("a","b","c"), Lists.newArrayList("1","2","3")))
+                                    .set("queryParams", new QueryParams(Arrays.asList("a","b","c"), Arrays.asList("1","2","3")))
                                     .expand();
 
         Assert.assertEquals("/test?field=a%2Cb%2Cc&user=1%2C2%2C3", result);
@@ -35,7 +35,7 @@ public class TestNestedDataStructures
     public void testNestedDataStructureWithoutExplodeModifier() throws Exception
     {
         String result =  UriTemplate.fromTemplate("/test{?queryParams}")
-        .set("queryParams", new QueryParams(Lists.newArrayList("a","b","c"), Lists.newArrayList("1","2","3")))
+        .set("queryParams", new QueryParams(Arrays.asList("a","b","c"), Arrays.asList("1","2","3")))
         .expand();
 
         Assert.assertEquals("/test?queryParams=a%2Cb%2Cc,1%2C2%2C3", result);
@@ -49,14 +49,14 @@ public class TestNestedDataStructures
     @Test(expected = VariableExpansionException.class)
     public void testWithParamsWithMaps() throws Exception
     {
-        Map<String, String> values = ImmutableMap.<String, String> builder()
-                                                 .put("foo", "bar")
-                                                 .put("moo", "foo")
-                                                 .build();
+        Map<String, String> values = new HashMap<>();
+        values.put("foo", "bar");
+        values.put("moo", "foo");
+
 
 
         String result =  UriTemplate.fromTemplate("/test{?queryParams*}")
-                                    .set("queryParams", new ParamsWithMaps(values, Lists.newArrayList("1","2","3")))
+                                    .set("queryParams", new ParamsWithMaps(values, Arrays.asList("1","2","3")))
                                     .expand();
 
 
