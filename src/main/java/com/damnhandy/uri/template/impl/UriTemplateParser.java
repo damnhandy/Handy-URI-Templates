@@ -73,7 +73,7 @@ public final class UriTemplateParser
                 startExpression(i);
             }
 
-            if (c != EXPR_START || c != EXPR_END)
+            if (c != EXPR_START)
             {
                 startLiteral(i);
             }
