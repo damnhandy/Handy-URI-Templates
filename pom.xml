@@ -7,7 +7,7 @@
     </parent>
     <groupId>com.damnhandy</groupId>
     <artifactId>handy-uri-templates</artifactId>
-    <version>2.1.7-SNAPSHOT</version>
+    <version>2.1.7</version>
     <packaging>bundle</packaging>
     <name>Handy URI Templates</name>
     <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to
@@ -34,7 +34,7 @@
         <url>https://github.com/damnhandy/Handy-URI-Templates.git</url>
         <connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
         <developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>handy-uri-templates-2.1.7</tag>
   </scm>
     <licenses>
         <license>
@@ -274,31 +274,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbugs.plugin}</version>
-                <dependencies>
-                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
-                    <dependency>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs</artifactId>
-                        <version>${spotbugs.plugin}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Max</threshold>
-                    <xmlOutput>true</xmlOutput>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -367,6 +343,31 @@
                 <version>3.2.1</version>
                 <configuration>
                     <failBuildOnCVSS>8</failBuildOnCVSS>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.plugin}</version>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.plugin}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Max</threshold>
+                    <xmlOutput>true</xmlOutput>
                 </configuration>
                 <executions>
                     <execution>
@@ -481,17 +482,6 @@
             </plugin>
 
             <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbugs.plugin}</version>
-                <configuration>
-                    <xmlOutput>true</xmlOutput>
-                    <!-- Optional directory to put spotbugs xdoc xml report -->
-                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
                 <version>2.0</version>
@@ -501,7 +491,16 @@
                 <artifactId>taglist-maven-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
-
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs.plugin}</version>
+                <configuration>
+                    <xmlOutput>true</xmlOutput>
+                    <!-- Optional directory to put spotbugs xdoc xml report -->
+                    <xmlOutputDirectory>target/site</xmlOutputDirectory>
+                </configuration>
+            </plugin>
 
         </plugins>
 
@@ -541,6 +540,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
             <reporting>
@@ -559,6 +559,7 @@
                             </links>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </reporting>
         </profile>
