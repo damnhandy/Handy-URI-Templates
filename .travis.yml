@@ -2,7 +2,7 @@ dist: trusty
 language: java
 jdk:
   - openjdk7
-  - oraclejdk7
+#  - oraclejdk7 disabling due to the container not being able to set JAVA_HOME correctly
   - oraclejdk8
   - oraclejdk9
 sudo: false
