@@ -317,7 +317,9 @@
                             <mode>development</mode>
                             <url>${project.url}</url>
                             <key>value</key>
+                            <Automatic-Module-Name>com.damnhandy.uri.template</Automatic-Module-Name>
                         </manifestEntries>
+
                     </archive>
                 </configuration>
             </plugin>
