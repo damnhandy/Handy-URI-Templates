@@ -7,7 +7,7 @@
     </parent>
     <groupId>com.damnhandy</groupId>
     <artifactId>handy-uri-templates</artifactId>
-    <version>2.1.8-SNAPSHOT</version>
+    <version>2.1.8</version>
     <packaging>bundle</packaging>
     <name>Handy URI Templates</name>
     <description>Handy URI Templates is a RFC6570 compliant URI template processor. The library allows clients to
@@ -31,7 +31,7 @@
         <url>https://github.com/damnhandy/Handy-URI-Templates.git</url>
         <connection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</connection>
         <developerConnection>scm:git:git@github.com:damnhandy/Handy-URI-Templates.git</developerConnection>
-      <tag>handy-uri-templates-2.1.7</tag>
+      <tag>handy-uri-templates-2.1.8</tag>
   </scm>
     <licenses>
         <license>
