@@ -17,13 +17,13 @@
 
 
     <properties>
-        <http.client>4.5.8</http.client>
-        <jackson.version>2.10.1</jackson.version>
+        <http.client>4.5.12</http.client>
+        <jackson.version>2.11.0</jackson.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spotbugs.plugin>3.1.11</spotbugs.plugin>
-        <jacoco.version>0.8.4</jacoco.version>
-        <javadoc.plugin>3.1.0</javadoc.plugin>
-        <joda.version>2.10.2</joda.version>
+        <spotbugs.plugin>4.0.0</spotbugs.plugin>
+        <jacoco.version>0.8.5</jacoco.version>
+        <javadoc.plugin>3.2.0</javadoc.plugin>
+        <joda.version>2.10.6</joda.version>
     </properties>
 
     <url>https://github.com/damnhandy/Handy-URI-Templates</url>
@@ -84,12 +84,12 @@
             <extension>
                 <groupId>org.apache.maven.scm</groupId>
                 <artifactId>maven-scm-provider-gitexe</artifactId>
-                <version>1.9.4</version>
+                <version>1.11.2</version>
             </extension>
             <extension>
                 <groupId>org.apache.maven.scm</groupId>
                 <artifactId>maven-scm-manager-plexus</artifactId>
-                <version>1.9.4</version>
+                <version>1.11.2</version>
             </extension>
             <extension>
                 <groupId>org.kathrynhuxtable.maven.wagon</groupId>
@@ -108,7 +108,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>4.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -130,7 +130,7 @@
             <plugin>
                 <groupId>com.rimerosolutions.maven.plugins</groupId>
                 <artifactId>wrapper-maven-plugin</artifactId>
-                <version>0.7.6</version>
+                <version>0.7.7</version>
                 <inherited>false</inherited>
                 <configuration>
                     <mavenVersion>3.6.1</mavenVersion>
@@ -241,7 +241,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.9.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>lt.velykis.maven.skins</groupId>
@@ -306,7 +306,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <index>true</index>
@@ -446,7 +446,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.8</version>
+                <version>3.13.0</version>
                 <configuration>
                     <rulesets>
                         <!-- Two rule sets that come bundled with PMD -->
