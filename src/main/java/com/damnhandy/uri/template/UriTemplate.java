@@ -16,15 +16,14 @@
 package com.damnhandy.uri.template;
 
 import com.damnhandy.uri.template.impl.*;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
@@ -84,7 +83,7 @@ public class UriTemplate implements Serializable
     /**
      *
      */
-    transient DateTimeFormatter defaultDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    transient DateTimeFormatter defaultDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     /**
      * @deprecated Replaced by {@link #defaultDateTimeFormatter defaultDateTimeFormatter}
@@ -469,7 +468,7 @@ public class UriTemplate implements Serializable
      */
     public UriTemplate withDefaultDateFormat(String dateFormatString)
     {
-        return this.withDefaultDateFormat(DateTimeFormat.forPattern(dateFormatString));
+        return this.withDefaultDateFormat(DateTimeFormatter.ofPattern(dateFormatString));
     }
 
     private UriTemplate withDefaultDateFormat(DateTimeFormatter dateTimeFormatter)
@@ -492,7 +491,7 @@ public class UriTemplate implements Serializable
             throw new IllegalArgumentException(
             "The only supported subclass of java.text.DateFormat is java.text.SimpleDateFormat");
         }
-        defaultDateTimeFormatter = DateTimeFormat.forPattern(((SimpleDateFormat) dateFormat).toPattern());
+        defaultDateTimeFormatter = DateTimeFormatter.ofPattern(((SimpleDateFormat) dateFormat).toPattern());
         return this;
     }
 
@@ -678,7 +677,8 @@ public class UriTemplate implements Serializable
                  */
                 if (value instanceof Date)
                 {
-                    value = defaultDateTimeFormatter.print(new DateTime((Date) value));
+                    final Instant instant = ((Date) value).toInstant();
+                    value = defaultDateTimeFormatter.format(instant);
                 }
                 /*
                  * The variable value contains a list of values
