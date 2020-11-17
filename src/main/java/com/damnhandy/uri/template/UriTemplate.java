@@ -23,6 +23,8 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
@@ -678,7 +680,9 @@ public class UriTemplate implements Serializable
                 if (value instanceof Date)
                 {
                     final Instant instant = ((Date) value).toInstant();
-                    value = defaultDateTimeFormatter.format(instant);
+                    // TODO should we rely on system default zone ID?
+                    final LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    value = defaultDateTimeFormatter.format(localDateTime);
                 }
                 /*
                  * The variable value contains a list of values
