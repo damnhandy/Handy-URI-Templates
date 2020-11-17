@@ -8,11 +8,10 @@ import com.damnhandy.uri.template.impl.Modifier;
 import com.damnhandy.uri.template.impl.Operator;
 import com.damnhandy.uri.template.impl.UriTemplateParser;
 import com.damnhandy.uri.template.impl.VarSpec;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -92,7 +91,7 @@ public final class UriTemplateBuilder
      */
     public UriTemplateBuilder withDefaultDateFormat(String dateFormatString)
     {
-        return this.withDefaultDateFormat(DateTimeFormat.forPattern(dateFormatString));
+        return this.withDefaultDateFormat(DateTimeFormatter.ofPattern(dateFormatString));
     }
 
     private UriTemplateBuilder withDefaultDateFormat(DateTimeFormatter dateTimeFormatter)
@@ -115,7 +114,7 @@ public final class UriTemplateBuilder
             throw new IllegalArgumentException(
             "The only supported subclass of java.text.DateFormat is java.text.SimpleDateFormat");
         }
-        defaultDateTimeFormatter = DateTimeFormat.forPattern(((SimpleDateFormat) dateFormat).toPattern());
+        defaultDateTimeFormatter = DateTimeFormatter.ofPattern(((SimpleDateFormat) dateFormat).toPattern());
         return this;
     }
 
