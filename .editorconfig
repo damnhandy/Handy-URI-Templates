@@ -13,14 +13,9 @@ trim_trailing_whitespace = false
 
 [*.java]
 indent_brace_style = Allman
-indent_style = space
-indent_size = 4
 continuation_indent_size = 0
 
 [*.{yaml,yml}]
-indent_style = space
-end_of_line = lf
-charset = utf-8
 indent_size = 2
 
 
