@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -142,7 +142,9 @@
                 <version>1.2</version>
                 <configuration>
                     <doapOptions>
-                        <!-- Default values -->
+                        
+<!-- Default values -->
+
                         <bugDatabase>${project.issueManagement.url}</bugDatabase>
                         <category>library</category>
                         <created>${project.inceptionYear}-01-01</created>
@@ -409,7 +411,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore />
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>
@@ -641,12 +643,7 @@
             <version>1.9.40</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${http.client}</version>
-            <scope>test</scope>
-        </dependency>
+        
 
         <!-- Date/Time Utilities -->
         <dependency>
