@@ -651,27 +651,6 @@ public class UriTemplate implements Serializable
                     throw new VariableExpansionException(
                     "Prefix modifiers are not applicable to variables that have composite values.");
                 }
-                // If it's explodable, lookup the appropriate exploder
-                if (explodable)
-                {
-                    final VarExploder exploder;
-                    if (value instanceof VarExploder)
-                    {
-                        exploder = (VarExploder) value;
-                    }
-                    else
-                    {
-                        exploder = VarExploderFactory.getExploder(value, varSpec);
-                    }
-                    if (varSpec.getModifier() == Modifier.EXPLODE)
-                    {
-                        expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
-                    }
-                    else if (varSpec.getModifier() != Modifier.EXPLODE)
-                    {
-                        expanded = expandCollection(operator, varSpec, exploder.getValues());
-                    }
-                }
 
                 /*
                  * Format the date if we have a java.util.Date
@@ -700,6 +679,25 @@ public class UriTemplate implements Serializable
                 else if (value == null)
                 {
                     expanded = null;
+                } else if (explodable) {
+                    // If it's explodable, lookup the appropriate exploder
+                    final VarExploder exploder;
+                    if (value instanceof VarExploder)
+                    {
+                        exploder = (VarExploder) value;
+                    }
+                    else
+                    {
+                        exploder = VarExploderFactory.getExploder(value, varSpec);
+                    }
+                    if (varSpec.getModifier() == Modifier.EXPLODE)
+                    {
+                        expanded = expandMap(operator, varSpec, exploder.getNameValuePairs());
+                    }
+                    else if (varSpec.getModifier() != Modifier.EXPLODE)
+                    {
+                        expanded = expandCollection(operator, varSpec, exploder.getValues());
+                    }
                 }
                 /*
                  * the value hasn't been expanded yet and we should call toString() on it.
