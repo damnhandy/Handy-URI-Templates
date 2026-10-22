@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.damnhandy.uri.template.MalformedUriTemplateException;
+import com.damnhandy.uri.template.UriTemplate;
 import com.damnhandy.uri.template.UriTemplateComponent;
 
 /**
@@ -105,6 +106,23 @@ public class TestUriTemplateParser
    }
 
    
+   @Test
+   public void testEmptyExpressionIsMalformed()
+   {
+      for (String template : new String[] { "{}", "{}x", "x{}", "a{}b" })
+      {
+         try
+         {
+            UriTemplate.fromTemplate(template);
+            Assert.fail("Expected a malformed template: " + template);
+         }
+         catch (MalformedUriTemplateException expected)
+         {
+            // Empty expressions must use the documented parse exception.
+         }
+      }
+   }
+
    private List<String> scanWithRegEx(String templateString)
    {
       Matcher matcher = URI_TEMPLATE_REGEX.matcher(templateString);

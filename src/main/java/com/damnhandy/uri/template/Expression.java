@@ -292,6 +292,10 @@ public class Expression extends UriTemplateComponent
     {
         final String expressionReplacement = Pattern.quote(rawExpression);
         String token = rawExpression.substring(1, rawExpression.length() - 1);
+        if (token.isEmpty())
+        {
+            throw new MalformedUriTemplateException("An expression must contain at least one variable", this.location);
+        }
         // Check for URI operators
         Operator operator = Operator.NUL;
         String firstChar = token.substring(0, 1);
